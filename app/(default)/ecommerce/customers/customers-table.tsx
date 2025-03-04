@@ -15,6 +15,19 @@ import { Customer } from "./customers-table-item";
 
 const columnHelper = createColumnHelper<Customer>();
 
+const SkeletonRow = ({ columns }: { columns: number }) => (
+  <tr>
+    {Array.from({ length: columns }).map((_, index) => (
+      <td
+        key={index}
+        className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
+      >
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+      </td>
+    ))}
+  </tr>
+);
+
 export default function CustomersTable() {
   const { loading, error, data } = useQuery(GET_ALL_CLIENT_CUSTOMERS);
   const [pageIndex, setPageIndex] = React.useState(0);
@@ -182,7 +195,6 @@ export default function CustomersTable() {
     },
   });
 
-  if (loading) return <p>Loading customers...</p>;
   if (error) return <p>Error fetching customers: {error.message}</p>;
 
   return (
@@ -218,22 +230,29 @@ export default function CustomersTable() {
               ))}
             </thead>
             {/* Table body */}
+            {/* Table body */}
             <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
+              {loading
+                ? // Show skeleton loading rows
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <SkeletonRow key={index} columns={columns.length} />
+                  ))
+                : // Render actual table rows
+                  table.getRowModel().rows.map((row) => (
+                    <tr key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}
             </tbody>
           </table>
           <div>
