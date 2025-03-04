@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import Image, { StaticImageData } from "next/image";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
@@ -7,29 +7,17 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { GET_ALL_CLIENT_CUSTOMERS } from "@/lib/queries";
-
-export interface Customer {
-  id: string;
-  image?: StaticImageData;
-  name: string;
-  email: string;
-  phone: string;
-  social: string;
-  type: string;
-  distributor: string; // Add if necessary
-  description: string;
-  createdAt: string;
-  updatedAt?: string;
-  _id: string;
-}
+import { Customer } from "./customers-table-item";
 
 const columnHelper = createColumnHelper<Customer>();
 
 export default function CustomersTable() {
   const { loading, error, data } = useQuery(GET_ALL_CLIENT_CUSTOMERS);
+  const [pageIndex, setPageIndex] = React.useState(0);
 
   console.log("the data is", data);
 
@@ -114,23 +102,19 @@ export default function CustomersTable() {
       }),
       columnHelper.accessor("email", {
         header: () => "Email",
-        cell: (info) => <div className="text-left">{info.getValue()}</div>,
+        cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("phone", {
         header: () => "Phone",
-        cell: (info) => <div className="text-left">{info.getValue()}</div>,
+        cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("social", {
         header: () => "Social",
-        cell: (info) => <div className="text-center">{info.getValue()}</div>,
+        cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("type", {
         header: () => "Type",
-        cell: (info) => (
-          <div className="text-left font-medium text-sky-600">
-            {info.getValue()}
-          </div>
-        ),
+        cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("distributor", {
         header: () => "Distributor",
@@ -154,7 +138,7 @@ export default function CustomersTable() {
       }),
       columnHelper.accessor("updatedAt", {
         header: () => "Last Updated",
-        cell: (info) => <div className="text-left">{info.getValue()}</div>,
+        cell: (info) => <div className="text-right">{info.getValue()}</div>,
       }),
       columnHelper.accessor("_id", {
         header: () => "ID",
@@ -182,6 +166,20 @@ export default function CustomersTable() {
     data: customers,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    state: { pagination: { pageIndex, pageSize: 15 } },
+    onPaginationChange: (updater) => {
+      setPageIndex((prev) => {
+        const newState =
+          typeof updater === "function"
+            ? updater({
+                pageIndex: prev,
+                pageSize: table.getState().pagination.pageSize,
+              })
+            : updater;
+        return newState.pageIndex;
+      });
+    },
   });
 
   if (loading) return <p>Loading customers...</p>;
@@ -238,6 +236,24 @@ export default function CustomersTable() {
               ))}
             </tbody>
           </table>
+          <div>
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </button>
+            <span>
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </span>
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </div>
