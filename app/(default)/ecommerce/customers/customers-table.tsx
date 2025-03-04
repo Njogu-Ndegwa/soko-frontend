@@ -13,7 +13,7 @@ import { GET_ALL_CLIENT_CUSTOMERS } from "@/lib/queries";
 
 export interface Customer {
   id: string;
-  image?: StaticImageData; // Optional, as it's missing in the provided data
+  image?: StaticImageData;
   name: string;
   email: string;
   phone: string;
@@ -22,12 +22,16 @@ export interface Customer {
   distributor: string; // Add if necessary
   description: string;
   createdAt: string;
+  updatedAt?: string;
+  _id: string;
 }
 
 const columnHelper = createColumnHelper<Customer>();
 
 export default function CustomersTable() {
   const { loading, error, data } = useQuery(GET_ALL_CLIENT_CUSTOMERS);
+
+  console.log("the data is", data);
 
   // Transform data
   const customers = useMemo(
@@ -42,6 +46,11 @@ export default function CustomersTable() {
           type: node.type || "N/A",
           description: node.description || "N/A",
           createdAt: new Date(node.createdAt).toLocaleDateString(),
+          distributor: node.distributor?.name || "N/A",
+          updatedAt: node.updatedAt
+            ? new Date(node.updatedAt).toLocaleDateString()
+            : "N/A  ",
+          _id: node.distributor?._id || "N/A",
         })
       ) || [],
     [data]
@@ -123,6 +132,14 @@ export default function CustomersTable() {
           </div>
         ),
       }),
+      columnHelper.accessor("distributor", {
+        header: () => "Distributor",
+        cell: (info) => (
+          <div className="text-left font-medium text-green-600">
+            {info.getValue()}
+          </div>
+        ),
+      }),
       columnHelper.accessor("description", {
         header: () => "Description",
         cell: (info) => (
@@ -133,6 +150,14 @@ export default function CustomersTable() {
       }),
       columnHelper.accessor("createdAt", {
         header: () => "Date Created",
+        cell: (info) => <div className="text-left">{info.getValue()}</div>,
+      }),
+      columnHelper.accessor("updatedAt", {
+        header: () => "Last Updated",
+        cell: (info) => <div className="text-left">{info.getValue()}</div>,
+      }),
+      columnHelper.accessor("_id", {
+        header: () => "ID",
         cell: (info) => <div className="text-left">{info.getValue()}</div>,
       }),
       columnHelper.display({

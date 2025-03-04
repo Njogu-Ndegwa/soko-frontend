@@ -22,6 +22,11 @@ export const GET_ALL_CLIENT_CUSTOMERS = gql`
               email
               social
             }
+            distributor {
+              _id
+              name
+            }
+            updatedAt
           }
         }
       }
