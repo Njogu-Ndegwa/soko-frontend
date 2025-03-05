@@ -6,6 +6,7 @@ export const SIGN_IN_USER = gql`
       email
       accessToken
       name
+      _id
     }
   }
 `;

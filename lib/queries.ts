@@ -42,65 +42,61 @@ export const GET_ALL_ASSET_ACCOUNTS = gql`
           cursor
           node {
             _id
+            deleteStatus
+            deleteAt
+            createdAt
+            updatedAt
             accountStage
+            eventId
             asset {
               _id
-              sellerItemID
+              deleteStatus
+              deleteAt
+              createdAt
+              updatedAt
+              triggers
+              type
+              actionScope
+              actorName
+              profile
+              idType
+              idString
+              description
+              creationDate
+              oemID
               oemItemID
-              codeGenerator {
+              sellerID
+              sellerItemID
+              lifeCycle
+              codeGenUsed
+              legacyItemId
+              code
+              assetAccount {
                 _id
-              }
-              itemFleet {
-                _id
-                fleetName
               }
             }
-            createdAt
-            deleteAt
-            deleteStatus
             manager {
               _id
-              orgContactPerson {
-                _id
-                name
-              }
-            }
-            paySchedule {
-              amount
-              datetime
-              instruction
+              deleteStatus
+              deleteAt
+              createdAt
+              updatedAt
+              type
+              name
+              description
+              activeSubRolePermission
+              mqtt_password
+              distributorMQTTPort
+              distributorGrafanaPort
+              distributorInfluxDBPort
+              delegateAuthorityToServicer
+              dbUri
             }
             credit {
-              accountStatus
-              balance
               currency
-              activities {
-                action
-                amount
-                datetime
-                notes
-              }
-              owner {
-                _id
-                name
-                contact {
-                  phone
-                }
-                address {
-                  street
-                  city
-                  country
-                  postcode
-                  addressLocation {
-                    addressLatitude
-                    addressLongitude
-                  }
-                }
-              }
-            }
-            updatedAt
-            user {
-              _id
+              balance
+              totalAmountPaid
+              accountStatus
             }
           }
         }

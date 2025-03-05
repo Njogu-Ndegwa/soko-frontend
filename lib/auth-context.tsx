@@ -7,6 +7,7 @@ import { ApolloError } from "@apollo/client";
 
 interface AuthContextType {
   user: any;
+  distributorId: string | null;
   loading: boolean;
   error: any;
   signIn: (credentials: { email: string; password: string }) => void;
@@ -20,17 +21,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-
+  const [distributorId, setDistributorId] = useState<string | null>(null);
   const [error, setError] = useState<ApolloError | null>(null);
   const router = useRouter();
 
+  React.useEffect(() => {
+    const storedDistributorId = localStorage.getItem("distributorId");
+    const storedUser = localStorage.getItem("user");
+
+    if (storedDistributorId) {
+      setDistributorId(storedDistributorId);
+    }
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Assuming user is stored as a JSON string
+    }
+  }, []);
+
   const [signInUser] = useMutation(SIGN_IN_USER, {
     onCompleted: (data) => {
-      const { accessToken } = data.signInUser;
+      const { accessToken, _id } = data.signInUser;
       localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("distributorId", _id);
       console.log("Access Token:", accessToken);
       console.log("User Data:", user);
       setUser(data.signInUser.name);
+      setDistributorId(_id);
       router.push("/dashboard");
     },
     onError: (error) => {
@@ -51,12 +66,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const signOut = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("distributorId");
     setUser(null);
+    setDistributorId(null);
     router.push("/signin");
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, distributorId, loading, error, signIn, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );
