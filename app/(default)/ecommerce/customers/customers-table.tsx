@@ -215,10 +215,14 @@ export default function CustomersTable() {
             <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
+                  {headerGroup.headers.map((header, index) => (
                     <th
                       key={header.id}
-                      className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
+                      className={`px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap ${
+                        index === 0
+                          ? "sticky left-0 bg-gray-50 dark:bg-gray-900/20 z-20"
+                          : ""
+                      }`}
                     >
                       {flexRender(
                         header.column.columnDef.header,
@@ -240,10 +244,14 @@ export default function CustomersTable() {
                 : // Render actual table rows
                   table.getRowModel().rows.map((row) => (
                     <tr key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
+                      {row.getVisibleCells().map((cell, index) => (
                         <td
                           key={cell.id}
-                          className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
+                          className={`px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap ${
+                            index === 0
+                              ? "sticky left-0 bg-white dark:bg-gray-800 z-10"
+                              : ""
+                          }`}
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
