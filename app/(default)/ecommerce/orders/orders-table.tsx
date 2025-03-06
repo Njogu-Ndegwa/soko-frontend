@@ -50,6 +50,8 @@ const SkeletonRow = ({ columns }: { columns: number }) => (
 export default function AssetAccountsTable() {
   const { distributorId } = useAuth();
   const [pageIndex, setPageIndex] = React.useState(0);
+  const [searchTerm, setSearchTerm] = React.useState(""); // State for search term
+
   console.log("the distributor id is", distributorId);
 
   const {
@@ -87,6 +89,20 @@ export default function AssetAccountsTable() {
       ) || [],
     [assetData]
   );
+
+  // Filter data based on search term
+  const filteredData = useMemo(() => {
+    if (!searchTerm) return assetAccounts; // Return all data if no search term
+
+    return assetAccounts.filter(
+      (account: AssetAccount) =>
+        account.accountNumber
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        account.Customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        account.phone.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [assetAccounts, searchTerm]);
 
   // Define columns for the asset accounts table
   const assetColumns = useMemo(
@@ -151,11 +167,7 @@ export default function AssetAccountsTable() {
       }),
       assetColumnHelper.accessor("accountStage", {
         header: () => "Account Stage",
-        cell: (info) => (
-          <div className="text-left font-medium text-green-600">
-            {info.getValue()}
-          </div>
-        ),
+        cell: (info) => info.getValue(),
       }),
       assetColumnHelper.accessor("status", {
         header: () => "Status",
@@ -181,7 +193,7 @@ export default function AssetAccountsTable() {
 
   // Create the table instance
   const assetTable = useReactTable({
-    data: assetAccounts,
+    data: filteredData,
     columns: assetColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -213,6 +225,16 @@ export default function AssetAccountsTable() {
               ({assetAccounts.length})
             </span>
           </h2>
+          {/* Search Input */}
+          <div className="mt-4 w-full md:w-1/2">
+            <input
+              type="text"
+              placeholder="Search by Account Number, Customer Name, or Phone"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+          </div>
         </header>
         <div>
           {/* Table */}
