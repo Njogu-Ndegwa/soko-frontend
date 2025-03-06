@@ -48,6 +48,7 @@ const SkeletonRow = ({ columns }: { columns: number }) => (
 
 export default function AssetAccountsTable() {
   const { distributorId } = useAuth();
+  const [pageIndex, setPageIndex] = React.useState(0);
   console.log("the distributor id is", distributorId);
 
   const {
@@ -150,6 +151,19 @@ export default function AssetAccountsTable() {
     columns: assetColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: { pagination: { pageIndex, pageSize: 15 } },
+    onPaginationChange: (updater) => {
+      setPageIndex((prev) => {
+        const newState =
+          typeof updater === "function"
+            ? updater({
+                pageIndex: prev,
+                pageSize: assetTable.getState().pagination.pageSize,
+              })
+            : updater;
+        return newState.pageIndex;
+      });
+    },
   });
 
   if (assetError)
