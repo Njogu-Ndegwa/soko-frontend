@@ -13,6 +13,7 @@ import PaginationClassic from "@/components/pagination-classic";
 import Image01 from "@/public/images/icon-01.svg";
 import Image02 from "@/public/images/icon-02.svg";
 import Image03 from "@/public/images/icon-03.svg";
+import AssetAccountsTable from "./orders-table";
 
 function OrdersContent() {
   // Some dummy orders data
@@ -197,7 +198,7 @@ function OrdersContent() {
       </div>
 
       {/* Table */}
-      <OrdersTable />
+      <AssetAccountsTable />
 
       {/* Pagination */}
       <div className="mt-8">

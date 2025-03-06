@@ -101,7 +101,7 @@ export default function CustomersTable() {
             <div className="w-10 h-10 shrink-0 mr-2 sm:mr-3">
               <Image
                 className="rounded-full"
-                src=""
+                src={null as unknown as StaticImageData}
                 width={40}
                 height={40}
                 alt=""
@@ -255,10 +255,11 @@ export default function CustomersTable() {
                   ))}
             </tbody>
           </table>
-          <div>
+          <div className="flex justify-center items-center gap-4 my-4">
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
             >
               Previous
             </button>
@@ -269,6 +270,7 @@ export default function CustomersTable() {
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
             >
               Next
             </button>

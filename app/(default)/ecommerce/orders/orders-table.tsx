@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Image, { StaticImageData } from "next/image";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import {
@@ -10,13 +9,30 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { GET_ALL_CLIENT_CUSTOMERS } from "@/lib/queries";
-import { Customer } from "../customers/customers-table-item";
 import { GET_ALL_ASSET_ACCOUNTS } from "@/lib/queries";
 import { useAuth } from "@/lib/auth-context";
 
-const columnHelper = createColumnHelper<Customer>();
+// Define the type for AssetAccount
+interface AssetAccount {
+  id: string;
+  accountStage: string;
+  accountNumber: string;
+  Customer: string;
+  phone: string;
+  unit: string;
+  street: string;
+  city: string;
+  srpc: string;
+  country: string;
+  postalCode: string;
+  latitude: string;
+  longitude: string;
+}
 
+// Create a column helper for AssetAccount
+const assetColumnHelper = createColumnHelper<AssetAccount>();
+
+// Skeleton loading row
 const SkeletonRow = ({ columns }: { columns: number }) => (
   <tr>
     {Array.from({ length: columns }).map((_, index) => (
@@ -30,205 +46,122 @@ const SkeletonRow = ({ columns }: { columns: number }) => (
   </tr>
 );
 
-export default function CustomersTable() {
+export default function AssetAccountsTable() {
   const { distributorId } = useAuth();
+  console.log("the distributor id is", distributorId);
+
   const {
-    loading: asset,
+    loading: assetLoading,
     error: assetError,
     data: assetData,
   } = useQuery(GET_ALL_ASSET_ACCOUNTS, {
-    variables: { first: 20, clientId: distributorId },
+    variables: { clientId: distributorId },
   });
-  const { loading, error, data } = useQuery(GET_ALL_CLIENT_CUSTOMERS);
-  const [pageIndex, setPageIndex] = React.useState(0);
 
-  console.log("the data is", data);
-
-  // Transform data
-  const customers = useMemo(
-    () =>
-      data?.getAllClientCustomers?.page?.edges.map(
-        ({ node }: { node: any }) => ({
-          id: node._id,
-          name: node.name || "N/A",
-          email: node.contact?.email || "N/A",
-          phone: node.contact?.phone || "N/A",
-          social: node.contact?.social || "N/A",
-          type: node.type || "N/A",
-          description: node.description || "N/A",
-          createdAt: new Date(node.createdAt).toLocaleDateString(),
-          distributor: node.distributor?.name || "N/A",
-          updatedAt: node.updatedAt
-            ? new Date(node.updatedAt).toLocaleDateString()
-            : "N/A  ",
-          _id: node.distributor?._id || "N/A",
-        })
-      ) || [],
-    [data]
-  );
-
+  // Transform asset data
   const assetAccounts = useMemo(
     () =>
       assetData?.getAllAssetAccountsForClient?.page?.edges.map(
         ({ node }: { node: any }) => ({
-          id: node._id,
-          accountStage: node.accountStage || "N/A",
-          accountNumber: node.asset?.sellerItemID || "N/A",
-          Customer: node.credit?.owner?.name,
+          id: node?._id,
+          accountStage: node?.accountStage || "N/A",
+          accountNumber: node?.asset?.sellerItemID || "N/A",
+          Customer: node?.credit?.owner?.name || "N/A",
+          phone: node?.credit?.owner?.contact?.phone || "N/A",
+          unit: node?.asset?.unit || "N/A",
+          street: node?.credit?.owner?.address?.street || "N/A",
+          city: node?.credit?.owner?.address?.city || "N/A",
+          srpc: node?.credit?.owner?.address?.srpc || "N/A",
+          country: node?.credit?.owner?.address?.country || "N/A",
+          postalCode: node?.credit?.owner?.address?.postcode || "N/A",
+          latitude:
+            node?.credit?.owner?.address?.addressLocation?.addressLatitude ||
+            "N/A",
+          longitude:
+            node?.credit?.owner?.address?.addressLocation?.addressLongitude ||
+            "N/A",
         })
       ) || [],
     [assetData]
   );
 
-  console.log("the asset data is", assetData);
-
-  // Define columns
-  const columns = useMemo(
+  // Define columns for the asset accounts table
+  const assetColumns = useMemo(
     () => [
-      columnHelper.display({
-        id: "select",
-        header: ({ table }) => (
-          <label className="inline-flex">
-            <span className="sr-only">Select all</span>
-            <input
-              type="checkbox"
-              checked={table.getIsAllRowsSelected()}
-              onChange={table.getToggleAllRowsSelectedHandler()}
-            />
-          </label>
-        ),
-        cell: ({ row }) => (
-          <label className="inline-flex">
-            <span className="sr-only">Select</span>
-            <input
-              type="checkbox"
-              checked={row.getIsSelected()}
-              onChange={row.getToggleSelectedHandler()}
-            />
-          </label>
-        ),
-      }),
-      columnHelper.display({
-        id: "favourite",
-        header: () => <span className="sr-only">Favourite</span>,
-        cell: () => (
-          <button>
-            <svg width="16" height="16" viewBox="0 0 16 16">
-              <path d="M8 0L6 5.934H0l4.89 3.954L2.968 16 8 12.223 13.032 16 11.11 9.888 16 5.934h-6L8 0z" />
-            </svg>
-          </button>
-        ),
-      }),
-      columnHelper.accessor("name", {
-        header: () => "Name",
-        cell: (info) => (
-          <div className="flex items-center">
-            <div className="w-10 h-10 shrink-0 mr-2 sm:mr-3">
-              <Image
-                className="rounded-full"
-                src=""
-                width={40}
-                height={40}
-                alt=""
-              />
-            </div>
-            <div className="font-medium text-gray-800 dark:text-gray-100">
-              {info.getValue()}
-            </div>
-          </div>
-        ),
-      }),
-      columnHelper.accessor("email", {
-        header: () => "Email",
+      assetColumnHelper.accessor("accountNumber", {
+        header: () => "Account Number",
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("phone", {
+      assetColumnHelper.accessor("Customer", {
+        header: () => "Customer",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("phone", {
         header: () => "Phone",
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("social", {
-        header: () => "Social",
+      assetColumnHelper.accessor("unit", {
+        header: () => "Unit",
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("type", {
-        header: () => "Type",
+      assetColumnHelper.accessor("street", {
+        header: () => "Street",
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("distributor", {
-        header: () => "Distributor",
+      assetColumnHelper.accessor("city", {
+        header: () => "City",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("srpc", {
+        header: () => "SRPC",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("country", {
+        header: () => "Country",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("postalCode", {
+        header: () => "Postal Code",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("latitude", {
+        header: () => "Latitude",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("longitude", {
+        header: () => "Longitude",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("accountStage", {
+        header: () => "Account Stage",
         cell: (info) => (
           <div className="text-left font-medium text-green-600">
             {info.getValue()}
           </div>
-        ),
-      }),
-      columnHelper.accessor("description", {
-        header: () => "Description",
-        cell: (info) => (
-          <div className="text-left font-medium text-green-600">
-            {info.getValue()}
-          </div>
-        ),
-      }),
-      columnHelper.accessor("createdAt", {
-        header: () => "Date Created",
-        cell: (info) => <div className="text-left">{info.getValue()}</div>,
-      }),
-      columnHelper.accessor("updatedAt", {
-        header: () => "Last Updated",
-        cell: (info) => <div className="text-right">{info.getValue()}</div>,
-      }),
-      columnHelper.accessor("_id", {
-        header: () => "ID",
-        cell: (info) => <div className="text-left">{info.getValue()}</div>,
-      }),
-      columnHelper.display({
-        id: "actions",
-        header: () => <span className="sr-only">Menu</span>,
-        cell: () => (
-          <button className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 rounded-full">
-            <span className="sr-only">Menu</span>
-            <svg className="w-8 h-8 fill-current" viewBox="0 0 32 32">
-              <circle cx="16" cy="16" r="2" />
-              <circle cx="10" cy="16" r="2" />
-              <circle cx="22" cy="16" r="2" />
-            </svg>
-          </button>
         ),
       }),
     ],
     []
   );
 
-  const table = useReactTable({
-    data: customers,
-    columns,
+  // Create the table instance
+  const assetTable = useReactTable({
+    data: assetAccounts,
+    columns: assetColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    state: { pagination: { pageIndex, pageSize: 15 } },
-    onPaginationChange: (updater) => {
-      setPageIndex((prev) => {
-        const newState =
-          typeof updater === "function"
-            ? updater({
-                pageIndex: prev,
-                pageSize: table.getState().pagination.pageSize,
-              })
-            : updater;
-        return newState.pageIndex;
-      });
-    },
   });
 
-  if (error) return <p>Error fetching customers: {error.message}</p>;
+  if (assetError)
+    return <p>Error fetching asset accounts: {assetError.message}</p>;
 
   return (
     <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl relative overflow-scroll">
       <header className="px-5 py-4">
         <h2 className="font-semibold text-gray-800 dark:text-gray-100">
-          All Customers{" "}
+          Asset Accounts{" "}
           <span className="text-gray-400 dark:text-gray-500 font-medium">
-            ({customers.length})
+            ({assetAccounts.length})
           </span>
         </h2>
       </header>
@@ -238,7 +171,7 @@ export default function CustomersTable() {
           <table className="table-auto w-full dark:text-gray-300">
             {/* Table header */}
             <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
-              {table.getHeaderGroups().map((headerGroup) => (
+              {assetTable.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
@@ -255,15 +188,14 @@ export default function CustomersTable() {
               ))}
             </thead>
             {/* Table body */}
-            {/* Table body */}
             <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-              {loading
+              {assetLoading
                 ? // Show skeleton loading rows
                   Array.from({ length: 5 }).map((_, index) => (
-                    <SkeletonRow key={index} columns={columns.length} />
+                    <SkeletonRow key={index} columns={assetColumns.length} />
                   ))
                 : // Render actual table rows
-                  table.getRowModel().rows.map((row) => (
+                  assetTable.getRowModel().rows.map((row) => (
                     <tr key={row.id}>
                       {row.getVisibleCells().map((cell) => (
                         <td
@@ -280,20 +212,23 @@ export default function CustomersTable() {
                   ))}
             </tbody>
           </table>
-          <div>
+          {/* Pagination controls */}
+          <div className="flex justify-center items-center gap-4 my-4">
             <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() => assetTable.previousPage()}
+              disabled={!assetTable.getCanPreviousPage()}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
             >
               Previous
             </button>
             <span>
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
+              Page {assetTable.getState().pagination.pageIndex + 1} of{" "}
+              {assetTable.getPageCount()}
             </span>
             <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={() => assetTable.nextPage()}
+              disabled={!assetTable.getCanNextPage()}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
             >
               Next
             </button>

@@ -35,8 +35,8 @@ export const GET_ALL_CLIENT_CUSTOMERS = gql`
 `;
 
 export const GET_ALL_ASSET_ACCOUNTS = gql`
-  query GetAllAssetAccountsForClient($clientId: ID!) {
-    getAllAssetAccountsForClient(clientId: $clientId) {
+  query GetAllAssetAccounts($clientId: ID!) {
+    getAllAssetAccountsForClient(clientId: $clientId, first: 100) {
       page {
         edges {
           cursor
@@ -90,13 +90,41 @@ export const GET_ALL_ASSET_ACCOUNTS = gql`
               distributorGrafanaPort
               distributorInfluxDBPort
               delegateAuthorityToServicer
-              dbUri
             }
             credit {
               currency
               balance
               totalAmountPaid
               accountStatus
+              owner {
+                _id
+                deleteStatus
+                deleteAt
+                createdAt
+                updatedAt
+                type
+                name
+                description
+                agentId
+                gender
+                address {
+                  unit
+                  street
+                  city
+                  srpc
+                  country
+                  postcode
+                  addressLocation {
+                    addressLatitude
+                    addressLongitude
+                  }
+                }
+                contact {
+                  phone
+                  email
+                  social
+                }
+              }
             }
           }
         }
