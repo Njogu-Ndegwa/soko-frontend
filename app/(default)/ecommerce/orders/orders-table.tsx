@@ -27,6 +27,7 @@ interface AssetAccount {
   postalCode: string;
   latitude: string;
   longitude: string;
+  status: string;
 }
 
 // Create a column helper for AssetAccount
@@ -81,6 +82,7 @@ export default function AssetAccountsTable() {
           longitude:
             node?.credit?.owner?.address?.addressLocation?.addressLongitude ||
             "N/A",
+          status: node?.credit?.accountStatus || "N/A",
         })
       ) || [],
     [assetData]
@@ -91,7 +93,21 @@ export default function AssetAccountsTable() {
     () => [
       assetColumnHelper.accessor("accountNumber", {
         header: () => "Account Number",
-        cell: (info) => info.getValue(),
+        cell: (info) => {
+          const status = info.row.original.status.toLowerCase();
+          const isActive = status === "active";
+          return (
+            <div
+              className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
+                isActive
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {info.getValue()}
+            </div>
+          );
+        },
       }),
       assetColumnHelper.accessor("Customer", {
         header: () => "Customer",
@@ -140,6 +156,24 @@ export default function AssetAccountsTable() {
             {info.getValue()}
           </div>
         ),
+      }),
+      assetColumnHelper.accessor("status", {
+        header: () => "Status",
+        cell: (info) => {
+          const status = info.getValue();
+          const isActive = status.toLowerCase() === "active";
+          return (
+            <div
+              className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
+                isActive
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {status}
+            </div>
+          );
+        },
       }),
     ],
     []
