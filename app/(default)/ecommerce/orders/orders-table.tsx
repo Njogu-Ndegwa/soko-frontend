@@ -2,15 +2,10 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { GET_ALL_ASSET_ACCOUNTS } from "@/lib/queries";
 import { useAuth } from "@/lib/auth-context";
+import { ReusableTable } from "@/components/reusable-table"; // Adjust the import path as needed
 
 // Define the type for AssetAccount
 interface AssetAccount {
@@ -33,26 +28,10 @@ interface AssetAccount {
 // Create a column helper for AssetAccount
 const assetColumnHelper = createColumnHelper<AssetAccount>();
 
-// Skeleton loading row
-const SkeletonRow = ({ columns }: { columns: number }) => (
-  <tr>
-    {Array.from({ length: columns }).map((_, index) => (
-      <td
-        key={index}
-        className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
-      >
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-      </td>
-    ))}
-  </tr>
-);
-
 export default function AssetAccountsTable() {
   const { distributorId } = useAuth();
   const [pageIndex, setPageIndex] = React.useState(0);
-  const [searchTerm, setSearchTerm] = React.useState(""); // State for search term
-
-  console.log("the distributor id is", distributorId);
+  const [searchTerm, setSearchTerm] = React.useState("");
 
   const {
     loading: assetLoading,
@@ -92,7 +71,7 @@ export default function AssetAccountsTable() {
 
   // Filter data based on search term
   const filteredData = useMemo(() => {
-    if (!searchTerm) return assetAccounts; // Return all data if no search term
+    if (!searchTerm) return assetAccounts;
 
     return assetAccounts.filter(
       (account: AssetAccount) =>
@@ -191,130 +170,16 @@ export default function AssetAccountsTable() {
     []
   );
 
-  // Create the table instance
-  const assetTable = useReactTable({
-    data: filteredData,
-    columns: assetColumns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    state: { pagination: { pageIndex, pageSize: 15 } },
-    onPaginationChange: (updater) => {
-      setPageIndex((prev) => {
-        const newState =
-          typeof updater === "function"
-            ? updater({
-                pageIndex: prev,
-                pageSize: assetTable.getState().pagination.pageSize,
-              })
-            : updater;
-        return newState.pageIndex;
-      });
-    },
-  });
-
-  if (assetError)
-    return <p>Error fetching asset accounts: {assetError.message}</p>;
-
   return (
-    <>
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl relative overflow-scroll">
-        <header className="px-5 py-4">
-          <h2 className="font-semibold text-gray-800 dark:text-gray-100">
-            Asset Accounts{" "}
-            <span className="text-gray-400 dark:text-gray-500 font-medium">
-              ({assetAccounts.length})
-            </span>
-          </h2>
-          {/* Search Input */}
-          <div className="mt-4 w-full md:w-1/2">
-            <input
-              type="text"
-              placeholder="Search by Account Number, Customer Name, or Phone"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
-          </div>
-        </header>
-        <div>
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full dark:text-gray-300">
-              {/* Table header */}
-              <thead className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-t border-b border-gray-100 dark:border-gray-700/60">
-                {assetTable.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        className={`px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap ${
-                          header.index === 0
-                            ? "sticky left-0 bg-gray-50 dark:bg-gray-900/20 z-20"
-                            : ""
-                        }`}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              {/* Table body */}
-              <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60">
-                {assetLoading
-                  ? // Show skeleton loading rows
-                    Array.from({ length: 5 }).map((_, index) => (
-                      <SkeletonRow key={index} columns={assetColumns.length} />
-                    ))
-                  : // Render actual table rows
-                    assetTable.getRowModel().rows.map((row) => (
-                      <tr key={row.id}>
-                        {row.getVisibleCells().map((cell, index) => (
-                          <td
-                            key={cell.id}
-                            className={`px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap ${
-                              index === 0
-                                ? "sticky left-0 bg-white dark:bg-gray-800 z-10"
-                                : ""
-                            }`}
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      {/* Pagination controls */}
-      <div className="flex flex-end items-center gap-4 my-4 mt-10">
-        <button
-          onClick={() => assetTable.previousPage()}
-          disabled={!assetTable.getCanPreviousPage()}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span>
-          Page {assetTable.getState().pagination.pageIndex + 1} of{" "}
-          {assetTable.getPageCount()}
-        </span>
-        <button
-          onClick={() => assetTable.nextPage()}
-          disabled={!assetTable.getCanNextPage()}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
-    </>
+    <ReusableTable<AssetAccount>
+      columns={assetColumns}
+      data={filteredData}
+      loading={assetLoading}
+      error={assetError}
+      pageIndex={pageIndex}
+      setPageIndex={setPageIndex}
+      searchTerm={searchTerm}
+      onSearchChange={setSearchTerm}
+    />
   );
 }
