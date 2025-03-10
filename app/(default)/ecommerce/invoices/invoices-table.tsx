@@ -56,7 +56,7 @@ export default function InvoicesTable() {
           hashTopInitial: node?.codeGenerator?.hashTopInitial || "N/A",
           hashIndex: node?.codeGenerator?.hashIndex || "N/A",
           lifeCycle: node?.lifeCycle || "N/A",
-          type: node?.type || "N/A",
+          type: node?.itemFirmware?.type || "N/A",
           assetAccount: node?.assetAccount?._id || "N/A",
           description: node?.description || "N/A",
           codeHistory: node?.codeHistory || "N/A",

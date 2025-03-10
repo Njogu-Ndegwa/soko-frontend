@@ -135,16 +135,38 @@ export const GET_ALL_ASSET_ACCOUNTS = gql`
 
 export const GET_ALL_CLIENT_ITEMS = gql`
   query GetAllClientItems {
-    getAllClientItems(queryorder: DESC, assetaccount: false, first: 10) {
+    getAllClientItems(queryorder: DESC, assetaccount: false, first: 20) {
       page {
         edges {
           node {
             _id
             deleteAt
             createdAt
+            updatedAt
             profile
             oemID
+            description
             oemItemID
+            sellerID
+            assetAccount {
+              _id
+              eventId
+            }
+            codeGenerator {
+              _id
+              triggers
+              type
+              actionScope
+              actorName
+              profile
+              hashRoot
+              hashTop
+              hashTopInitial
+              codeCount
+              hashIndex
+              codeReversalCount
+              freeCodeCount
+            }
             itemSKU {
               _id
               deleteStatus
@@ -230,6 +252,10 @@ export const GET_ALL_CLIENT_ITEMS = gql`
               description
             }
             lifeCycle
+            itemFleet {
+              _id
+              fleetName
+            }
           }
         }
       }
