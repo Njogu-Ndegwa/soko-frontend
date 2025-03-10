@@ -196,6 +196,56 @@ function OrdersContent() {
           </button>
         </div>
       </div>
+      {/* More actions */}
+      <div className="sm:flex sm:justify-between sm:items-center mb-5">
+        {/* Left side */}
+        <div className="mb-4 sm:mb-0">
+          <ul className="flex flex-wrap -m-1">
+            <li className="m-1">
+              <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
+                All{" "}
+                <span className="ml-1 text-gray-400 dark:text-gray-500">
+                  67
+                </span>
+              </button>
+            </li>
+            <li className="m-1">
+              <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 shadow-sm bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 transition">
+                Paid{" "}
+                <span className="ml-1 text-gray-400 dark:text-gray-500">
+                  14
+                </span>
+              </button>
+            </li>
+            <li className="m-1">
+              <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 shadow-sm bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 transition">
+                Due{" "}
+                <span className="ml-1 text-gray-400 dark:text-gray-500">
+                  34
+                </span>
+              </button>
+            </li>
+            <li className="m-1">
+              <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 shadow-sm bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 transition">
+                Overdue{" "}
+                <span className="ml-1 text-gray-400 dark:text-gray-500">
+                  19
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        {/* Right side */}
+        <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
+          {/* Delete button */}
+          <DeleteButton />
+          {/* Dropdown */}
+          <DateSelect />
+          {/* Filter button */}
+          <FilterButton align="right" />
+        </div>
+      </div>
 
       {/* Table */}
       <AssetAccountsTable />
