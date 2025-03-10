@@ -132,3 +132,107 @@ export const GET_ALL_ASSET_ACCOUNTS = gql`
     }
   }
 `;
+
+export const GET_ALL_CLIENT_ITEMS = gql`
+  query GetAllClientItems {
+    getAllClientItems(queryorder: DESC, assetaccount: false, first: 10) {
+      page {
+        edges {
+          node {
+            _id
+            deleteAt
+            createdAt
+            profile
+            oemID
+            oemItemID
+            itemSKU {
+              _id
+              deleteStatus
+              deleteAt
+              createdAt
+              updatedAt
+              triggers
+              type
+              actionScope
+              actorName
+              profile
+              skuName
+              productBase
+              mainMediaURL
+              properties {
+                name
+                attributes {
+                  prop
+                  value
+                  meta
+                }
+              }
+              oemDescription
+            }
+            itemBatch {
+              _id
+              deleteStatus
+              deleteAt
+              createdAt
+              updatedAt
+              triggers
+              type
+              actionScope
+              actorName
+              profile
+              batchNumber
+              batchDate
+              description
+              batchState
+              eventMap
+              starting_code
+              secret_key
+              code_gen_type
+              actionProgress
+              itemSKU {
+                _id
+                deleteStatus
+                deleteAt
+                createdAt
+                updatedAt
+                triggers
+                type
+                actionScope
+                actorName
+                profile
+                skuName
+                productBase
+                mainMediaURL
+                oemDescription
+                properties {
+                  name
+                  attributes {
+                    prop
+                    value
+                    meta
+                  }
+                }
+              }
+            }
+            itemFirmware {
+              _id
+              deleteStatus
+              deleteAt
+              createdAt
+              updatedAt
+              triggers
+              type
+              actionScope
+              actorName
+              profile
+              version
+              codeSystem
+              description
+            }
+            lifeCycle
+          }
+        }
+      }
+    }
+  }
+`;

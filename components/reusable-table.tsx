@@ -72,7 +72,7 @@ export function ReusableTable<T>({
           <h2 className="font-semibold text-gray-800 dark:text-gray-100">
             Table Data{" "}
             <span className="text-gray-400 dark:text-gray-500 font-medium">
-              ({data.length})
+              ({data?.length})
             </span>
           </h2>
           {onSearchChange && (
