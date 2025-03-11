@@ -32,7 +32,7 @@ interface AssetItems {
 
 const assetColumnHelper = createColumnHelper<AssetItems>();
 
-export default function InvoicesTable() {
+export default function ItemsTable() {
   const { data: itemsData, loading, error } = useQuery(GET_ALL_CLIENT_ITEMS);
 
   const [pageIndex, setPageIndex] = React.useState(0);
