@@ -134,10 +134,23 @@ export const GET_ALL_ASSET_ACCOUNTS = gql`
 `;
 
 export const GET_ALL_CLIENT_ITEMS = gql`
-  query GetAllClientItems {
-    getAllClientItems(queryorder: DESC, assetaccount: false, first: 20) {
+  query GetAllClientItems(
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
+    getAllClientItems(
+      queryorder: DESC
+      assetaccount: false
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+    ) {
       page {
         edges {
+          cursor
           node {
             _id
             deleteAt
@@ -258,6 +271,15 @@ export const GET_ALL_CLIENT_ITEMS = gql`
             }
           }
         }
+        pageInfo {
+          startCursor
+          endCursor
+          hasPreviousPage
+          hasNextPage
+        }
+      }
+      pageData {
+        count
       }
     }
   }

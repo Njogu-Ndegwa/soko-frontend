@@ -4,8 +4,8 @@ import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { GET_ALL_CLIENT_ITEMS } from "@/lib/queries";
-import { ReusableTable } from "@/components/reusable-table";
-import { useAuth } from "@/lib/auth-context";
+import { ReusableTable } from "@/components/utils/reusable-table";
+import { usePagination } from "@/components/utils/pagination";
 
 interface AssetItems {
   id: string;
@@ -33,10 +33,25 @@ interface AssetItems {
 const assetColumnHelper = createColumnHelper<AssetItems>();
 
 export default function ItemsTable() {
-  const { data: itemsData, loading, error } = useQuery(GET_ALL_CLIENT_ITEMS);
+  const [pageSize, setPageSize] = React.useState(15); // Manage pageSize state
 
-  const [pageIndex, setPageIndex] = React.useState(0);
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const {
+    cursorHistory,
+    currentCursor,
+    itemsPerPage,
+    setItemsPerPage,
+    handleNext,
+    handlePrevious,
+    resetPagination,
+  } = usePagination(10);
+
+  const {
+    data: itemsData,
+    loading,
+    error,
+  } = useQuery(GET_ALL_CLIENT_ITEMS, {
+    variables: { first: itemsPerPage, after: currentCursor },
+  });
 
   const assetItems = useMemo(
     () =>
@@ -66,6 +81,7 @@ export default function ItemsTable() {
       ) || [],
     [itemsData]
   );
+
   console.log("the data is", itemsData);
 
   const itemColumns = useMemo(
@@ -146,27 +162,97 @@ export default function ItemsTable() {
     []
   );
 
+  React.useEffect(() => {
+    resetPagination();
+  }, [itemsPerPage, resetPagination]);
+
+  const calculateStartIndex = () => {
+    if (!itemsData?.getAllClientItems?.pageData) return 0;
+    return cursorHistory.length * itemsPerPage + 1;
+  };
+
+  const calculateEndIndex = () => {
+    if (!itemsData?.getAllClientItems?.pageData) return 0;
+    const startIndex = calculateStartIndex();
+    const currentPageItemCount = itemsData.getAllClientItems.page.edges.length;
+    return startIndex + currentPageItemCount - 1;
+  };
+
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl relative">
-      <header className="px-5 py-4">
-        <h2 className="font-semibold text-gray-800 dark:text-gray-100">
-          Invoices{" "}
-          <span className="text-gray-400 dark:text-gray-500 font-medium">
-            67
-          </span>
-        </h2>
-      </header>
-      <div>
-        <ReusableTable<AssetItems>
-          columns={itemColumns}
-          data={assetItems}
-          loading={loading}
-          error={error}
-          pageIndex={pageIndex}
-          setPageIndex={setPageIndex}
-          searchTerm={searchTerm}
-        />
+    <>
+      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl relative">
+        <header className="px-5 py-4">
+          <h2 className="font-semibold text-gray-800 dark:text-gray-100">
+            Invoices{" "}
+            <span className="text-gray-400 dark:text-gray-500 font-medium">
+              67
+            </span>
+          </h2>
+        </header>
+        <div>
+          <ReusableTable<AssetItems>
+            columns={itemColumns}
+            data={assetItems}
+            loading={loading}
+            error={error}
+            pageIndex={0}
+            setPageIndex={() => {}}
+            searchTerm=""
+            pageSize={pageSize} // Pass pageSize
+            setPageSize={setPageSize} // Pass setPageSize
+          />
+        </div>
       </div>
-    </div>
+      <div className="mt-8 flex justify-between align-items-center">
+        <div className="text-sm text-gray-500 text-center sm:text-left">
+          Showing{" "}
+          <span className="font-medium text-gray-600 dark:text-gray-300">
+            {calculateStartIndex()}
+          </span>{" "}
+          to{" "}
+          <span className="font-medium text-gray-600 dark:text-gray-300">
+            {calculateEndIndex()}
+          </span>{" "}
+          of{" "}
+          <span className="font-medium text-gray-600 dark:text-gray-300">
+            {itemsData?.getAllClientItems?.pageData?.count || 0}
+          </span>{" "}
+          results
+        </div>
+        <div className="flex gap-3 mt-4">
+          <select
+            value={itemsPerPage}
+            onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded"
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={30}>30</option>
+            <option value={40}>40</option>
+          </select>
+          <button
+            onClick={handlePrevious}
+            disabled={cursorHistory.length === 0 || loading}
+            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() =>
+              handleNext(
+                itemsData?.getAllClientItems?.page?.pageInfo?.endCursor
+              )
+            }
+            disabled={
+              !itemsData?.getAllClientItems?.page?.pageInfo?.hasNextPage ||
+              loading
+            }
+            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </>
   );
 }

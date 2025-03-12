@@ -199,11 +199,6 @@ function InvoicesContent() {
 
       {/* Table */}
       <ItemsTable />
-
-      {/* Pagination */}
-      <div className="mt-8">
-        <PaginationClassic />
-      </div>
     </div>
   );
 }

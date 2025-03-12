@@ -31,7 +31,8 @@ interface ReusableTableProps<T> {
   setPageIndex: (index: number) => void;
   searchTerm?: string;
   onSearchChange?: (term: string) => void;
-  pageSize?: number;
+  pageSize: number; // Add pageSize as a prop
+  setPageSize: (size: number) => void; // Add setPageSize as a prop
 }
 
 export function ReusableTable<T>({
@@ -43,7 +44,8 @@ export function ReusableTable<T>({
   setPageIndex,
   searchTerm,
   onSearchChange,
-  pageSize = 15,
+  pageSize, // Destructure pageSize
+  setPageSize, // Destructure setPageSize
 }: ReusableTableProps<T>) {
   const table = useReactTable({
     data,
@@ -62,6 +64,10 @@ export function ReusableTable<T>({
       setPageIndex(newState.pageIndex);
     },
   });
+
+  React.useEffect(() => {
+    setPageIndex(0);
+  }, [pageSize]);
 
   if (error) return <p>Error: {error.message}</p>;
 
@@ -139,26 +145,6 @@ export function ReusableTable<T>({
             </table>
           </div>
         </div>
-      </div>
-      <div className="flex flex-end items-center gap-4 my-4 mt-10">
-        <button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span>
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
-        </span>
-        <button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
-        >
-          Next
-        </button>
       </div>
     </>
   );

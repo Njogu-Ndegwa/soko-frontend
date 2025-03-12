@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { GET_ALL_ASSET_ACCOUNTS } from "@/lib/queries";
 import { useAuth } from "@/lib/auth-context";
-import { ReusableTable } from "@/components/reusable-table"; // Adjust the import path as needed
+import { ReusableTable } from "@/components/utils/reusable-table"; // Adjust the import path as needed
 
 // Define the type for AssetAccount
 interface AssetAccount {
