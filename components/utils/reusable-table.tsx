@@ -76,7 +76,7 @@ export function ReusableTable<T>({
       <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl relative overflow-scroll">
         <header className="px-5 py-4">
           <h2 className="font-semibold text-gray-800 dark:text-gray-100">
-            Table Data{" "}
+            items
             <span className="text-gray-400 dark:text-gray-500 font-medium">
               ({data?.length})
             </span>
