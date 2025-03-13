@@ -33,8 +33,14 @@ interface AssetItems {
 const assetColumnHelper = createColumnHelper<AssetItems>();
 
 export default function ItemsTable() {
-  const { currentCursor, cursorHistory, handleNext, handlePrevious } =
-    usePagination();
+  const {
+    currentCursor,
+    cursorHistory,
+    handleNext,
+    handlePrevious,
+    itemsPerPage,
+    setItemsPerPage,
+  } = usePagination();
   const {
     data: itemsData,
     loading,
@@ -153,6 +159,18 @@ export default function ItemsTable() {
     []
   );
 
+  const calculateStartIndex = () => {
+    if (!itemsData?.getAllClientItems?.pageData) return 0;
+    return cursorHistory.length * itemsPerPage + 1;
+  };
+
+  const calculateEndIndex = () => {
+    if (!itemsData?.getAllClientItems?.pageData) return 0;
+    const startIndex = calculateStartIndex();
+    const currentPageItemCount = itemsData.getAllClientItems.page.edges.length;
+    return startIndex + currentPageItemCount - 1;
+  };
+
   return (
     <>
       <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl relative">
@@ -178,26 +196,46 @@ export default function ItemsTable() {
           />
         </div>
       </div>
-      <div className="flex  gap-3 mt-4">
-        <button
-          onClick={handlePrevious}
-          disabled={cursorHistory.length === 0 || loading}
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <button
-          onClick={() =>
-            handleNext(itemsData?.getAllClientItems?.page?.pageInfo?.endCursor)
-          }
-          disabled={
-            !itemsData?.getAllClientItems?.page?.pageInfo?.hasNextPage ||
-            loading
-          }
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-        >
-          Next
-        </button>
+      <div className="flex flex-row items-center justify-between mt-4">
+        <div className="text-sm text-gray-500 text-center sm:text-left">
+          Showing{" "}
+          <span className="font-medium text-gray-600 dark:text-gray-300">
+            {calculateStartIndex()}
+          </span>{" "}
+          to{" "}
+          <span className="font-medium text-gray-600 dark:text-gray-300">
+            {calculateEndIndex()}
+          </span>{" "}
+          of{" "}
+          <span className="font-medium text-gray-600 dark:text-gray-300">
+            {itemsData?.getAllClientItems?.pageData?.count || 0}
+          </span>{" "}
+          results
+        </div>
+
+        <div className="flex  gap-3 mt-4">
+          <button
+            onClick={handlePrevious}
+            disabled={cursorHistory.length === 0 || loading}
+            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() =>
+              handleNext(
+                itemsData?.getAllClientItems?.page?.pageInfo?.endCursor
+              )
+            }
+            disabled={
+              !itemsData?.getAllClientItems?.page?.pageInfo?.hasNextPage ||
+              loading
+            }
+            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </>
   );
