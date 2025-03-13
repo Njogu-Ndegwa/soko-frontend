@@ -1,15 +1,15 @@
 import React from "react";
 
 export const usePagination = (initialItemsPerPage: number = 10) => {
-  const [cursorHistory, setCursorHistory] = React.useState<string[]>([]); // Track cursor history
+  const [cursorHistory, setCursorHistory] = React.useState<(string | null)[]>(
+    []
+  ); // Track cursor history
   const [currentCursor, setCurrentCursor] = React.useState<string | null>(null); // Current cursor
   const [itemsPerPage, setItemsPerPage] = React.useState(initialItemsPerPage);
 
-  const handleNext = (endCursor: string | null) => {
-    if (endCursor) {
-      setCursorHistory((prev) => [...prev, currentCursor || ""]);
-      setCurrentCursor(endCursor);
-    }
+  const handleNext = (newCursor: string) => {
+    setCursorHistory([...cursorHistory, currentCursor]);
+    setCurrentCursor(newCursor);
   };
 
   const handlePrevious = () => {
@@ -20,10 +20,10 @@ export const usePagination = (initialItemsPerPage: number = 10) => {
     }
   };
 
-  const resetPagination = () => {
+  const resetPagination = React.useCallback(() => {
     setCursorHistory([]);
     setCurrentCursor(null);
-  };
+  }, [setCursorHistory, setCurrentCursor]);
 
   return {
     cursorHistory,

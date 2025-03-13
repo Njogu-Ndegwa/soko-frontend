@@ -33,24 +33,15 @@ interface AssetItems {
 const assetColumnHelper = createColumnHelper<AssetItems>();
 
 export default function ItemsTable() {
-  const [pageSize, setPageSize] = React.useState(15); // Manage pageSize state
-
-  const {
-    cursorHistory,
-    currentCursor,
-    itemsPerPage,
-    setItemsPerPage,
-    handleNext,
-    handlePrevious,
-    resetPagination,
-  } = usePagination(10);
-
+  const { currentCursor, cursorHistory, handleNext, handlePrevious } =
+    usePagination();
   const {
     data: itemsData,
     loading,
     error,
+    fetchMore,
   } = useQuery(GET_ALL_CLIENT_ITEMS, {
-    variables: { first: itemsPerPage, after: currentCursor },
+    variables: { first: 10, after: currentCursor },
   });
 
   const assetItems = useMemo(
@@ -162,22 +153,6 @@ export default function ItemsTable() {
     []
   );
 
-  React.useEffect(() => {
-    resetPagination();
-  }, [itemsPerPage, resetPagination]);
-
-  const calculateStartIndex = () => {
-    if (!itemsData?.getAllClientItems?.pageData) return 0;
-    return cursorHistory.length * itemsPerPage + 1;
-  };
-
-  const calculateEndIndex = () => {
-    if (!itemsData?.getAllClientItems?.pageData) return 0;
-    const startIndex = calculateStartIndex();
-    const currentPageItemCount = itemsData.getAllClientItems.page.edges.length;
-    return startIndex + currentPageItemCount - 1;
-  };
-
   return (
     <>
       <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl relative">
@@ -198,60 +173,31 @@ export default function ItemsTable() {
             pageIndex={0}
             setPageIndex={() => {}}
             searchTerm=""
-            pageSize={pageSize} // Pass pageSize
-            setPageSize={setPageSize} // Pass setPageSize
+            pageSize={10}
+            setPageSize={() => {}}
           />
         </div>
       </div>
-      <div className="mt-8 flex justify-between align-items-center">
-        <div className="text-sm text-gray-500 text-center sm:text-left">
-          Showing{" "}
-          <span className="font-medium text-gray-600 dark:text-gray-300">
-            {calculateStartIndex()}
-          </span>{" "}
-          to{" "}
-          <span className="font-medium text-gray-600 dark:text-gray-300">
-            {calculateEndIndex()}
-          </span>{" "}
-          of{" "}
-          <span className="font-medium text-gray-600 dark:text-gray-300">
-            {itemsData?.getAllClientItems?.pageData?.count || 0}
-          </span>{" "}
-          results
-        </div>
-        <div className="flex gap-3 mt-4">
-          <select
-            value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="px-4 py-2 bg-gray-200 text-gray-800 rounded"
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={30}>30</option>
-            <option value={40}>40</option>
-          </select>
-          <button
-            onClick={handlePrevious}
-            disabled={cursorHistory.length === 0 || loading}
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <button
-            onClick={() =>
-              handleNext(
-                itemsData?.getAllClientItems?.page?.pageInfo?.endCursor
-              )
-            }
-            disabled={
-              !itemsData?.getAllClientItems?.page?.pageInfo?.hasNextPage ||
-              loading
-            }
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+      <div className="flex  gap-3 mt-4">
+        <button
+          onClick={handlePrevious}
+          disabled={cursorHistory.length === 0 || loading}
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <button
+          onClick={() =>
+            handleNext(itemsData?.getAllClientItems?.page?.pageInfo?.endCursor)
+          }
+          disabled={
+            !itemsData?.getAllClientItems?.page?.pageInfo?.hasNextPage ||
+            loading
+          }
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </>
   );
