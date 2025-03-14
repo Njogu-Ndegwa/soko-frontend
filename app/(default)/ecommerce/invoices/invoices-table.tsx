@@ -213,7 +213,7 @@ export default function ItemsTable() {
               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
                 All{" "}
                 <span className="ml-1 text-gray-400 dark:text-gray-500">
-                  67
+                  {itemsData?.getAllClientItems?.pageData?.count || 0}
                 </span>
               </button>
             </li>
