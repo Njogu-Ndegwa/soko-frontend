@@ -1,5 +1,4 @@
 import React from "react";
-import { debounce } from "lodash";
 
 interface SearchFormProps {
   placeholder: string;
@@ -12,14 +11,6 @@ export const SearchForm: React.FC<SearchFormProps> = ({
   searchTerm,
   setSearchTerm,
 }) => {
-  // Debounce the search term update
-  const handleSearch = React.useCallback(
-    debounce((term: string) => {
-      setSearchTerm(term);
-    }, 500), // 300ms debounce delay
-    [] // Dependency array
-  );
-
   return (
     <form className="relative">
       <label htmlFor="action-search" className="sr-only">
@@ -31,7 +22,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({
         type="search"
         placeholder={placeholder}
         value={searchTerm}
-        onChange={(e) => handleSearch(e.target.value)}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
       <button
         className="absolute inset-0 right-auto group"

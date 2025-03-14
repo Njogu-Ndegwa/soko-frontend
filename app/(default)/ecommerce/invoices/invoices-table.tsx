@@ -12,7 +12,7 @@ import DateSelect from "@/components/date-select";
 import FilterButton from "@/components/dropdown-filter";
 import { SearchForm } from "@/components/search-form";
 import moment from "moment";
-import { searchData } from "@/components/utils/search";
+import { useDebounce } from "use-debounce";
 
 interface AssetItems {
   id: string;
@@ -45,6 +45,7 @@ const formatDate = (dateString: string) => {
 
 export default function ItemsTable() {
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 500); // 500ms debounce
 
   const {
     currentCursor,
@@ -63,7 +64,7 @@ export default function ItemsTable() {
     variables: {
       first: itemsPerPage,
       after: currentCursor,
-      search: searchTerm,
+      search: debouncedSearchTerm,
     },
   });
 
@@ -227,10 +228,6 @@ export default function ItemsTable() {
     const currentPageItemCount = itemsData.getAllClientItems.page.edges.length;
     return startIndex + currentPageItemCount - 1;
   };
-
-  const searchableFields = ["accountNumber", "oemItemID"];
-
-  const filteredData = searchData(assetItems, searchTerm, searchableFields);
 
   return (
     <>
