@@ -10,8 +10,9 @@ import { usePagination } from "@/components/utils/pagination";
 import DeleteButton from "@/components/delete-button";
 import DateSelect from "@/components/date-select";
 import FilterButton from "@/components/dropdown-filter";
-import SearchForm from "@/components/search-form";
+import { SearchForm } from "@/components/search-form";
 import moment from "moment";
+import { searchData } from "@/components/utils/search";
 
 interface AssetItems {
   id: string;
@@ -43,6 +44,8 @@ const formatDate = (dateString: string) => {
 };
 
 export default function ItemsTable() {
+  const [searchTerm, setSearchTerm] = React.useState("");
+
   const {
     currentCursor,
     cursorHistory,
@@ -57,7 +60,11 @@ export default function ItemsTable() {
     error,
     fetchMore,
   } = useQuery(GET_ALL_CLIENT_ITEMS, {
-    variables: { first: 10, after: currentCursor },
+    variables: {
+      first: itemsPerPage,
+      after: currentCursor,
+      search: searchTerm,
+    },
   });
 
   const assetItems = useMemo(
@@ -221,6 +228,10 @@ export default function ItemsTable() {
     return startIndex + currentPageItemCount - 1;
   };
 
+  const searchableFields = ["accountNumber", "oemItemID"];
+
+  const filteredData = searchData(assetItems, searchTerm, searchableFields);
+
   return (
     <>
       <div className="sm:flex sm:justify-between sm:items-center mb-5">
@@ -234,7 +245,12 @@ export default function ItemsTable() {
         {/* Right: Actions */}
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
           {/* Search form */}
-          <SearchForm placeholder="Search by invoice ID…" />
+          <SearchForm
+            placeholder="Search by OEM Item ID or Account Number…"
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+          />
+
           {/* Create invoice button */}
           <button className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white">
             <svg
@@ -309,7 +325,7 @@ export default function ItemsTable() {
             error={error}
             pageIndex={0}
             setPageIndex={() => {}}
-            searchTerm=""
+            searchTerm={searchTerm}
             pageSize={10}
             setPageSize={() => {}}
           />

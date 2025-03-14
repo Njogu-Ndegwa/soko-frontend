@@ -139,6 +139,7 @@ export const GET_ALL_CLIENT_ITEMS = gql`
     $after: String
     $last: Int
     $before: String
+    $search: String
   ) {
     getAllClientItems(
       queryorder: DESC
@@ -147,6 +148,7 @@ export const GET_ALL_CLIENT_ITEMS = gql`
       after: $after
       last: $last
       before: $before
+      search: $search
     ) {
       page {
         edges {
