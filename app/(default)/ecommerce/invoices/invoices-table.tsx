@@ -11,6 +11,7 @@ import DeleteButton from "@/components/delete-button";
 import DateSelect from "@/components/date-select";
 import FilterButton from "@/components/dropdown-filter";
 import SearchForm from "@/components/search-form";
+import moment from "moment";
 
 interface AssetItems {
   id: string;
@@ -36,6 +37,10 @@ interface AssetItems {
 }
 
 const assetColumnHelper = createColumnHelper<AssetItems>();
+
+const formatDate = (dateString: string) => {
+  return moment(dateString).format("MMMM D, YYYY, hh:mm:ss A"); // Output: "March 5, 2025, 07:50:24 AM"
+};
 
 export default function ItemsTable() {
   const {
@@ -77,8 +82,12 @@ export default function ItemsTable() {
           assetAccount: node?.assetAccount?._id || "N/A",
           description: node?.description || "N/A",
           codeHistory: node?.codeHistory || "N/A",
-          createdAt: node?.createdAt || "N/A",
-          updatedAt: node?.updatedAt || "N/A",
+          createdAt: node?.createdAt
+            ? formatDate(node.createdAt) // Format the createdAt date
+            : "N/A",
+          updatedAt: node?.updatedAt
+            ? formatDate(node.updatedAt) // Format the updatedAt date
+            : "N/A",
         })
       ) || [],
     [itemsData]
