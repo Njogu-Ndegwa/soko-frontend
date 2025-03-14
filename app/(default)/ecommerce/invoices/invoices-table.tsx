@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -87,6 +88,42 @@ export default function ItemsTable() {
 
   const itemColumns = useMemo(
     () => [
+      assetColumnHelper.display({
+        id: "select",
+        header: ({ table }) => (
+          <div className="inline-flex items-center">
+            <label className="inline-flex">
+              <span className="sr-only">Select all</span>
+              <input
+                type="checkbox"
+                checked={table.getIsAllRowsSelected()}
+                onChange={table.getToggleAllRowsSelectedHandler()}
+              />
+            </label>
+            <span className="ml-2 font-semibold">Actions</span>
+          </div>
+        ),
+        cell: ({ row }) => (
+          <div className="inline-flex items-center">
+            <label className="inline-flex">
+              <span className="sr-only">Select</span>
+              <input
+                type="checkbox"
+                checked={row.getIsSelected()}
+                onChange={row.getToggleSelectedHandler()}
+              />
+            </label>
+            {/* Edit Icon */}
+            <button className="ml-2 text-blue-500 hover:text-blue-700">
+              <FaEdit />
+            </button>
+            {/* Delete Icon */}
+            <button className="ml-2 text-red-500 hover:text-red-700">
+              <FaTrash />
+            </button>
+          </div>
+        ),
+      }),
       assetColumnHelper.accessor("oemItemId", {
         header: () => "OEM Item ID",
         cell: (info) => info.getValue(),

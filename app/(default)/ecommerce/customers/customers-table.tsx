@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+
 import Image, { StaticImageData } from "next/image";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
