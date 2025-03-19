@@ -81,17 +81,6 @@ export function ReusableTable<T>({
               ({data?.length})
             </span>
           </h2>
-          {onSearchChange && (
-            <div className="mt-4 w-full md:w-1/2">
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              />
-            </div>
-          )}
         </header>
         <div>
           <div className="overflow-x-auto">

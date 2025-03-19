@@ -35,8 +35,22 @@ export const GET_ALL_CLIENT_CUSTOMERS = gql`
 `;
 
 export const GET_ALL_ASSET_ACCOUNTS = gql`
-  query GetAllAssetAccounts($clientId: ID!) {
-    getAllAssetAccountsForClient(clientId: $clientId, first: 100) {
+  query GetAllAssetAccounts(
+    $clientId: ID!
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+    $search: String
+  ) {
+    getAllAssetAccountsForClient(
+      clientId: $clientId
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      search: $search
+    ) {
       page {
         edges {
           cursor
@@ -128,6 +142,15 @@ export const GET_ALL_ASSET_ACCOUNTS = gql`
             }
           }
         }
+        pageInfo {
+          startCursor
+          endCursor
+          hasPreviousPage
+          hasNextPage
+        }
+      }
+      pageData {
+        count
       }
     }
   }
