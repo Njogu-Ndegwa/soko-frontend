@@ -64,46 +64,23 @@ export const GET_ALL_ASSET_ACCOUNTS = gql`
             eventId
             asset {
               _id
-              deleteStatus
-              deleteAt
-              createdAt
-              updatedAt
-              triggers
-              type
-              actionScope
-              actorName
-              profile
-              idType
-              idString
-              description
-              creationDate
-              oemID
               oemItemID
-              sellerID
               sellerItemID
-              lifeCycle
-              codeGenUsed
-              legacyItemId
-              code
-              assetAccount {
+              codeGenerator {
+                _id
+                type
+              }
+              itemFleet {
                 _id
               }
             }
             manager {
               _id
-              deleteStatus
-              deleteAt
-              createdAt
-              updatedAt
-              type
-              name
-              description
-              activeSubRolePermission
-              mqtt_password
-              distributorMQTTPort
-              distributorGrafanaPort
-              distributorInfluxDBPort
-              delegateAuthorityToServicer
+              orgContactPerson {
+                _id
+                name
+                type
+              }
             }
             credit {
               currency
@@ -112,15 +89,8 @@ export const GET_ALL_ASSET_ACCOUNTS = gql`
               accountStatus
               owner {
                 _id
-                deleteStatus
-                deleteAt
-                createdAt
-                updatedAt
                 type
                 name
-                description
-                agentId
-                gender
                 address {
                   unit
                   street

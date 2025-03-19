@@ -30,6 +30,14 @@ interface AssetAccount {
   latitude: string;
   longitude: string;
   status: string;
+  balance: string;
+  currency: string;
+  oemItemid: string;
+  itemId: string;
+  fleetId: string;
+  manager: string;
+  dateCreated: string;
+  lastUpdated: string;
 }
 
 // Create a column helper for AssetAccount
@@ -72,7 +80,13 @@ export default function AssetAccountsTable() {
           accountNumber: node?.asset?.sellerItemID || "N/A",
           Customer: node?.credit?.owner?.name || "N/A",
           phone: node?.credit?.owner?.contact?.phone || "N/A",
+          balance: node?.credit?.balance || "N/A",
+          currency: node?.credit?.currency || "N/A",
           unit: node?.asset?.unit || "N/A",
+          oemItemid: node?.asset?.oemItemID || "N/A",
+          itemId: node?.asset?._id || "N/A",
+          manager: node?.manager?._id || "N/A",
+          fleetId: node?.asset?.itemFleet?._id || "N/A",
           street: node?.credit?.owner?.address?.street || "N/A",
           city: node?.credit?.owner?.address?.city || "N/A",
           srpc: node?.credit?.owner?.address?.srpc || "N/A",
@@ -201,8 +215,32 @@ export default function AssetAccountsTable() {
         header: () => "Longitude",
         cell: (info) => info.getValue(),
       }),
+      assetColumnHelper.accessor("balance", {
+        header: () => "Balance",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("currency", {
+        header: () => "Currency",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("oemItemid", {
+        header: () => "Item Oem Id",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("itemId", {
+        header: () => "Item Id",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("fleetId", {
+        header: () => "Fleet Id",
+        cell: (info) => info.getValue(),
+      }),
       assetColumnHelper.accessor("accountStage", {
         header: () => "Account Stage",
+        cell: (info) => info.getValue(),
+      }),
+      assetColumnHelper.accessor("manager", {
+        header: () => "Manager",
         cell: (info) => info.getValue(),
       }),
       assetColumnHelper.accessor("status", {
@@ -222,6 +260,10 @@ export default function AssetAccountsTable() {
             </div>
           );
         },
+      }),
+      assetColumnHelper.accessor("id", {
+        header: () => "Id",
+        cell: (info) => info.getValue(),
       }),
     ],
     []
