@@ -279,3 +279,35 @@ export const GET_ALL_CLIENT_ITEMS = gql`
     }
   }
 `;
+
+export const GET_SPECIFIC_ASSET_ACCOUNT = gql`
+  query GetSpecificAssetAccount($id: ID!) {
+    getSpecificAssetAccount(id: $id) {
+      _id
+      eventId
+      asset {
+        _id
+        sellerItemID
+        oemItemID
+        codeGenerator {
+          _id
+        }
+      }
+      meta {
+        name
+        value
+      }
+      manager {
+        _id
+        name
+        orgContactPerson {
+          _id
+          name
+        }
+      }
+      user {
+        _id
+      }
+    }
+  }
+`;
