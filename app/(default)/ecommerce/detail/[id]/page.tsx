@@ -28,54 +28,61 @@ export default function AssetAccountDetail() {
   const assetAccount = data?.getSpecificAssetAccount;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
-      <div className="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-6">
+      <div
+        className="mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden"
+        style={{ maxWidth: "90%", marginTop: "5vh" }}
+      >
         {/* Header with Back Button */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center space-x-4">
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex items-center space-x-4">
           <button
             onClick={() => router.back()}
-            className="p-2 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 text-blue-600 dark:text-blue-400"
+            className="p-2 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-lg transition-colors text-blue-600 dark:text-blue-400"
           >
             <FaArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">
             Asset Account Details
           </h1>
         </div>
 
-        <div className="flex">
-          {/* Vertical Tabs */}
-          <div className="w-64 bg-blue-50 dark:bg-gray-700 p-4">
-            <nav className="space-y-2">
-              {["Basic Info", "Technical", "Management", "Metadata"].map(
-                (tab, index) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(index)}
-                    className={`w-full px-4 py-3 text-left rounded-lg transition-colors duration-200 ${
-                      activeTab === index
-                        ? "bg-blue-600 text-white shadow-md"
-                        : "text-gray-600 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                )
-              )}
+        <div className="flex flex-col md:flex-row">
+          {/* Vertical Tabs - Responsive Layout */}
+          <div className="w-full md:w-64 bg-blue-50 dark:bg-gray-700 p-4 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-600">
+            <nav className="flex md:flex-col gap-2 overflow-x-auto">
+              {[
+                "Pair User With Asset",
+                "Payment Schedule",
+                "Payment and Codes",
+                "Review Completion Plan",
+                "activate account",
+              ].map((tab, index) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(index)}
+                  className={`min-w-max md:w-full px-4 py-3 text-left rounded-lg transition-colors duration-200 ${
+                    activeTab === index
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
             </nav>
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 p-8">
+          <div className="flex-1 p-4 sm:p-6 md:p-8">
             {activeTab === 0 && (
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                  <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">
                       Basic Information
                     </h2>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <DetailItem
                       label="OEM Item ID"
                       value={assetAccount.asset.oemItemID}
@@ -100,9 +107,9 @@ export default function AssetAccountDetail() {
             )}
 
             {activeTab !== 0 && (
-              <div className="h-full flex items-center justify-center">
-                <div className="text-center p-8">
-                  <p className="text-gray-400 dark:text-gray-500 text-lg">
+              <div className="h-full flex items-center justify-center min-h-[200px]">
+                <div className="text-center p-4">
+                  <p className="text-gray-400 dark:text-gray-500 text-base sm:text-lg">
                     {
                       [
                         "Technical Details",
@@ -134,7 +141,7 @@ const DetailItem = ({
     <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
       {label}
     </p>
-    <p className="text-lg text-gray-800 dark:text-gray-200 font-semibold">
+    <p className="text-base sm:text-lg text-gray-800 dark:text-gray-200 font-semibold break-words">
       {value || "N/A"}
     </p>
   </div>
