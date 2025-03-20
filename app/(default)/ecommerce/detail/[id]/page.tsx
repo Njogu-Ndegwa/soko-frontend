@@ -105,7 +105,143 @@ export default function AssetAccountDetail() {
                 </div>
               </div>
             )}
+            {activeTab === 1 && (
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <div className="pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">
+                      Payment Schedule Configuration
+                    </h2>
+                  </div>
+                  <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    {/* Plan Information */}
+                    <div className="space-y-1">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Plan Name
+                      </label>
+                      <input
+                        type="text"
+                        name="planName"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
 
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Plan Description
+                      </label>
+                      <textarea
+                        name="planDescription"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                        rows={3}
+                      />
+                    </div>
+
+                    {/* Upfront Payment Section */}
+                    <div className="space-y-1 sm:col-span-2">
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          name="useUpfront"
+                          className="form-checkbox h-4 w-4"
+                        />
+                        <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                          Use Upfront Payment
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Upfront Price
+                      </label>
+                      <input
+                        type="number"
+                        name="upfrontPrice"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Freecode Price
+                      </label>
+                      <input
+                        type="number"
+                        name="freecodePrice"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
+
+                    {/* Payment Details */}
+                    <div className="space-y-1">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Days to Cutoff
+                      </label>
+                      <input
+                        type="number"
+                        name="daysToCutOff"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Minimum Payment Amount
+                      </label>
+                      <input
+                        type="number"
+                        name="minimumPaymentAmount"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Upfront Days Included
+                      </label>
+                      <input
+                        type="number"
+                        name="upfrontDaysIncluded"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Hour Price
+                      </label>
+                      <input
+                        type="number"
+                        name="hourPrice"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        Expected Paid
+                      </label>
+                      <input
+                        type="number"
+                        name="expectedPaid"
+                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
+
+                    {/* Save Button */}
+                    <div className="sm:col-span-2 pt-6">
+                      <button
+                        type="submit"
+                        className="w-full sm:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
             {activeTab !== 0 && (
               <div className="h-full flex items-center justify-center min-h-[200px]">
                 <div className="text-center p-4">
