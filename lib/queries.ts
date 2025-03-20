@@ -285,6 +285,17 @@ export const GET_SPECIFIC_ASSET_ACCOUNT = gql`
     getSpecificAssetAccount(id: $id) {
       _id
       eventId
+      credit {
+        balance
+        currency
+        owner {
+          _id
+          name
+          contact {
+            phone
+          }
+        }
+      }
       asset {
         _id
         sellerItemID
