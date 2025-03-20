@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GET_SPECIFIC_ASSET_ACCOUNT } from "@/lib/queries";
 import { useParams, useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
+import LoaderSkeleton from "@/components/utils/loaderSkeleton";
 
 export default function AssetAccountDetail() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ export default function AssetAccountDetail() {
 
   console.log(" the data is", data);
 
-  if (loading) return <div className="text-center p-8">Loading...</div>;
+  if (loading) return <LoaderSkeleton />;
   if (error)
     return (
       <div className="text-center p-8 text-red-500">Error: {error.message}</div>
