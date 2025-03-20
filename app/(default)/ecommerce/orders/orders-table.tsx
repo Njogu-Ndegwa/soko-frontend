@@ -13,6 +13,7 @@ import { SearchForm } from "@/components/search-form";
 import DeleteButton from "@/components/delete-button";
 import DateSelect from "@/components/date-select";
 import FilterButton from "@/components/dropdown-filter";
+import { useRouter } from "next/navigation";
 
 // Define the type for AssetAccount
 interface AssetAccount {
@@ -44,6 +45,7 @@ interface AssetAccount {
 const assetColumnHelper = createColumnHelper<AssetAccount>();
 
 export default function AssetAccountsTable() {
+  const router = useRouter();
   const { distributorId } = useAuth();
   const [pageIndex, setPageIndex] = React.useState(0);
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -147,7 +149,12 @@ export default function AssetAccountsTable() {
               />
             </label>
             {/* Edit Icon */}
-            <button className="ml-2 text-blue-500 hover:text-blue-700">
+            <button
+              className="ml-2 text-blue-500 hover:text-blue-700"
+              onClick={() =>
+                router.push(`/ecommerce/detail/${row.original.id}`)
+              }
+            >
               <FaEdit />
             </button>
             {/* Delete Icon */}
