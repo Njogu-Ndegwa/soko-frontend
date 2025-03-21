@@ -323,7 +323,7 @@ export const GET_SPECIFIC_ASSET_ACCOUNT = gql`
   }
 `;
 
-const GET_ALL_PAY_PLAN_TEMPLATES = gql`
+export const GET_ALL_PAY_PLAN_TEMPLATES = gql`
   query GetAllPayPlanTemplates {
     getAllPayPlanTemplates {
       page {
@@ -351,8 +351,6 @@ const GET_ALL_PAY_PLAN_TEMPLATES = gql`
       }
       pageData {
         count
-        limit
-        offset
       }
     }
   }

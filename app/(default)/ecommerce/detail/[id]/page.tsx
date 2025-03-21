@@ -5,29 +5,46 @@ import { GET_SPECIFIC_ASSET_ACCOUNT } from "@/lib/queries";
 import { useParams, useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 import LoaderSkeleton from "@/components/utils/loaderSkeleton";
+import { GET_ALL_PAY_PLAN_TEMPLATES } from "@/lib/queries";
+import { first } from "lodash";
 
 export default function AssetAccountDetail() {
   const { id } = useParams();
   const router = useRouter();
 
+  const [selectedPlanId, setSelectedPlanId] = React.useState<string | null>(
+    null
+  );
+
   const [activeTab, setActiveTab] = React.useState(0);
 
   console.log("the id is ....", id);
-
+  const {
+    loading: paymentLoading,
+    error: paymentError,
+    data: paymentData,
+  } = useQuery(GET_ALL_PAY_PLAN_TEMPLATES);
   const { loading, error, data } = useQuery(GET_SPECIFIC_ASSET_ACCOUNT, {
     variables: { id },
   });
 
-  console.log(" the data is", data);
+  //console.log(" the data is", data);
 
-  if (loading) return <LoaderSkeleton />;
-  if (error)
+  if (loading || paymentLoading) return <LoaderSkeleton />;
+  if (error || paymentError)
     return (
-      <div className="text-center p-8 text-red-500">Error: {error.message}</div>
+      <div className="text-center p-8 text-red-500">
+        Error: {error?.message || paymentError?.message}
+      </div>
     );
 
   const assetAccount = data?.getSpecificAssetAccount;
+  const paymentPlans = paymentData?.getAllPayPlanTemplates?.page?.edges;
+  const selectedPlan = paymentPlans?.find(
+    (p: { node: { _id: string } }) => p.node._id === selectedPlanId
+  )?.node;
 
+  console.log("the payment plans are", paymentPlans);
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-6">
       <div
@@ -114,132 +131,196 @@ export default function AssetAccountDetail() {
                       Payment Schedule Configuration
                     </h2>
                   </div>
-                  <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                    {/* Plan Information */}
-                    <div className="space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Plan Name
-                      </label>
-                      <input
-                        type="text"
-                        name="planName"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                      />
-                    </div>
 
-                    <div className="space-y-1 sm:col-span-2">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Plan Description
-                      </label>
-                      <textarea
-                        name="planDescription"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                        rows={3}
-                      />
-                    </div>
+                  {/* Payment Plan Selector */}
+                  <div className="space-y-1 sm:col-span-2">
+                    <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                      Select Payment Plan
+                    </label>
+                    <select
+                      className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                      onChange={(e) => setSelectedPlanId(e.target.value)}
+                      value={selectedPlanId || ""}
+                    >
+                      <option value="">Select a payment plan</option>
+                      {paymentPlans?.map(
+                        ({
+                          node,
+                        }: {
+                          node: { _id: string; planName: string };
+                        }) => (
+                          <option key={node._id} value={node._id}>
+                            {node.planName}
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </div>
 
-                    {/* Upfront Payment Section */}
-                    <div className="space-y-1 sm:col-span-2">
-                      <label className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          name="useUpfront"
-                          className="form-checkbox h-4 w-4"
-                        />
-                        <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                          Use Upfront Payment
-                        </span>
-                      </label>
-                    </div>
+                  {selectedPlan && (
+                    <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                      {(() => {
+                        const planDetails = selectedPlan.planDetails.reduce(
+                          (
+                            acc: any,
+                            detail: { pName: string; pValue: string }
+                          ) => {
+                            const keyMap: { [key: string]: string } = {
+                              upFrontPrice: "upfrontPrice",
+                              uFrontDaysIncluded: "upfrontDaysIncluded",
+                              daysToCutOff: "daysToCutOff",
+                              minimumPaymentAmount: "minimumPaymentAmount",
+                              hourPrice: "hourPrice",
+                              expectedPaid: "expectedPaid",
+                            };
+                            acc[keyMap[detail.pName] || detail.pName] =
+                              detail.pValue;
+                            return acc;
+                          },
+                          {}
+                        );
 
-                    <div className="space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Upfront Price
-                      </label>
-                      <input
-                        type="number"
-                        name="upfrontPrice"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                      />
-                    </div>
+                        return (
+                          <>
+                            {/* Plan Information */}
+                            <div className="space-y-1">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Plan Name
+                              </label>
+                              <input
+                                type="text"
+                                defaultValue={selectedPlan.planName}
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                              />
+                            </div>
 
-                    <div className="space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Freecode Price
-                      </label>
-                      <input
-                        type="number"
-                        name="freecodePrice"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                      />
-                    </div>
+                            <div className="space-y-1 sm:col-span-2">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Plan Description
+                              </label>
+                              <textarea
+                                defaultValue={selectedPlan.planDescription}
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                                rows={3}
+                              />
+                            </div>
 
-                    {/* Payment Details */}
-                    <div className="space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Days to Cutoff
-                      </label>
-                      <input
-                        type="number"
-                        name="daysToCutOff"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                      />
-                    </div>
+                            {/* Upfront Payment Section */}
+                            <div className="space-y-1 sm:col-span-2">
+                              <label className="flex items-center space-x-2">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedPlan.useUpfront || false}
+                                  className="form-checkbox h-4 w-4"
+                                />
+                                <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                  Use Upfront Payment
+                                </span>
+                              </label>
+                            </div>
 
-                    <div className="space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Minimum Payment Amount
-                      </label>
-                      <input
-                        type="number"
-                        name="minimumPaymentAmount"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                      />
-                    </div>
+                            {/* Payment Details Grid */}
+                            <div className="space-y-1">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Upfront Price
+                              </label>
+                              <input
+                                type="number"
+                                defaultValue={planDetails.upfrontPrice || ""}
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                              />
+                            </div>
 
-                    <div className="space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Upfront Days Included
-                      </label>
-                      <input
-                        type="number"
-                        name="upfrontDaysIncluded"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                      />
-                    </div>
+                            <div className="space-y-1">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Freecode Price
+                              </label>
+                              <input
+                                type="number"
+                                defaultValue={planDetails.freecodePrice || ""}
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                                readOnly
+                              />
+                            </div>
 
-                    <div className="space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Hour Price
-                      </label>
-                      <input
-                        type="number"
-                        name="hourPrice"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                      />
-                    </div>
+                            <div className="space-y-1">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Days to Cutoff
+                              </label>
+                              <input
+                                type="number"
+                                defaultValue={planDetails.daysToCutOff || ""}
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                                readOnly
+                              />
+                            </div>
 
-                    <div className="space-y-1">
-                      <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                        Expected Paid
-                      </label>
-                      <input
-                        type="number"
-                        name="expectedPaid"
-                        className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                      />
-                    </div>
+                            <div className="space-y-1">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Minimum Payment Amount
+                              </label>
+                              <input
+                                type="number"
+                                defaultValue={
+                                  planDetails.minimumPaymentAmount || ""
+                                }
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                                readOnly
+                              />
+                            </div>
 
-                    {/* Save Button */}
-                    <div className="sm:col-span-2 pt-6">
-                      <button
-                        type="submit"
-                        className="w-full sm:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                      >
-                        Save Changes
-                      </button>
-                    </div>
-                  </form>
+                            <div className="space-y-1">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Upfront Days Included
+                              </label>
+                              <input
+                                type="number"
+                                defaultValue={
+                                  planDetails.upfrontDaysIncluded || ""
+                                }
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                                readOnly
+                              />
+                            </div>
+
+                            <div className="space-y-1">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Hour Price
+                              </label>
+                              <input
+                                type="number"
+                                defaultValue={planDetails.hourPrice || ""}
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                                readOnly
+                              />
+                            </div>
+
+                            <div className="space-y-1">
+                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                Expected Paid
+                              </label>
+                              <input
+                                type="number"
+                                defaultValue={planDetails.expectedPaid || ""}
+                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                                readOnly
+                              />
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="sm:col-span-2 pt-6 flex gap-4">
+                              <button
+                                type="submit"
+                                className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                              >
+                                save
+                              </button>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </form>
+                  )}
                 </div>
               </div>
             )}
