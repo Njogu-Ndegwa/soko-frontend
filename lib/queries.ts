@@ -322,3 +322,38 @@ export const GET_SPECIFIC_ASSET_ACCOUNT = gql`
     }
   }
 `;
+
+const GET_ALL_PAY_PLAN_TEMPLATES = gql`
+  query GetAllPayPlanTemplates {
+    getAllPayPlanTemplates {
+      page {
+        edges {
+          cursor
+          node {
+            _id
+            planName
+            useUpfront
+            distributor
+            createdAt
+            planDescription
+            planDetails {
+              pName
+              pValue
+            }
+          }
+        }
+        pageInfo {
+          startCursor
+          endCursor
+          hasPreviousPage
+          hasNextPage
+        }
+      }
+      pageData {
+        count
+        limit
+        offset
+      }
+    }
+  }
+`;
