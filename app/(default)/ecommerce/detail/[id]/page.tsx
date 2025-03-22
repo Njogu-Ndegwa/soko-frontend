@@ -1,22 +1,27 @@
 "use client";
 import React from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_SPECIFIC_ASSET_ACCOUNT } from "@/lib/queries";
 import { useParams, useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 import LoaderSkeleton from "@/components/utils/loaderSkeleton";
 import { GET_ALL_PAY_PLAN_TEMPLATES } from "@/lib/queries";
-import { first } from "lodash";
+import { UPDATE_ASSET_ACCOUNT } from "@/lib/mutations";
+
+function formatLabel(label: string): string {
+  return label
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (str) => str.toUpperCase());
+}
 
 export default function AssetAccountDetail() {
   const { id } = useParams();
   const router = useRouter();
-
   const [selectedPlanId, setSelectedPlanId] = React.useState<string | null>(
     null
   );
-
   const [activeTab, setActiveTab] = React.useState(0);
+  const [modifiedPlan, setModifiedPlan] = React.useState<any>(null);
 
   console.log("the id is ....", id);
   const {
@@ -28,7 +33,71 @@ export default function AssetAccountDetail() {
     variables: { id },
   });
 
-  //console.log(" the data is", data);
+  const [updateAssetAccount, { loading: updateLoading, error: updateError }] =
+    useMutation(UPDATE_ASSET_ACCOUNT);
+
+  // Update modifiedPlan when selection changes
+  React.useEffect(() => {
+    if (selectedPlanId && paymentData) {
+      const selected = paymentData.getAllPayPlanTemplates.page.edges.find(
+        (p: any) => p.node._id === selectedPlanId
+      )?.node;
+      if (selected) {
+        // Create a DEEP copy of the selected plan
+        setModifiedPlan({
+          ...selected,
+          planDetails: selected.planDetails.map((detail: any) => ({
+            ...detail,
+            pValue: String(detail.pValue), // Ensure string conversion
+          })),
+          useUpfront: Boolean(selected.useUpfront),
+        });
+      }
+    }
+  }, [selectedPlanId, paymentData]);
+
+  // Form submission handler
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!modifiedPlan || !id) return;
+
+    try {
+      await updateAssetAccount({
+        variables: {
+          assetAccountId: id,
+          paymentPlan: {
+            planName: modifiedPlan.planName,
+            planDescription: modifiedPlan.planDescription,
+            useUpfront: modifiedPlan.useUpfront,
+            planDetails: modifiedPlan.planDetails.map((detail: any) => ({
+              pName: detail.pName,
+              pValue: parseFloat(detail.pValue), // Convert back to number
+            })),
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Update failed:", error);
+    }
+  };
+
+  // Handle plan detail changes
+  const handleDetailChange = (pName: string, value: string) => {
+    setModifiedPlan((prev: any) => ({
+      ...prev,
+      planDetails: prev.planDetails.map((detail: any) =>
+        detail.pName === pName ? { ...detail, pValue: value } : detail
+      ),
+    }));
+  };
+
+  // Handle plan metadata changes
+  const handlePlanChange = (field: string, value: string | boolean) => {
+    setModifiedPlan((prev: any) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   if (loading || paymentLoading) return <LoaderSkeleton />;
   if (error || paymentError)
@@ -40,9 +109,6 @@ export default function AssetAccountDetail() {
 
   const assetAccount = data?.getSpecificAssetAccount;
   const paymentPlans = paymentData?.getAllPayPlanTemplates?.page?.edges;
-  const selectedPlan = paymentPlans?.find(
-    (p: { node: { _id: string } }) => p.node._id === selectedPlanId
-  )?.node;
 
   console.log("the payment plans are", paymentPlans);
   return (
@@ -131,8 +197,7 @@ export default function AssetAccountDetail() {
                       Payment Schedule Configuration
                     </h2>
                   </div>
-
-                  {/* Payment Plan Selector */}
+                  {/* Plan Selection */}
                   <div className="space-y-1 sm:col-span-2">
                     <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
                       Select Payment Plan
@@ -143,43 +208,20 @@ export default function AssetAccountDetail() {
                       value={selectedPlanId || ""}
                     >
                       <option value="">Select a payment plan</option>
-                      {paymentPlans?.map(
-                        ({
-                          node,
-                        }: {
-                          node: { _id: string; planName: string };
-                        }) => (
-                          <option key={node._id} value={node._id}>
-                            {node.planName}
-                          </option>
-                        )
-                      )}
+                      {paymentPlans.map(({ node }: any) => (
+                        <option key={node._id} value={node._id}>
+                          {node.planName}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
-                  {selectedPlan && (
-                    <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  {modifiedPlan && (
+                    <form
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+                      onSubmit={handleSubmit}
+                    >
                       {(() => {
-                        const planDetails = selectedPlan.planDetails.reduce(
-                          (
-                            acc: any,
-                            detail: { pName: string; pValue: string }
-                          ) => {
-                            const keyMap: { [key: string]: string } = {
-                              upFrontPrice: "upfrontPrice",
-                              uFrontDaysIncluded: "upfrontDaysIncluded",
-                              daysToCutOff: "daysToCutOff",
-                              minimumPaymentAmount: "minimumPaymentAmount",
-                              hourPrice: "hourPrice",
-                              expectedPaid: "expectedPaid",
-                            };
-                            acc[keyMap[detail.pName] || detail.pName] =
-                              detail.pValue;
-                            return acc;
-                          },
-                          {}
-                        );
-
                         return (
                           <>
                             {/* Plan Information */}
@@ -189,7 +231,10 @@ export default function AssetAccountDetail() {
                               </label>
                               <input
                                 type="text"
-                                defaultValue={selectedPlan.planName}
+                                value={modifiedPlan?.planName}
+                                onChange={(e) =>
+                                  handlePlanChange("planName", e.target.value)
+                                }
                                 className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
                               />
                             </div>
@@ -199,7 +244,13 @@ export default function AssetAccountDetail() {
                                 Plan Description
                               </label>
                               <textarea
-                                defaultValue={selectedPlan.planDescription}
+                                value={modifiedPlan?.planDescription}
+                                onChange={(e) =>
+                                  handlePlanChange(
+                                    "planDescription",
+                                    e.target.value
+                                  )
+                                }
                                 className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
                                 rows={3}
                               />
@@ -210,7 +261,13 @@ export default function AssetAccountDetail() {
                               <label className="flex items-center space-x-2">
                                 <input
                                   type="checkbox"
-                                  checked={selectedPlan.useUpfront || false}
+                                  checked={modifiedPlan?.useUpfront}
+                                  onChange={(e) =>
+                                    handlePlanChange(
+                                      "useUpfront",
+                                      e.target.checked
+                                    )
+                                  }
                                   className="form-checkbox h-4 w-4"
                                 />
                                 <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
@@ -220,92 +277,25 @@ export default function AssetAccountDetail() {
                             </div>
 
                             {/* Payment Details Grid */}
-                            <div className="space-y-1">
-                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                Upfront Price
-                              </label>
-                              <input
-                                type="number"
-                                defaultValue={planDetails.upfrontPrice || ""}
-                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                              />
-                            </div>
-
-                            <div className="space-y-1">
-                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                Freecode Price
-                              </label>
-                              <input
-                                type="number"
-                                defaultValue={planDetails.freecodePrice || ""}
-                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                                readOnly
-                              />
-                            </div>
-
-                            <div className="space-y-1">
-                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                Days to Cutoff
-                              </label>
-                              <input
-                                type="number"
-                                defaultValue={planDetails.daysToCutOff || ""}
-                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                                readOnly
-                              />
-                            </div>
-
-                            <div className="space-y-1">
-                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                Minimum Payment Amount
-                              </label>
-                              <input
-                                type="number"
-                                defaultValue={
-                                  planDetails.minimumPaymentAmount || ""
-                                }
-                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                                readOnly
-                              />
-                            </div>
-
-                            <div className="space-y-1">
-                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                Upfront Days Included
-                              </label>
-                              <input
-                                type="number"
-                                defaultValue={
-                                  planDetails.upfrontDaysIncluded || ""
-                                }
-                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                                readOnly
-                              />
-                            </div>
-
-                            <div className="space-y-1">
-                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                Hour Price
-                              </label>
-                              <input
-                                type="number"
-                                defaultValue={planDetails.hourPrice || ""}
-                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                                readOnly
-                              />
-                            </div>
-
-                            <div className="space-y-1">
-                              <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                Expected Paid
-                              </label>
-                              <input
-                                type="number"
-                                defaultValue={planDetails.expectedPaid || ""}
-                                className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
-                                readOnly
-                              />
-                            </div>
+                            {/* Plan Details */}
+                            {modifiedPlan.planDetails.map((detail: any) => (
+                              <div className="space-y-1" key={detail.pName}>
+                                <label className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                                  {formatLabel(detail.pName)}
+                                </label>
+                                <input
+                                  type="number"
+                                  value={detail.pValue}
+                                  onChange={(e) =>
+                                    handleDetailChange(
+                                      detail.pName,
+                                      e.target.value
+                                    )
+                                  }
+                                  className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+                                />
+                              </div>
+                            ))}
 
                             {/* Action Buttons */}
                             <div className="sm:col-span-2 pt-6 flex gap-4">
@@ -313,7 +303,7 @@ export default function AssetAccountDetail() {
                                 type="submit"
                                 className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                               >
-                                save
+                                {updateLoading ? "Saving..." : "Save"}
                               </button>
                             </div>
                           </>
