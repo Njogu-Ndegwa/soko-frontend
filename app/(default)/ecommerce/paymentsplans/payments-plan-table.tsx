@@ -119,7 +119,9 @@ export default function PaymentsPlanTable() {
             <button
               className="ml-2 text-blue-500 hover:text-blue-700"
               onClick={() =>
-                router.push(`/ecommerce/detail/${row.original.id}`)
+                router.push(
+                  `/ecommerce/paymentsplans/detail/${row.original.id}`
+                )
               }
             >
               <FaEdit />
