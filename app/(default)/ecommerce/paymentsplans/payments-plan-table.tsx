@@ -3,7 +3,7 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { GET_ALL_ASSET_ACCOUNT_ACTIVITIES } from "@/lib/queries";
+import { GET_ALL_PAY_PLAN_TEMPLATES } from "@/lib/queries";
 import { useAuth } from "@/lib/auth-context";
 import { ReusableTable } from "@/components/utils/reusable-table"; // Adjust the import path as needed
 import { useDebounce } from "use-debounce";
@@ -47,7 +47,7 @@ interface AssetAccount {
 // Create a column helper for AssetAccount
 const assetColumnHelper = createColumnHelper<AssetAccount>();
 
-export default function PaymentsTable() {
+export default function PaymentsPlanTable() {
   const router = useRouter();
 
   const [pageIndex, setPageIndex] = React.useState(0);
@@ -66,7 +66,7 @@ export default function PaymentsTable() {
     loading: assetLoading,
     error: assetError,
     data: assetData,
-  } = useQuery(GET_ALL_ASSET_ACCOUNT_ACTIVITIES, {
+  } = useQuery(GET_ALL_PAY_PLAN_TEMPLATES, {
     variables: {
       first: itemsPerPage,
       after: currentCursor,
@@ -77,7 +77,7 @@ export default function PaymentsTable() {
   // Transform asset data
   const assetAccounts = useMemo(
     () =>
-      assetData?.getAllAssetAccountActivities?.page?.edges.map(
+      assetData?.getAllPayPlanTemplates?.page?.edges.map(
         ({ node }: { node: any }) => ({
           id: node?._id,
           accountStage: node?.accountStage || "N/A",
@@ -286,15 +286,15 @@ export default function PaymentsTable() {
   );
 
   const calculateStartIndex = () => {
-    if (!assetData?.getAllAssetAccountActivities?.pageData) return 0;
+    if (!assetData?.getAllPayPlanTemplates?.pageData) return 0;
     return cursorHistory.length * itemsPerPage + 1;
   };
 
   const calculateEndIndex = () => {
-    if (!assetData?.getAllAssetAccountActivities?.pageData) return 0;
+    if (!assetData?.getAllPayPlanTemplates?.pageData) return 0;
     const startIndex = calculateStartIndex();
     const currentPageItemCount =
-      assetData.getAllAssetAccountActivities.page.edges.length;
+      assetData.getAllPayPlanTemplates.page.edges.length;
     return startIndex + currentPageItemCount - 1;
   };
 
@@ -340,8 +340,7 @@ export default function PaymentsTable() {
               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
                 All{" "}
                 <span className="ml-1 text-gray-400 dark:text-gray-500">
-                  {assetData?.getAllAssetAccountActivities?.pageData?.count ||
-                    0}
+                  {assetData?.getAllPayPlanTemplates?.pageData?.count || 0}
                 </span>
               </button>
             </li>
@@ -408,7 +407,7 @@ export default function PaymentsTable() {
           </span>{" "}
           of{" "}
           <span className="font-medium text-gray-600 dark:text-gray-300">
-            {assetData?.getAllAssetAccountActivities?.pageData?.count || 0}
+            {assetData?.getAllPayPlanTemplates?.pageData?.count || 0}
           </span>{" "}
           results
         </div>
@@ -423,13 +422,12 @@ export default function PaymentsTable() {
           <button
             onClick={() =>
               handleNext(
-                assetData?.getAllAssetAccountActivities?.page?.pageInfo
-                  ?.endCursor
+                assetData?.getAllPayPlanTemplates?.page?.pageInfo?.endCursor
               )
             }
             disabled={
-              !assetData?.getAllAssetAccountActivities?.page?.pageInfo
-                ?.hasNextPage || assetLoading
+              !assetData?.getAllPayPlanTemplates?.page?.pageInfo?.hasNextPage ||
+              assetLoading
             }
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
           >
