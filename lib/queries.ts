@@ -355,3 +355,83 @@ export const GET_ALL_PAY_PLAN_TEMPLATES = gql`
     }
   }
 `;
+
+export const GET_ALL_ASSET_ACCOUNT_ACTIVITIES = gql`
+  query GetAllAssetAccountActivities {
+    getAllAssetAccountActivities(first: 20) {
+      page {
+        edges {
+          cursor
+          node {
+            _id
+            deleteStatus
+            deleteAt
+            createdAt
+            updatedAt
+            accountStage
+            paymentPlan {
+              planName
+              planDescription
+              useUpfront
+            }
+            manager {
+              _id
+              orgContactPerson {
+                _id
+                name
+              }
+            }
+            asset {
+              _id
+              oemItemID
+              sellerItemID
+              codeGenerator {
+                _id
+              }
+              itemFleet {
+                _id
+                fleetName
+              }
+            }
+            paySchedule {
+              amount
+              datetime
+              instruction
+            }
+            credit {
+              currency
+              balance
+              accountStatus
+              activities {
+                action
+                datetime
+                amount
+                notes
+              }
+              owner {
+                _id
+                name
+                agentId
+                gender
+                contact {
+                  phone
+                }
+                address {
+                  street
+                  city
+                  srpc
+                  country
+                  postcode
+                  addressLocation {
+                    addressLatitude
+                    addressLongitude
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

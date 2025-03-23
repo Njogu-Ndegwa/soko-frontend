@@ -42,8 +42,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const { accessToken, _id } = data.signInUser;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("distributorId", _id);
+      //61811cc2bf5a3f81fbeb5d41
       console.log("Access Token:", accessToken);
-      console.log("User Data:", user);
+      console.log("User Data:", _id);
       setUser(data.signInUser.name);
       setDistributorId(_id);
       router.push("/dashboard");
