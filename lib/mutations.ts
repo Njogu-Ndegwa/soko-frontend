@@ -51,3 +51,18 @@ export const UPDATE_ASSET_ACCOUNT = gql`
     }
   }
 `;
+
+export const UPDATE_PAY_PLAN = gql`
+  mutation UpdatePayPlan($input: UpdatePayPlanTemplateInput!) {
+    updatePayPlan(updatePayPlanTemplateInput: $input) {
+      _id
+      deleteStatus
+      deleteAt
+      createdAt
+      updatedAt
+      planName
+      planDescription
+      useUpfront
+    }
+  }
+`;

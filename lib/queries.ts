@@ -456,3 +456,18 @@ export const GET_ALL_ASSET_ACCOUNT_ACTIVITIES = gql`
     }
   }
 `;
+
+export const GET_SPECIFIC_PAY_PLAN_TEMPLATE = gql`
+  query GetSpecificPayPlanTemplate($id: ID!) {
+    getSpecificPayPlanTemplate(id: $id) {
+      _id
+      planName
+      planDescription
+      useUpfront
+      planDetails {
+        pName
+        pValue
+      }
+    }
+  }
+`;
