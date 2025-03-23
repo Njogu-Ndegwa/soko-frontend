@@ -44,7 +44,7 @@ interface AssetAccount {
 // Create a column helper for AssetAccount
 const assetColumnHelper = createColumnHelper<AssetAccount>();
 
-export default function AssetAccountsTable() {
+export default function PaymentsTable() {
   const router = useRouter();
   const { distributorId } = useAuth();
   const [pageIndex, setPageIndex] = React.useState(0);
