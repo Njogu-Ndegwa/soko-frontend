@@ -357,8 +357,20 @@ export const GET_ALL_PAY_PLAN_TEMPLATES = gql`
 `;
 
 export const GET_ALL_ASSET_ACCOUNT_ACTIVITIES = gql`
-  query GetAllAssetAccountActivities {
-    getAllAssetAccountActivities(first: 20) {
+  query GetAllAssetAccountActivities(
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+    $search: String
+  ) {
+    getAllAssetAccountActivities(
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+      search: $search
+    ) {
       page {
         edges {
           cursor
@@ -431,6 +443,15 @@ export const GET_ALL_ASSET_ACCOUNT_ACTIVITIES = gql`
             }
           }
         }
+        pageInfo {
+          startCursor
+          endCursor
+          hasPreviousPage
+          hasNextPage
+        }
+      }
+      pageData {
+        count
       }
     }
   }

@@ -3,7 +3,7 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { GET_ALL_ASSET_ACCOUNTS } from "@/lib/queries";
+import { GET_ALL_ASSET_ACCOUNT_ACTIVITIES } from "@/lib/queries";
 import { useAuth } from "@/lib/auth-context";
 import { ReusableTable } from "@/components/utils/reusable-table"; // Adjust the import path as needed
 import { useDebounce } from "use-debounce";
@@ -46,7 +46,7 @@ const assetColumnHelper = createColumnHelper<AssetAccount>();
 
 export default function PaymentsTable() {
   const router = useRouter();
-  const { distributorId } = useAuth();
+
   const [pageIndex, setPageIndex] = React.useState(0);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500); // 500ms debounce
@@ -63,9 +63,8 @@ export default function PaymentsTable() {
     loading: assetLoading,
     error: assetError,
     data: assetData,
-  } = useQuery(GET_ALL_ASSET_ACCOUNTS, {
+  } = useQuery(GET_ALL_ASSET_ACCOUNT_ACTIVITIES, {
     variables: {
-      clientId: distributorId,
       first: itemsPerPage,
       after: currentCursor,
       search: debouncedSearchTerm,
@@ -75,7 +74,7 @@ export default function PaymentsTable() {
   // Transform asset data
   const assetAccounts = useMemo(
     () =>
-      assetData?.getAllAssetAccountsForClient?.page?.edges.map(
+      assetData?.getAllAssetAccountActivities?.page?.edges.map(
         ({ node }: { node: any }) => ({
           id: node?._id,
           accountStage: node?.accountStage || "N/A",
@@ -277,15 +276,15 @@ export default function PaymentsTable() {
   );
 
   const calculateStartIndex = () => {
-    if (!assetData?.getAllAssetAccountsForClient?.pageData) return 0;
+    if (!assetData?.getAllAssetAccountActivities?.pageData) return 0;
     return cursorHistory.length * itemsPerPage + 1;
   };
 
   const calculateEndIndex = () => {
-    if (!assetData?.getAllAssetAccountsForClient?.pageData) return 0;
+    if (!assetData?.getAllAssetAccountActivities?.pageData) return 0;
     const startIndex = calculateStartIndex();
     const currentPageItemCount =
-      assetData.getAllAssetAccountsForClient.page.edges.length;
+      assetData.getAllAssetAccountActivities.page.edges.length;
     return startIndex + currentPageItemCount - 1;
   };
 
@@ -331,7 +330,7 @@ export default function PaymentsTable() {
               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
                 All{" "}
                 <span className="ml-1 text-gray-400 dark:text-gray-500">
-                  {assetData?.getAllAssetAccountsForClient?.pageData?.count ||
+                  {assetData?.getAllAssetAccountActivities?.pageData?.count ||
                     0}
                 </span>
               </button>
@@ -399,7 +398,7 @@ export default function PaymentsTable() {
           </span>{" "}
           of{" "}
           <span className="font-medium text-gray-600 dark:text-gray-300">
-            {assetData?.getAllAssetAccountsForClient?.pageData?.count || 0}
+            {assetData?.getAllAssetAccountActivities?.pageData?.count || 0}
           </span>{" "}
           results
         </div>
@@ -414,12 +413,12 @@ export default function PaymentsTable() {
           <button
             onClick={() =>
               handleNext(
-                assetData?.getAllAssetAccountsForClient?.page?.pageInfo
+                assetData?.getAllAssetAccountActivities?.page?.pageInfo
                   ?.endCursor
               )
             }
             disabled={
-              !assetData?.getAllAssetAccountsForClient?.page?.pageInfo
+              !assetData?.getAllAssetAccountActivities?.page?.pageInfo
                 ?.hasNextPage || assetLoading
             }
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
