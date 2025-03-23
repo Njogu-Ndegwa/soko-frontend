@@ -19,29 +19,16 @@ import { useRouter } from "next/navigation";
 
 interface AssetAccount {
   id: string;
-  accountStage: string;
-  accountNumber: string;
-  Customer: string;
-  phone: string;
-  street: string;
-  city: string;
-  srpc: string;
-  country: string;
-  postalCode: string;
-  latitude: string;
-  longitude: string;
-  status: string;
-  balance: string;
-  currency: string;
-  oemItemid: string;
-  itemId: string;
-  fleetId: string;
-  manager: string;
-  dateCreated: string;
-  lastUpdated: string;
-  fleetName: string;
   planName: string;
-  activities: any[];
+  planDescription: string;
+  upFrontPrice: string;
+  freecodePrice: string;
+  DaysToCutOff: string;
+  minimumPayment: string;
+  upFrontDaysIncluded: string;
+  hourPrice: string;
+  expectedPaid: string;
+  useupfront: boolean;
 }
 
 // Create a column helper for AssetAccount
@@ -80,31 +67,16 @@ export default function PaymentsPlanTable() {
       assetData?.getAllPayPlanTemplates?.page?.edges.map(
         ({ node }: { node: any }) => ({
           id: node?._id,
-          accountStage: node?.accountStage || "N/A",
-          accountNumber: node?.asset?.sellerItemID || "N/A",
-          Customer: node?.credit?.owner?.name || "N/A",
-          phone: node?.credit?.owner?.contact?.phone || "N/A",
-          balance: node?.credit?.balance || "N/A",
-          currency: node?.credit?.currency || "N/A",
-          oemItemid: node?.asset?.oemItemID || "N/A",
-          itemId: node?.asset?._id || "N/A",
-          manager: node?.manager?._id || "N/A",
-          fleetId: node?.asset?.itemFleet?._id || "N/A",
-          fleetName: node?.asset?.itemFleet?.fleetName || "N/A",
-          planeName: node?.paymentPlan?.planName || "N/A",
-          street: node?.credit?.owner?.address?.street || "N/A",
-          city: node?.credit?.owner?.address?.city || "N/A",
-          srpc: node?.credit?.owner?.address?.srpc || "N/A",
-          country: node?.credit?.owner?.address?.country || "N/A",
-          postalCode: node?.credit?.owner?.address?.postcode || "N/A",
-          latitude:
-            node?.credit?.owner?.address?.addressLocation?.addressLatitude ||
-            "N/A",
-          longitude:
-            node?.credit?.owner?.address?.addressLocation?.addressLongitude ||
-            "N/A",
-          status: node?.credit?.accountStatus || "N/A",
-          activities: node?.credit?.activities || [],
+          planName: node?.planName,
+          planDescription: node?.planDescription,
+          upFrontPrice: node?.planDetails?.[0]?.pValue,
+          freecodePrice: node?.planDetails?.[1]?.pValue,
+          DaysToCutOff: node?.planDetails?.[2]?.pValue,
+          minimumPayment: node?.planDetails?.[3]?.pValue,
+          upFrontDaysIncluded: node?.planDetails?.[4]?.pValue,
+          hourPrice: node?.planDetails?.[5]?.pValue,
+          expectedPaid: node?.planDetails?.[6]?.pValue,
+          useupfront: node?.useUpfront,
         })
       ) || [],
     [assetData]
@@ -113,15 +85,6 @@ export default function PaymentsPlanTable() {
   // Filter data based on search term
   const filteredData = useMemo(() => {
     if (!searchTerm) return assetAccounts;
-
-    return assetAccounts.filter(
-      (account: AssetAccount) =>
-        account.accountNumber
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        account.Customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        account.phone.toLowerCase().includes(searchTerm.toLowerCase())
-    );
   }, [assetAccounts, searchTerm]);
 
   // Define columns for the asset accounts table
@@ -168,117 +131,49 @@ export default function PaymentsPlanTable() {
           </div>
         ),
       }),
-      assetColumnHelper.accessor("accountNumber", {
-        header: () => "Account Number",
-        cell: (info) => {
-          const status = info.row.original.status.toLowerCase();
-          const isActive = status === "active";
-          return (
-            <div
-              className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                isActive
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
-            >
-              {info.getValue()}
-            </div>
-          );
-        },
-      }),
-      assetColumnHelper.accessor("Customer", {
-        header: () => "Customer",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("phone", {
-        header: () => "Phone",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("fleetName", {
-        header: () => "Fleet Name",
-        cell: (info) => info.getValue(),
-      }),
+
       assetColumnHelper.accessor("planName", {
         header: () => "Plan Name",
         cell: (info) => info.getValue(),
       }),
-
-      assetColumnHelper.accessor("street", {
-        header: () => "Street",
+      assetColumnHelper.accessor("planDescription", {
+        header: () => "Plan Description",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("city", {
-        header: () => "City",
+      assetColumnHelper.accessor("upFrontPrice", {
+        header: () => "Upfront Price",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("srpc", {
-        header: () => "SRPC",
+      assetColumnHelper.accessor("freecodePrice", {
+        header: () => "Freecode Price",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("country", {
-        header: () => "Country",
+      assetColumnHelper.accessor("DaysToCutOff", {
+        header: () => "Days To Cut Off",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("postalCode", {
-        header: () => "Postal Code",
+      assetColumnHelper.accessor("minimumPayment", {
+        header: () => "Minimum Payment",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("latitude", {
-        header: () => "Latitude",
+      assetColumnHelper.accessor("upFrontDaysIncluded", {
+        header: () => "Upfront Days Included",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("longitude", {
-        header: () => "Longitude",
+      assetColumnHelper.accessor("hourPrice", {
+        header: () => "Hour Price",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("balance", {
-        header: () => "Balance",
+      assetColumnHelper.accessor("expectedPaid", {
+        header: () => "Expected Paid",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("currency", {
-        header: () => "Currency",
+      assetColumnHelper.accessor("useupfront", {
+        header: () => "Use Upfront",
         cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("oemItemid", {
-        header: () => "Item Oem Id",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("itemId", {
-        header: () => "Item Id",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("fleetId", {
-        header: () => "Fleet Id",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("accountStage", {
-        header: () => "Account Stage",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("manager", {
-        header: () => "Manager",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("status", {
-        header: () => "Status",
-        cell: (info) => {
-          const status = info.getValue();
-          const isActive = status.toLowerCase() === "active";
-          return (
-            <div
-              className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                isActive
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
-            >
-              {status}
-            </div>
-          );
-        },
       }),
       assetColumnHelper.accessor("id", {
-        header: () => "Id",
+        header: () => "ID",
         cell: (info) => info.getValue(),
       }),
     ],
