@@ -392,7 +392,7 @@ export default function PaymentsTable() {
           setPageIndex={setPageIndex}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
-          pageSize={15}
+          pageSize={itemsPerPage}
           setPageSize={() => {}}
         />
       </div>

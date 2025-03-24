@@ -1,6 +1,6 @@
 import React from "react";
 
-export const usePagination = (initialItemsPerPage: number = 10) => {
+export const usePagination = (initialItemsPerPage: number = 15) => {
   const [cursorHistory, setCursorHistory] = React.useState<(string | null)[]>(
     []
   ); // Track cursor history

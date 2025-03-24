@@ -323,7 +323,7 @@ export default function ItemsTable() {
             pageIndex={0}
             setPageIndex={() => {}}
             searchTerm={searchTerm}
-            pageSize={10}
+            pageSize={itemsPerPage}
             setPageSize={() => {}}
           />
         </div>
