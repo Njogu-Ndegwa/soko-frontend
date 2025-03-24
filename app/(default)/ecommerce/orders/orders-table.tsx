@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/auth-context";
 import { ReusableTable } from "@/components/utils/reusable-table"; // Adjust the import path as needed
 import { useDebounce } from "use-debounce";
 import { usePagination } from "@/components/utils/pagination";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaCloudUploadAlt } from "react-icons/fa";
 import { SearchForm } from "@/components/search-form";
 import DeleteButton from "@/components/delete-button";
 import DateSelect from "@/components/date-select";
@@ -338,9 +338,9 @@ export default function AssetAccountsTable() {
             </li>
             <li className="m-1">
               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 shadow-sm bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 transition">
-                Paid{" "}
+                <FaCloudUploadAlt className="mr-1" />
                 <span className="ml-1 text-gray-400 dark:text-gray-500">
-                  14
+                  upload
                 </span>
               </button>
             </li>
