@@ -53,8 +53,13 @@ export const UPDATE_ASSET_ACCOUNT = gql`
 `;
 
 export const UPDATE_PAY_PLAN = gql`
-  mutation UpdatePayPlan($input: UpdatePayPlanTemplateInput!) {
-    updatePayPlan(updatePayPlanTemplateInput: $input) {
+  mutation UpdatePayPlan($payPlanId: ID!, $planDescription: String!) {
+    updatePayPlan(
+      updatePayPlanTemplateInput: {
+        payPlanId: $payPlanId
+        planDescription: $planDescription
+      }
+    ) {
       _id
       deleteStatus
       deleteAt
@@ -63,6 +68,10 @@ export const UPDATE_PAY_PLAN = gql`
       planName
       planDescription
       useUpfront
+      planDetails {
+        pName
+        pValue
+      }
     }
   }
 `;

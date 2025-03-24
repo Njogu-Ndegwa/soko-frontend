@@ -53,26 +53,38 @@ export default function PaymentPlanDetail() {
   const handleSave = async () => {
     if (!plan) return;
 
-    const planDetailsInput = plan.planDetails.map(
-      (detail: any, index: number) => ({
+    const planDetailsInput = (plan?.planDetails || []).map(
+      (detail: { pName: string; pValue: number }, index: number) => ({
         pName: detail.pName,
-        pValue: [
-          formData.upfrontPrice,
-          formData.freecodePrice,
-          formData.daysToCutOff,
-          formData.minimumPayment,
-          formData.upfrontIncludedDays,
-          formData.hourPrice,
-          formData.expectedPaidAmount,
-        ][index],
+        pValue:
+          [
+            formData.upfrontPrice,
+            formData.freecodePrice,
+            formData.daysToCutOff,
+            formData.minimumPayment,
+            formData.upfrontIncludedDays,
+            formData.hourPrice,
+            formData.expectedPaidAmount,
+          ][index] || 0, // Ensure a fallback value
       })
     );
 
+    console.log("Mutation variables:", {
+      updatePayPlanTemplateInput: {
+        payPlanId: id,
+        planName: formData.planName,
+        planDescription: formData.planDescription,
+        useUpfront: formData.useUpfront,
+        planDetails: planDetailsInput,
+      },
+    });
+
     try {
-      await updatePayPlan({
+      const { data: updateResponse } = await updatePayPlan({
         variables: {
-          input: {
-            payPlanId: id,
+          payPlanId: id,
+          planDescription: formData.planDescription,
+          updatePayPlanTemplateInput: {
             planName: formData.planName,
             planDescription: formData.planDescription,
             useUpfront: formData.useUpfront,
@@ -80,6 +92,7 @@ export default function PaymentPlanDetail() {
           },
         },
       });
+      console.log("the updated data is", updateResponse);
       await refetch();
       setIsEditing(false);
     } catch (err) {
@@ -108,7 +121,7 @@ export default function PaymentPlanDetail() {
   if (!plan) return <div>Plan not found</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md mt-4">
       <div className="flex justify-between items-start mb-6">
         {isEditing ? (
           <input
@@ -324,6 +337,6 @@ function EditableField({
       />
     </div>
   ) : (
-    <DetailItem label={label} value={`$${value}`} />
+    <DetailItem label={label} value={`${value}`} />
   );
 }
