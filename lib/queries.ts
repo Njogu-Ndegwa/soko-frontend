@@ -472,9 +472,13 @@ export const GET_SPECIFIC_PAY_PLAN_TEMPLATE = gql`
   }
 `;
 
-const GET_ITEM_FLEETS_FOR_CLIENT = gql`
-  query GetItemFleetsForClient($clientId: ID!) {
-    getItemFleetsForClient(clientId: $clientId) {
+export const GET_ITEM_FLEETS_FOR_CLIENT = gql`
+  query GetItemFleetsForClient(
+    $clientId: String!
+    $first: Int
+    $after: String
+  ) {
+    getItemFleetsForClient(clientId: $clientId, first: $first, after: $after) {
       page {
         edges {
           cursor

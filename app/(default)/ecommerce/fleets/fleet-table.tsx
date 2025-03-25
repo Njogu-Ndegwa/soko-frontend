@@ -4,7 +4,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { GET_ALL_CLIENT_ITEMS } from "@/lib/queries";
+import { GET_ITEM_FLEETS_FOR_CLIENT } from "@/lib/queries";
 import { ReusableTable } from "@/components/utils/reusable-table";
 import { usePagination } from "@/components/utils/pagination";
 import DeleteButton from "@/components/delete-button";
@@ -13,26 +13,24 @@ import FilterButton from "@/components/dropdown-filter";
 import { SearchForm } from "@/components/search-form";
 import moment from "moment";
 import { useDebounce } from "use-debounce";
+import { useAuth } from "@/lib/auth-context";
 
 interface AssetItems {
   id: string;
-  oemItemId: string;
-  accountNumber: string;
-  fleet: string;
-  sellerId: string;
-  oemId: string;
-  batchId: string;
-  batchNumber: string;
-  skuName: string;
-  itemFirmware: string;
-  hashTop: string;
-  hashTopInitial: string;
-  hashIndex: string;
-  lifeCycle: string;
+  fleetName: string;
+  distributor: string;
+  freeCode: string;
+  resetCode: string;
+  dayCodeCount: string;
+  codeInterval: string;
+  actionScope: string;
+  actorName: string;
+  assignDate: string;
+  distributorId: string;
+  profile: string;
+
   type: string;
-  assetAccount: string;
-  description: string;
-  codeHistory: string;
+
   createdAt: string;
   updatedAt: string;
 }
@@ -44,6 +42,7 @@ const formatDate = (dateString: string) => {
 };
 
 export default function FleetTable() {
+  const { distributorId } = useAuth();
   const [searchTerm, setSearchTerm] = React.useState("");
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500); // 500ms debounce
 
@@ -59,36 +58,34 @@ export default function FleetTable() {
     data: itemsData,
     loading,
     error,
-    fetchMore,
-  } = useQuery(GET_ALL_CLIENT_ITEMS, {
+  } = useQuery(GET_ITEM_FLEETS_FOR_CLIENT, {
     variables: {
+      clientId: distributorId,
       first: itemsPerPage,
       after: currentCursor,
-      search: debouncedSearchTerm,
     },
   });
 
   const assetItems = useMemo(
     () =>
-      itemsData?.getAllClientItems?.page?.edges.map(
+      itemsData?.getItemFleetsForClient?.page?.edges.map(
         ({ node }: { node: any }) => ({
           id: node?._id,
-          oemItemId: node?.oemItemID || "N/A",
-          accountNumber: node?.oemItemID || "N/A",
-          fleet: node?.itemFleet?.fleetName || "N/A",
-          sellerId: node?.sellerID || "N/A",
-          oemId: node?.oemID || "N/A",
-          batchId: node?.itemBatch?._id || "N/A",
-          batchNumber: node?.itemBatch?.batchNumber || "N/A",
+          fleetName: node?.fleetName || "N/A",
+          distributor: node?.distributor?.orgContactPerson?.name || "N/A",
+          description: node?.description || "N/A",
+          freeCode: node?.freeCodeCount || "N/A",
+          codeInterval: node?.codeGenInterval || "N/A",
+          actionScope: node?.actionScope || "N/A",
+          actorName: node?.actorName || "N/A",
           skuName: node?.itemBatch?.itemSKU?.skuName || "N/A",
           itemFirmware: node?.itemFirmware?.version || "N/A",
           hashTop: node?.codeGenerator?.hashTop || "N/A",
           hashTopInitial: node?.codeGenerator?.hashTopInitial || "N/A",
           hashIndex: node?.codeGenerator?.hashIndex || "N/A",
           lifeCycle: node?.lifeCycle || "N/A",
-          type: node?.itemFirmware?.type || "N/A",
-          assetAccount: node?.assetAccount?._id || "N/A",
-          description: node?.description || "N/A",
+          type: node?.type || "N/A",
+          profile: node?.profile || "N/A",
           codeHistory: node?.codeHistory || "N/A",
           createdAt: node?.createdAt
             ? formatDate(node.createdAt) // Format the createdAt date
@@ -141,70 +138,40 @@ export default function FleetTable() {
           </div>
         ),
       }),
-      assetColumnHelper.accessor("oemItemId", {
-        header: () => "OEM Item ID",
+      assetColumnHelper.accessor("fleetName", {
+        header: () => "fleet Name",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("accountNumber", {
-        header: () => "Account Number",
+      assetColumnHelper.accessor("distributor", {
+        header: () => "Distributor",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("fleet", {
-        header: () => "Fleet",
+
+      assetColumnHelper.accessor("freeCode", {
+        header: () => "Free Code Count",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("sellerId", {
-        header: () => "Seller ID",
+      assetColumnHelper.accessor("codeInterval", {
+        header: () => "Code Interval",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("oemId", {
-        header: () => "OEM ID",
+      assetColumnHelper.accessor("actionScope", {
+        header: () => "Action Scope",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("batchNumber", {
-        header: () => "Batch Number",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("skuName", {
-        header: () => "SKU Name",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("itemFirmware", {
-        header: () => "Item Firmware",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("hashTop", {
-        header: () => "Hash Top",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("hashTopInitial", {
-        header: () => "Hash Top Initial",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("hashIndex", {
-        header: () => "Hash Index",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("lifeCycle", {
-        header: () => "Life Cycle",
+      assetColumnHelper.accessor("actorName", {
+        header: () => "Actor Name",
         cell: (info) => info.getValue(),
       }),
       assetColumnHelper.accessor("type", {
         header: () => "Type",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("assetAccount", {
-        header: () => "Asset Account",
+      assetColumnHelper.accessor("profile", {
+        header: () => "Profile",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("description", {
-        header: () => "Description",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("codeHistory", {
-        header: () => "Code History",
-        cell: (info) => info.getValue(),
-      }),
+
       assetColumnHelper.accessor("createdAt", {
         header: () => "Created At",
         cell: (info) => info.getValue(),
@@ -218,14 +185,15 @@ export default function FleetTable() {
   );
 
   const calculateStartIndex = () => {
-    if (!itemsData?.getAllClientItems?.pageData) return 0;
+    if (!itemsData?.getItemFleetsForClient?.pageData) return 0;
     return cursorHistory.length * itemsPerPage + 1;
   };
 
   const calculateEndIndex = () => {
-    if (!itemsData?.getAllClientItems?.pageData) return 0;
+    if (!itemsData?.getItemFleetsForClient?.pageData) return 0;
     const startIndex = calculateStartIndex();
-    const currentPageItemCount = itemsData.getAllClientItems.page.edges.length;
+    const currentPageItemCount =
+      itemsData.getItemFleetsForClient.page.edges.length;
     return startIndex + currentPageItemCount - 1;
   };
 
@@ -272,7 +240,7 @@ export default function FleetTable() {
               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
                 All{" "}
                 <span className="ml-1 text-gray-400 dark:text-gray-500">
-                  {itemsData?.getAllClientItems?.pageData?.count || 0}
+                  {itemsData?.getItemFleetsForClient?.pageData?.count || 0}
                 </span>
               </button>
             </li>
@@ -340,7 +308,7 @@ export default function FleetTable() {
           </span>{" "}
           of{" "}
           <span className="font-medium text-gray-600 dark:text-gray-300">
-            {itemsData?.getAllClientItems?.pageData?.count || 0}
+            {itemsData?.getItemFleetsForClient?.pageData?.count || 0}
           </span>{" "}
           results
         </div>
@@ -355,11 +323,11 @@ export default function FleetTable() {
           <button
             onClick={() =>
               handleNext(
-                itemsData?.getAllClientItems?.page?.pageInfo?.endCursor
+                itemsData?.getItemFleetsForClient?.page?.pageInfo?.endCursor
               )
             }
             disabled={
-              !itemsData?.getAllClientItems?.page?.pageInfo?.hasNextPage ||
+              !itemsData?.getItemFleetsForClient?.page?.pageInfo?.hasNextPage ||
               loading
             }
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
