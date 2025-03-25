@@ -471,3 +471,61 @@ export const GET_SPECIFIC_PAY_PLAN_TEMPLATE = gql`
     }
   }
 `;
+
+const GET_ITEM_FLEETS_FOR_CLIENT = gql`
+  query GetItemFleetsForClient($clientId: ID!) {
+    getItemFleetsForClient(clientId: $clientId) {
+      page {
+        edges {
+          cursor
+          node {
+            _id
+            createdAt
+            updatedAt
+            actionScope
+            actorName
+            profile
+            fleetName
+            assignDate
+            description
+            freeCodeCount
+            disableFreeCode
+            resetCodeCount
+            disableResetCodeCount
+            dayCodeCountLimit
+            disableDayCodeCountLimit
+            totalCodeCountLimit
+            disableTotalCodeCountLimit
+            codeGenInterval
+            disableCodeGenInterval
+            maxCreditStackDays
+            disableMaxCreditStackDays
+            maxCreditStackCodeEvents
+            disableMaxCreditStackCodeEvents
+            daysToCheckDuration
+            disableDaysToCheckDuration
+            minimumDayCodesGenerated
+            disableMinimumDayCodesGenerated
+            distributor {
+              _id
+              orgContactPerson {
+                _id
+                name
+              }
+            }
+            type
+          }
+        }
+        pageInfo {
+          startCursor
+          endCursor
+          hasPreviousPage
+          hasNextPage
+        }
+      }
+      pageData {
+        count
+      }
+    }
+  }
+`;
