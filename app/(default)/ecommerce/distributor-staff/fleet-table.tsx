@@ -4,7 +4,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { GET_ITEM_FLEETS_FOR_CLIENT } from "@/lib/queries";
+import { GET_ALL_DISTRIBUTOR_STAFFS } from "@/lib/queries";
 import { ReusableTable } from "@/components/utils/reusable-table";
 import { usePagination } from "@/components/utils/pagination";
 import DeleteButton from "@/components/delete-button";
@@ -17,20 +17,11 @@ import { useAuth } from "@/lib/auth-context";
 
 interface AssetItems {
   id: string;
-  fleetName: string;
-  distributor: string;
-  freeCode: string;
-  resetCode: string;
-  dayCodeCount: string;
-  codeInterval: string;
-  actionScope: string;
-  actorName: string;
-  assignDate: string;
-  distributorId: string;
-  profile: string;
-
-  type: string;
-
+  name: string;
+  email: string;
+  phone: string;
+  social: string;
+  lastName: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -58,9 +49,8 @@ export default function DistributorStaff() {
     data: itemsData,
     loading,
     error,
-  } = useQuery(GET_ITEM_FLEETS_FOR_CLIENT, {
+  } = useQuery(GET_ALL_DISTRIBUTOR_STAFFS, {
     variables: {
-      clientId: distributorId,
       first: itemsPerPage,
       after: currentCursor,
     },
@@ -68,13 +58,14 @@ export default function DistributorStaff() {
 
   const assetItems = useMemo(
     () =>
-      itemsData?.getItemFleetsForClient?.page?.edges.map(
+      itemsData?.getAllDistributorStaffsForSpecificDistributor?.page?.edges.map(
         ({ node }: { node: any }) => ({
           id: node?._id,
-          fleetName: node?.fleetName || "N/A",
-          distributor: node?.distributor?.orgContactPerson?.name || "N/A",
-          description: node?.description || "N/A",
-          freeCode: node?.freeCodeCount || "N/A",
+          name: node?.firstName || "N/A",
+          lastName: node?.lastName || "N/A",
+          email: node?.contact?.email || "N/A",
+          phone: node?.contact?.phone || "N/A",
+          social: node?.contact?.social || "N/A",
           codeInterval: node?.codeGenInterval || "N/A",
           actionScope: node?.actionScope || "N/A",
           actorName: node?.actorName || "N/A",
@@ -138,46 +129,30 @@ export default function DistributorStaff() {
           </div>
         ),
       }),
-      assetColumnHelper.accessor("fleetName", {
-        header: () => "fleet Name",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("distributor", {
-        header: () => "Distributor",
+
+      assetColumnHelper.accessor("name", {
+        header: () => "First Name",
         cell: (info) => info.getValue(),
       }),
 
-      assetColumnHelper.accessor("freeCode", {
-        header: () => "Free Code Count",
+      assetColumnHelper.accessor("lastName", {
+        header: () => "Last Name",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("codeInterval", {
-        header: () => "Code Interval",
+      assetColumnHelper.accessor("email", {
+        header: () => "email",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("actionScope", {
-        header: () => "Action Scope",
+      assetColumnHelper.accessor("phone", {
+        header: () => "Phone",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("actorName", {
-        header: () => "Actor Name",
+      assetColumnHelper.accessor("social", {
+        header: () => "Social",
         cell: (info) => info.getValue(),
       }),
-      assetColumnHelper.accessor("type", {
-        header: () => "Type",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("profile", {
-        header: () => "Profile",
-        cell: (info) => info.getValue(),
-      }),
-
-      assetColumnHelper.accessor("createdAt", {
-        header: () => "Created At",
-        cell: (info) => info.getValue(),
-      }),
-      assetColumnHelper.accessor("updatedAt", {
-        header: () => "Updated At",
+      assetColumnHelper.accessor("id", {
+        header: () => "id",
         cell: (info) => info.getValue(),
       }),
     ],
@@ -185,15 +160,17 @@ export default function DistributorStaff() {
   );
 
   const calculateStartIndex = () => {
-    if (!itemsData?.getItemFleetsForClient?.pageData) return 0;
+    if (!itemsData?.getAllDistributorStaffsForSpecificDistributor?.pageData)
+      return 0;
     return cursorHistory.length * itemsPerPage + 1;
   };
 
   const calculateEndIndex = () => {
-    if (!itemsData?.getItemFleetsForClient?.pageData) return 0;
+    if (!itemsData?.getAllDistributorStaffsForSpecificDistributor?.pageData)
+      return 0;
     const startIndex = calculateStartIndex();
     const currentPageItemCount =
-      itemsData.getItemFleetsForClient.page.edges.length;
+      itemsData.getAllDistributorStaffsForSpecificDistributor.page.edges.length;
     return startIndex + currentPageItemCount - 1;
   };
 
@@ -240,7 +217,8 @@ export default function DistributorStaff() {
               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
                 All{" "}
                 <span className="ml-1 text-gray-400 dark:text-gray-500">
-                  {itemsData?.getItemFleetsForClient?.pageData?.count || 0}
+                  {itemsData?.getAllDistributorStaffsForSpecificDistributor
+                    ?.pageData?.count || 0}
                 </span>
               </button>
             </li>
@@ -308,7 +286,8 @@ export default function DistributorStaff() {
           </span>{" "}
           of{" "}
           <span className="font-medium text-gray-600 dark:text-gray-300">
-            {itemsData?.getItemFleetsForClient?.pageData?.count || 0}
+            {itemsData?.getAllDistributorStaffsForSpecificDistributor?.pageData
+              ?.count || 0}
           </span>{" "}
           results
         </div>
@@ -323,12 +302,13 @@ export default function DistributorStaff() {
           <button
             onClick={() =>
               handleNext(
-                itemsData?.getItemFleetsForClient?.page?.pageInfo?.endCursor
+                itemsData?.getAllDistributorStaffsForSpecificDistributor?.page
+                  ?.pageInfo?.endCursor
               )
             }
             disabled={
-              !itemsData?.getItemFleetsForClient?.page?.pageInfo?.hasNextPage ||
-              loading
+              !itemsData?.getAllDistributorStaffsForSpecificDistributor?.page
+                ?.pageInfo?.hasNextPage || loading
             }
             className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
           >

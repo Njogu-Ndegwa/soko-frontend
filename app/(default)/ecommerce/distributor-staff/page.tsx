@@ -16,7 +16,7 @@ function FleetContent() {
   );
 }
 
-export default function Invoices() {
+export default function Distributor() {
   return (
     <SelectedItemsProvider>
       <FleetContent />

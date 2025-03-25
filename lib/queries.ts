@@ -533,3 +533,47 @@ export const GET_ITEM_FLEETS_FOR_CLIENT = gql`
     }
   }
 `;
+
+export const GET_ALL_DISTRIBUTOR_STAFFS = gql`
+  query GetAllDistributorStaffsForSpecificDistributor {
+    getAllDistributorStaffsForSpecificDistributor {
+      page {
+        edges {
+          cursor
+          node {
+            _id
+            createdAt
+            updatedAt
+            firstName
+            lastName
+            contact {
+              phone
+              email
+              social
+            }
+            address {
+              addressLocation {
+                addressLatitude
+                addressLongitude
+              }
+              city
+              srpc
+              country
+              postcode
+              street
+            }
+          }
+        }
+        pageInfo {
+          startCursor
+          endCursor
+          hasPreviousPage
+          hasNextPage
+        }
+      }
+      pageData {
+        count
+      }
+    }
+  }
+`;
