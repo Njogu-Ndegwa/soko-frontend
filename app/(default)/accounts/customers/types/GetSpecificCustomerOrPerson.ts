@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { PersonTypes } from "../../../thing/types/globalTypes";
+import { PersonTypes } from "./../../types/globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetSpecificCustomerOrPerson

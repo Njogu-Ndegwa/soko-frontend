@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { AccountActions } from "../../../thing/types/globalTypes";
+import { AccountActions } from "./../../types/globalTypes";
 
 // ====================================================
 // GraphQL fragment: Activity

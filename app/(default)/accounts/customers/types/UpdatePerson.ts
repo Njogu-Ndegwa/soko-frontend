@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UpdateClientPersonInput, PersonTypes } from "../../../thing/types/globalTypes";
+import { UpdateClientPersonInput, PersonTypes } from "./../../types/globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: UpdatePerson

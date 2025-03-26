@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { ClientRegisterPersonInput } from "../../../thing/types/globalTypes";
+import { ClientRegisterPersonInput } from "./../../types/globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: ClientRegisterCustomer
