@@ -21,13 +21,13 @@
 // 1. First, update your PaginationClassic component to accept props:
 
 interface PaginationClassicProps {
-  currentPage: number;
-  totalItems: number;
-  itemsPerPage: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  onNextPage: () => void;
-  onPreviousPage: () => void;
+  currentPage?: number;
+  totalItems?: number;
+  itemsPerPage?: number;
+  hasNextPage?: boolean;
+  hasPreviousPage?: boolean;
+  onNextPage?: () => void;
+  onPreviousPage?: () => void;
 }
 
 export default function PaginationClassic({

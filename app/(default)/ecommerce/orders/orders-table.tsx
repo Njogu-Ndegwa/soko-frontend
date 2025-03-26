@@ -9,7 +9,7 @@ import { ReusableTable } from "@/components/utils/reusable-table"; // Adjust the
 import { useDebounce } from "use-debounce";
 import { usePagination } from "@/components/utils/pagination";
 import { FaEdit, FaTrash, FaCloudUploadAlt } from "react-icons/fa";
-import { SearchForm } from "@/components/search-form";
+import  SearchForm  from "@/components/search-form";
 import DeleteButton from "@/components/delete-button";
 import DateSelect from "@/components/date-select";
 import FilterButton from "@/components/dropdown-filter";

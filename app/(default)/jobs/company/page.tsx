@@ -1,7 +1,4 @@
-export const metadata = {
-  title: 'Company - Mosaic',
-  description: 'Page description',
-}
+'use-client'
 
 import Image from 'next/image'
 import JobsItem from '../jobs-item'

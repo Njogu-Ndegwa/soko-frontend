@@ -24,7 +24,7 @@ import { useLazygetAllAssetAccountsForClientQuery } from './queries';
 import { useAuth } from '@/lib/auth-context';
 import { usePagination } from '@/components/utils/pagination';
 import { GetAllAssetAccountsForClient_getAllAssetAccountsForClient_page_edges } from './types/GetAllAssetAccountsForClient';
-import { SearchForm } from '@/components/search-form';
+import  SearchForm  from '@/components/search-form';
 import PaginationClassic from '@/components/pagination-classic';
 export default function FleetTableWrapper() {
   return (
