@@ -63,7 +63,7 @@ import { CustomerFormData } from '../constants';
 import { Person } from '../types/Person';
 import useClientRegisterCustomer from '../hooks/useClientRegisterCustomer';
 import useUpdatePerson from '../hooks/useUpdatePerson';
-import { PersonTypes } from '../../../thing/types/globalTypes';
+import { PersonTypes } from '../../types/globalTypes';
 
 interface UseCustomerFormProps {
   isEdit?: boolean;
