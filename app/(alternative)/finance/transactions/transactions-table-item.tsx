@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import { Transaction } from './transactions-table'
 import { TransactionsProperties } from './transactions-properties'

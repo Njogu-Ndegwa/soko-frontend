@@ -1,7 +1,4 @@
-export const metadata = {
-  title: 'Dashboard - Mosaic',
-  description: 'Page description',
-}
+'use-client'
 
 import FilterButton from '@/components/dropdown-filter'
 import Datepicker from '@/components/datepicker'

@@ -1,7 +1,4 @@
-export const metadata = {
-  title: 'Account Settings - Mosaic',
-  description: 'Page description',
-}
+'use-client'
 
 import SettingsSidebar from '../settings-sidebar'
 import AccountPanel from './account-panel'

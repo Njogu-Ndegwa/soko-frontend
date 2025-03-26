@@ -15,7 +15,7 @@ export default function DropdownProfile({ align }: {
       </PopoverButton>
       <Transition
         as="div"
-        className={`origin-top-right z-10 absolute top-full left-0 right-auto min-w-[14rem] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 pt-1.5 rounded-lg shadow-lg overflow-hidden mt-1 ${align === 'right' ? 'md:left-auto md:right-0' : 'md:left-0 md:right-auto'
+        className={`origin-top-right z-50 absolute top-full left-0 right-auto min-w-[14rem] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 pt-1.5 rounded-lg shadow-lg overflow-hidden mt-1 ${align === 'right' ? 'md:left-auto md:right-0' : 'md:left-0 md:right-auto'
           }`}
         enter="transition ease-out duration-200 transform"
         enterFrom="opacity-0 -translate-y-2"

@@ -1,7 +1,5 @@
-export const metadata = {
-  title: 'Calendar - Mosaic',
-  description: 'Page description',
-}
+'use-client'
+
 
 import { CalendarProvider } from './calendar-context'
 import CalendarNavigation from './calendar-navigation'

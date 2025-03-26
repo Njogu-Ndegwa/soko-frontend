@@ -1,7 +1,5 @@
-export const metadata = {
-  title: 'Transactions - Mosaic',
-  description: 'Page description',
-}
+'use client'
+
 
 import { SelectedItemsProvider } from '@/app/selected-items-context'
 import { FlyoutProvider } from '@/app/flyout-context'

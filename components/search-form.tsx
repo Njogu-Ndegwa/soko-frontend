@@ -1,12 +1,13 @@
+'use-client'
 import React from "react";
 
 interface SearchFormProps {
-  placeholder: string;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  placeholder?: string;
+  searchTerm?: string;
+  setSearchTerm?: (term: string) => void;
 }
 
-export const SearchForm: React.FC<SearchFormProps> = ({
+ const SearchForm: React.FC<SearchFormProps> = ({
   placeholder,
   searchTerm,
   setSearchTerm,
@@ -22,6 +23,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({
         type="search"
         placeholder={placeholder}
         value={searchTerm}
+        // @ts-ignore
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <button
@@ -43,3 +45,5 @@ export const SearchForm: React.FC<SearchFormProps> = ({
     </form>
   );
 };
+
+export default SearchForm

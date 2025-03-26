@@ -1,7 +1,4 @@
-export const metadata = {
-  title: 'Jobs - Mosaic',
-  description: 'Page description',
-}
+'use-client'
 
 import JobsSidebar from './jobs-sidebar'
 import JobsItem from './jobs-item'
