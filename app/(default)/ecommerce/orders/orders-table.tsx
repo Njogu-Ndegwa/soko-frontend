@@ -72,6 +72,7 @@ export default function AssetAccountsTable() {
     },
   });
 
+  console.log(assetData, "Asset Data -----75-----")
   // Transform asset data
   const assetAccounts = useMemo(
     () =>

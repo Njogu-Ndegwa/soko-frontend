@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build-types-thing": "apollo client:codegen --target=typescript types --globalTypesFile=app/(default)/thing/types/globalTypes.ts --config=apollo.config.account.js"
   },
   "dependencies": {
     "@apollo/client": "^3.13.1",
@@ -23,6 +24,7 @@
     "graphql": "^16.10.0",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
+    "lucide-react": "^0.483.0",
     "moment": "^2.30.1",
     "next": "15.1.6",
     "next-themes": "^0.4.4",
