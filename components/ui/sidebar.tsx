@@ -339,8 +339,9 @@ export default function Sidebar({
                   }}
                 </SidebarLinkGroup>
               )}
-              {canViewMenu('ecommerce') && (
-                <SidebarLinkGroup open={segments.includes("ecommerce")}>
+
+
+                {/* <SidebarLinkGroup open={segments.includes("ecommerce")}>
                   {(handleClick, open) => {
                     return (
                       <>
@@ -374,7 +375,6 @@ export default function Sidebar({
                                 E-Commerce
                               </span>
                             </div>
-                            {/* Icon */}
                             <div className="flex shrink-0 ml-2">
                               <svg
                                 className={`w-3 h-3 shrink-0 ml-1 fill-current text-gray-400 dark:text-gray-500 ${open && "rotate-180"
@@ -491,8 +491,8 @@ export default function Sidebar({
                       </>
                     );
                   }}
-                </SidebarLinkGroup>
-              )}
+                </SidebarLinkGroup> */}
+
               {/* <SidebarLinkGroup open={segments.includes("community")}>
                 {(handleClick, open) => {
                   return (
