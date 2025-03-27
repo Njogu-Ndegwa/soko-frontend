@@ -3,50 +3,50 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { AssignItemToItemFleetInput, ActorTypes, ActionScope, ThingIDTypes, BatchState, CodeSystemType } from "./../../types/globalTypes";
+import { ActorTypes, ActionScope, ThingIDTypes, BatchState, CodeSystemType } from "./../../types/globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: AssignItemToItemFleet
+// GraphQL fragment: GetAllItemsResponse
 // ====================================================
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit_owner_contact {
+export interface GetAllItemsResponse_page_edges_node_assetAccount_credit_owner_contact {
   __typename: "Contact";
   phone: string;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit_owner {
+export interface GetAllItemsResponse_page_edges_node_assetAccount_credit_owner {
   __typename: "Person";
   _id: string;
   name: string;
-  contact: AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit_owner_contact;
+  contact: GetAllItemsResponse_page_edges_node_assetAccount_credit_owner_contact;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit {
+export interface GetAllItemsResponse_page_edges_node_assetAccount_credit {
   __typename: "CreditAccount";
-  owner: AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit_owner;
+  owner: GetAllItemsResponse_page_edges_node_assetAccount_credit_owner;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount_paySchedule {
+export interface GetAllItemsResponse_page_edges_node_assetAccount_paySchedule {
   __typename: "Payment";
   amount: number;
   datetime: any;
   instruction: string;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount {
+export interface GetAllItemsResponse_page_edges_node_assetAccount {
   __typename: "AssetAccount";
   _id: string;
-  credit: AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit;
-  paySchedule: AssignItemToItemFleet_assignItemToItemFleet_assetAccount_paySchedule[] | null;
+  credit: GetAllItemsResponse_page_edges_node_assetAccount_credit;
+  paySchedule: GetAllItemsResponse_page_edges_node_assetAccount_paySchedule[] | null;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_itemFleet {
+export interface GetAllItemsResponse_page_edges_node_itemFleet {
   __typename: "ItemFleet";
   _id: string;
   fleetName: string;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_itemBatch {
+export interface GetAllItemsResponse_page_edges_node_itemBatch {
   __typename: "ItemBatch";
   _id: string;
   deleteStatus: boolean | null;
@@ -75,7 +75,7 @@ export interface AssignItemToItemFleet_assignItemToItemFleet_itemBatch {
   code_gen_type: CodeSystemType | null;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_itemFirmware {
+export interface GetAllItemsResponse_page_edges_node_itemFirmware {
   __typename: "ItemFirmware";
   _id: string;
   /**
@@ -85,7 +85,7 @@ export interface AssignItemToItemFleet_assignItemToItemFleet_itemFirmware {
   codeSystem: CodeSystemType;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_codeGenerator {
+export interface GetAllItemsResponse_page_edges_node_codeGenerator {
   __typename: "CodeGenerator";
   _id: string;
   deleteStatus: boolean | null;
@@ -104,7 +104,7 @@ export interface AssignItemToItemFleet_assignItemToItemFleet_codeGenerator {
   codeReversalCount: number;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet {
+export interface GetAllItemsResponse_page_edges_node {
   __typename: "Item";
   _id: string;
   deleteStatus: boolean | null;
@@ -135,18 +135,43 @@ export interface AssignItemToItemFleet_assignItemToItemFleet {
    * This is seller designated ID, unique within range.  Cannot be null.  Default same as oemItemID
    */
   sellerItemID: string;
-  assetAccount: AssignItemToItemFleet_assignItemToItemFleet_assetAccount | null;
-  itemFleet: AssignItemToItemFleet_assignItemToItemFleet_itemFleet | null;
-  itemBatch: AssignItemToItemFleet_assignItemToItemFleet_itemBatch;
-  itemFirmware: AssignItemToItemFleet_assignItemToItemFleet_itemFirmware;
+  assetAccount: GetAllItemsResponse_page_edges_node_assetAccount | null;
+  itemFleet: GetAllItemsResponse_page_edges_node_itemFleet | null;
+  itemBatch: GetAllItemsResponse_page_edges_node_itemBatch;
+  itemFirmware: GetAllItemsResponse_page_edges_node_itemFirmware;
   lifeCycle: string;
-  codeGenerator: AssignItemToItemFleet_assignItemToItemFleet_codeGenerator | null;
+  codeGenerator: GetAllItemsResponse_page_edges_node_codeGenerator | null;
 }
 
-export interface AssignItemToItemFleet {
-  assignItemToItemFleet: AssignItemToItemFleet_assignItemToItemFleet;
+export interface GetAllItemsResponse_page_edges {
+  __typename: "ItemEdge";
+  cursor: string | null;
+  node: GetAllItemsResponse_page_edges_node | null;
 }
 
-export interface AssignItemToItemFleetVariables {
-  assignItemToItemFleetInput: AssignItemToItemFleetInput;
+export interface GetAllItemsResponse_page_pageInfo {
+  __typename: "ItemPageInfo";
+  startCursor: string | null;
+  endCursor: string | null;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface GetAllItemsResponse_page {
+  __typename: "ItemConnection";
+  edges: GetAllItemsResponse_page_edges[] | null;
+  pageInfo: GetAllItemsResponse_page_pageInfo | null;
+}
+
+export interface GetAllItemsResponse_pageData {
+  __typename: "PageData";
+  count: number;
+  limit: number;
+  offset: number;
+}
+
+export interface GetAllItemsResponse {
+  __typename: "GetAllItemsResponse";
+  page: GetAllItemsResponse_page;
+  pageData: GetAllItemsResponse_pageData | null;
 }
