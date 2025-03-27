@@ -1,5 +1,13 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
+import {
+  GetAllItemFleets,
+  GetAllItemFleetsVariables,
+} from "./types/GetAllItemFleets";
+import {
+  GetItemFleetsForClient,
+  GetItemFleetsForClientVariables,
+} from "./types/GetItemFleetsForClient";
 // import useNotifier from "hooks/useNotifier";
 // import clientSimulator from "utils/clientSimulator";
 // import { handleGQLErrors } from "utils/gqlErrors";
@@ -278,4 +286,11 @@ const getTotalItemsInFleetQuery = gql`
   }
 `;
 
-
+export const useLazyGetItemFleetsForClientQuery = (
+  variables: GetItemFleetsForClientVariables
+) => {
+  return useLazyQuery<GetItemFleetsForClient, GetItemFleetsForClientVariables>(
+    getItemFleetsForClientQuery,
+    { variables }
+  );
+};

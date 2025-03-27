@@ -1,74 +1,73 @@
-'use client'
+"use client";
 // ManufacturersTable.tsx
-import { useState, useEffect } from 'react'
-import Table from '@/components/table/table'
-import { FleetInterface, CustomerInterface } from '../../accounts/types'
+import { useState, useEffect } from "react";
+import Table from "@/components/table/table";
+import { FleetInterface, CustomerInterface } from "../../accounts/types";
 // import { getFleets, reassignFleetToAgent, assignFleetToAgent, getCustomers } from '../services/inventoryService'
 
-import Link from 'next/link';
-import DynamicDropdown from '@/components/dropdown-dynamic';
-import { getDistributorAgents, } from '@/app/(auth)/services/authService';
+import Link from "next/link";
+import DynamicDropdown from "@/components/dropdown-dynamic";
+import { getDistributorAgents } from "@/app/(auth)/services/authService";
 
-import { AgentInterface } from '@/app/(auth)/services/authService'
-import { useSelectedItems } from '@/app/selected-items-context';
-import DateSelect from '@/components/date-select';
-import FilterButton from '@/components/dropdown-filter';
-import { SelectedItemsProvider } from '@/app/selected-items-context';
-import Alert from '@/components/alert';
-import { useAlert } from '@/app/contexts/alertContext';
-import FeedbackModal from '@/components/feedback-modal';
+import { AgentInterface } from "@/app/(auth)/services/authService";
+import { useSelectedItems } from "@/app/selected-items-context";
+import DateSelect from "@/components/date-select";
+import FilterButton from "@/components/dropdown-filter";
+import { SelectedItemsProvider } from "@/app/selected-items-context";
+import Alert from "@/components/alert";
+import { useAlert } from "@/app/contexts/alertContext";
+import FeedbackModal from "@/components/feedback-modal";
 import { columns, dropdownOptions } from "./tableColumns";
-import { actions } from './tableActions';
-import { SearchableListModal } from '@/components/seachable-list-modal';
-import { useLazyGetAllClientCustomersQuery } from './queries';
-import { useAuth } from '@/lib/auth-context';
-import { usePagination } from '@/components/utils/pagination';
+import { actions } from "./tableActions";
+import { SearchableListModal } from "@/components/seachable-list-modal";
+import { useLazyGetItemFleetsForClientQuery } from "./queries";
+import { useAuth } from "@/lib/auth-context";
+import { usePagination } from "@/components/utils/pagination";
 // import { GetAllAssetAccountsForClient_getAllAssetAccountsForClient_page_edges } from './types/GetAllAssetAccountsForClient';
-import { GetAllClientCustomers_getAllClientCustomers_page_edges } from './types/GetAllClientCustomers';
-import  SearchForm  from '@/components/search-form';
-import PaginationClassic from '@/components/pagination-classic';
+import { GetAllItemFleets_getAllItemFleets_page_edges } from "./types/GetAllItemFleets";
+import SearchForm from "@/components/search-form";
+import PaginationClassic from "@/components/pagination-classic";
 export default function FleetTableWrapper() {
   return (
     <SelectedItemsProvider>
       <FleetTable />
     </SelectedItemsProvider>
-  )
+  );
 }
 
 function FleetTable() {
-  const [customers, setCustomers] = useState<GetAllClientCustomers_getAllClientCustomers_page_edges[]>(
-    [] as GetAllClientCustomers_getAllClientCustomers_page_edges[])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [agents, setAgents] = useState<AgentInterface[]>([])
-  const { setSelectedItems, selectedItems } = useSelectedItems()
+  const [customers, setCustomers] = useState<
+    GetAllItemFleets_getAllItemFleets_page_edges[]
+  >([] as GetAllItemFleets_getAllItemFleets_page_edges[]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [agents, setAgents] = useState<AgentInterface[]>([]);
+  const { setSelectedItems, selectedItems } = useSelectedItems();
   const [selectedAgentId, setSelectedAgentId] = useState<number | null>(null);
-  const [isBannerOpen, setBannerOpen] = useState(false)
-  const [dangerModalOpen, setDangerModalOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isOpen, setIsOpen] = useState(false)
+  const [isBannerOpen, setBannerOpen] = useState(false);
+  const [dangerModalOpen, setDangerModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const { alert } = useAlert()
+  const { alert } = useAlert();
   const { distributorId } = useAuth();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-    const {
-      currentCursor,
-      cursorHistory,
-      handleNext,
-      handlePrevious,
-      itemsPerPage,
-      setItemsPerPage,
-      hasPreviousPage, // Use this from hook instead of API
-      currentPage, // Use this from hook instead of calculating
-    } = usePagination();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const {
+    currentCursor,
+    cursorHistory,
+    handleNext,
+    handlePrevious,
+    itemsPerPage,
+    setItemsPerPage,
+    hasPreviousPage, // Use this from hook instead of API
+    currentPage, // Use this from hook instead of calculating
+  } = usePagination();
 
-  const [getAllAssetAccounts, { loading: assetLoading, error: assetError, data }] = useLazyGetAllClientCustomersQuery({
-    clientId: distributorId || "",
-    first: itemsPerPage,
-    after: currentCursor,
-    search: debouncedSearchTerm || null
-  });
+  const [
+    getDistributorItems,
+    { data, error: assetError, loading: assetLoading },
+  ] = useLazyGetItemFleetsForClientQuery({ clientId: distributorId });
   // const fetchCustomers = async () => {
   //   try {
   //     const data = await getCustomers()
@@ -89,52 +88,47 @@ function FleetTable() {
   }, [searchTerm]);
 
   useEffect(() => {
-    getAllAssetAccounts();
+    getDistributorItems();
   }, [debouncedSearchTerm, itemsPerPage]);
 
   const fetchAgents = async () => {
     try {
-      const data = await getDistributorAgents()
-      setAgents(data)
+      const data = await getDistributorAgents();
+      setAgents(data);
+    } catch (err) {
+    } finally {
     }
-    catch (err) {
-
-    }
-    finally {
-
-    }
-
-  }
+  };
 
   useEffect(() => {
     // fetchAgents()
     // fetchCustomers()
-    getAllAssetAccounts()
-  }, [])
+    getDistributorItems();
+  }, []);
 
   useEffect(() => {
-    setCustomers(data?.getAllClientCustomers?.page?.edges || [])
-  },[data])
+    setCustomers(data?.getItemFleetsForClient?.page?.edges || []);
+  }, [data]);
 
   const handleSelectionChange = (selectedIds: any[]) => {
-    setSelectedItems(selectedIds)
-  }
+    setSelectedItems(selectedIds);
+  };
 
   const handleAgentSelect = (agent: any) => {
     setSelectedAgentId(agent.id); // Just set the ID, no actor here
   };
 
   const handleDropdownItemSelect = (option: any) => {
-    setSelectedOption(option.id)
+    setSelectedOption(option.id);
     if (option.id === 0) {
       setDangerModalOpen(true);
     } else if (option.id === 1 || option.id === 2) {
-      setIsOpen(true)
+      setIsOpen(true);
     }
-  }
-  
+  };
+
   const loadData = async () => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     // fetchCustomers();
     setSelectedItems([]);
   };
@@ -155,39 +149,39 @@ function FleetTable() {
     // }
   };
 
-  const filteredAgents = agents.filter(agent =>
+  const filteredAgents = agents.filter((agent) =>
     agent.email.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  );
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
-  }
+  };
   // 2. Add these pagination data extractors (add after your existing useEffect hooks):
-// Extract page info and count
-const pageInfo = data?.getAllClientCustomers?.page?.pageInfo || {
-  hasNextPage: false, 
-  hasPreviousPage: false
-};
+  // Extract page info and count
+  const pageInfo = data?.getItemFleetsForClient?.page?.pageInfo || {
+    hasNextPage: false,
+    hasPreviousPage: false,
+  };
 
-const totalCount = data?.getAllClientCustomers?.pageData?.count || 0;
+  const totalCount = data?.getItemFleetsForClient?.pageData?.count || 0;
 
-// Handler for next page button
-const handleNextPage = () => {
-  if (pageInfo.hasNextPage && pageInfo.endCursor) {
-    handleNext(pageInfo.endCursor);
-  }
-};
+  // Handler for next page button
+  const handleNextPage = () => {
+    if (pageInfo.hasNextPage && pageInfo.endCursor) {
+      handleNext(pageInfo.endCursor);
+    }
+  };
 
-// Handler for previous page button
-const handlePreviousPage = () => {
-  handlePrevious();
-};
+  // Handler for previous page button
+  const handlePreviousPage = () => {
+    handlePrevious();
+  };
 
-// 4. Add useEffect to trigger query when current cursor changes:
-useEffect(() => {
-  getAllAssetAccounts();
-}, [currentCursor]);
-console.log(columns, "Columns")
+  // Add useEffect to trigger query when current cursor changes:
+  useEffect(() => {
+    getDistributorItems();
+  }, [currentCursor]);
+  console.log(columns, "Columns");
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto">
       <FeedbackModal
@@ -209,8 +203,10 @@ console.log(columns, "Columns")
         renderItem={(agent) => agent.email}
         onSelect={handleAgentSelect}
         selectedItemId={selectedAgentId}
-        actionLabel={selectedOption === 1 ? 'Assign Item' : 'Re-assign Item'}
-        onAction={() => handleActionClick(selectedOption === 1 ? 'assign' : 'reAssign')}
+        actionLabel={selectedOption === 1 ? "Assign Item" : "Re-assign Item"}
+        onAction={() =>
+          handleActionClick(selectedOption === 1 ? "assign" : "reAssign")
+        }
       />
       {/* Header section */}
       <div className="sm:flex sm:justify-between sm:items-center mb-5">
@@ -221,11 +217,11 @@ console.log(columns, "Columns")
         </div>
 
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-        <SearchForm
-          placeholder="Search by Customer…" 
-          searchTerm={searchTerm}
-          setSearchTerm={handleSearch}
-        />
+          <SearchForm
+            placeholder="Search by Customer…"
+            searchTerm={searchTerm}
+            setSearchTerm={handleSearch}
+          />
           <Link
             href="/accounts/customers/add" // Replace with your desired path
             className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white flex items-center justify-center"
@@ -246,12 +242,16 @@ console.log(columns, "Columns")
         </div>
       </div>
       <div className="sm:flex sm:justify-between sm:items-center mb-5">
-
         {/* Left side */}
         <div className="mb-4 sm:mb-0">
           <ul className="flex flex-wrap -m-1">
             <li className="m-1">
-              <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">All <span className="ml-1 text-gray-400 dark:text-gray-500">{totalCount}</span></button>
+              <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
+                All{" "}
+                <span className="ml-1 text-gray-400 dark:text-gray-500">
+                  {totalCount}
+                </span>
+              </button>
             </li>
           </ul>
         </div>
@@ -259,13 +259,15 @@ console.log(columns, "Columns")
         {/* Right side */}
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
           {/* Delete button */}
-          <DynamicDropdown options={dropdownOptions} onDropdownItemSelect={handleDropdownItemSelect} />
+          <DynamicDropdown
+            options={dropdownOptions}
+            onDropdownItemSelect={handleDropdownItemSelect}
+          />
           {/* Dropdown */}
           <DateSelect />
           {/* Filter button */}
           <FilterButton align="right" />
         </div>
-
       </div>
       {/* Table section */}
       <div className="bg-white dark:bg-gray-800 shadow-lg rounded-xl">
@@ -280,16 +282,16 @@ console.log(columns, "Columns")
         />
       </div>
       <div className="mt-8">
-      <PaginationClassic 
-    currentPage={currentPage}
-    totalItems={totalCount}
-    itemsPerPage={itemsPerPage}
-    hasNextPage={pageInfo.hasNextPage}
-    hasPreviousPage={hasPreviousPage} // Use the one from hook
-    onNextPage={handleNextPage}
-    onPreviousPage={handlePreviousPage}
-  />
-      </div> 
+        <PaginationClassic
+          currentPage={currentPage}
+          totalItems={totalCount}
+          itemsPerPage={itemsPerPage}
+          hasNextPage={pageInfo.hasNextPage}
+          hasPreviousPage={hasPreviousPage} // Use the one from hook
+          onNextPage={handleNextPage}
+          onPreviousPage={handlePreviousPage}
+        />
+      </div>
     </div>
-  )
+  );
 }

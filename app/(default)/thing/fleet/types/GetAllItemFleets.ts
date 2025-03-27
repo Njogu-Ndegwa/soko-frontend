@@ -121,8 +121,6 @@ export interface GetAllItemFleets_getAllItemFleets_page {
 export interface GetAllItemFleets_getAllItemFleets_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllItemFleets_getAllItemFleets {
