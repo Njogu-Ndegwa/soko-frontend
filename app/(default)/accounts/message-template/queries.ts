@@ -89,8 +89,6 @@ offset: Int!
 export const pageDataFragment = gql`
   fragment PageData on PageData {
     count
-    limit
-    offset
   }
 `;
 
