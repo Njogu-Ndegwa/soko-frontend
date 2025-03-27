@@ -176,8 +176,6 @@ export interface GetAllAssetAccountActivities_getAllAssetAccountActivities_page 
 export interface GetAllAssetAccountActivities_getAllAssetAccountActivities_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllAssetAccountActivities_getAllAssetAccountActivities {

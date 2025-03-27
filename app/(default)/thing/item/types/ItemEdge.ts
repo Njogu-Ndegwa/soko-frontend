@@ -3,50 +3,50 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { AssignItemToItemFleetInput, ActorTypes, ActionScope, ThingIDTypes, BatchState, CodeSystemType } from "./../../types/globalTypes";
+import { ActorTypes, ActionScope, ThingIDTypes, BatchState, CodeSystemType } from "./../../types/globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: AssignItemToItemFleet
+// GraphQL fragment: ItemEdge
 // ====================================================
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit_owner_contact {
+export interface ItemEdge_node_assetAccount_credit_owner_contact {
   __typename: "Contact";
   phone: string;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit_owner {
+export interface ItemEdge_node_assetAccount_credit_owner {
   __typename: "Person";
   _id: string;
   name: string;
-  contact: AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit_owner_contact;
+  contact: ItemEdge_node_assetAccount_credit_owner_contact;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit {
+export interface ItemEdge_node_assetAccount_credit {
   __typename: "CreditAccount";
-  owner: AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit_owner;
+  owner: ItemEdge_node_assetAccount_credit_owner;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount_paySchedule {
+export interface ItemEdge_node_assetAccount_paySchedule {
   __typename: "Payment";
   amount: number;
   datetime: any;
   instruction: string;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_assetAccount {
+export interface ItemEdge_node_assetAccount {
   __typename: "AssetAccount";
   _id: string;
-  credit: AssignItemToItemFleet_assignItemToItemFleet_assetAccount_credit;
-  paySchedule: AssignItemToItemFleet_assignItemToItemFleet_assetAccount_paySchedule[] | null;
+  credit: ItemEdge_node_assetAccount_credit;
+  paySchedule: ItemEdge_node_assetAccount_paySchedule[] | null;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_itemFleet {
+export interface ItemEdge_node_itemFleet {
   __typename: "ItemFleet";
   _id: string;
   fleetName: string;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_itemBatch {
+export interface ItemEdge_node_itemBatch {
   __typename: "ItemBatch";
   _id: string;
   deleteStatus: boolean | null;
@@ -75,7 +75,7 @@ export interface AssignItemToItemFleet_assignItemToItemFleet_itemBatch {
   code_gen_type: CodeSystemType | null;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_itemFirmware {
+export interface ItemEdge_node_itemFirmware {
   __typename: "ItemFirmware";
   _id: string;
   /**
@@ -85,7 +85,7 @@ export interface AssignItemToItemFleet_assignItemToItemFleet_itemFirmware {
   codeSystem: CodeSystemType;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet_codeGenerator {
+export interface ItemEdge_node_codeGenerator {
   __typename: "CodeGenerator";
   _id: string;
   deleteStatus: boolean | null;
@@ -104,7 +104,7 @@ export interface AssignItemToItemFleet_assignItemToItemFleet_codeGenerator {
   codeReversalCount: number;
 }
 
-export interface AssignItemToItemFleet_assignItemToItemFleet {
+export interface ItemEdge_node {
   __typename: "Item";
   _id: string;
   deleteStatus: boolean | null;
@@ -135,18 +135,16 @@ export interface AssignItemToItemFleet_assignItemToItemFleet {
    * This is seller designated ID, unique within range.  Cannot be null.  Default same as oemItemID
    */
   sellerItemID: string;
-  assetAccount: AssignItemToItemFleet_assignItemToItemFleet_assetAccount | null;
-  itemFleet: AssignItemToItemFleet_assignItemToItemFleet_itemFleet | null;
-  itemBatch: AssignItemToItemFleet_assignItemToItemFleet_itemBatch;
-  itemFirmware: AssignItemToItemFleet_assignItemToItemFleet_itemFirmware;
+  assetAccount: ItemEdge_node_assetAccount | null;
+  itemFleet: ItemEdge_node_itemFleet | null;
+  itemBatch: ItemEdge_node_itemBatch;
+  itemFirmware: ItemEdge_node_itemFirmware;
   lifeCycle: string;
-  codeGenerator: AssignItemToItemFleet_assignItemToItemFleet_codeGenerator | null;
+  codeGenerator: ItemEdge_node_codeGenerator | null;
 }
 
-export interface AssignItemToItemFleet {
-  assignItemToItemFleet: AssignItemToItemFleet_assignItemToItemFleet;
-}
-
-export interface AssignItemToItemFleetVariables {
-  assignItemToItemFleetInput: AssignItemToItemFleetInput;
+export interface ItemEdge {
+  __typename: "ItemEdge";
+  cursor: string | null;
+  node: ItemEdge_node | null;
 }

@@ -10,4 +10,6 @@
 export interface PageData {
   __typename: "PageData";
   count: number;
+  limit: number;
+  offset: number;
 }

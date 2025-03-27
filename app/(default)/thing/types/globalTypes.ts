@@ -25,10 +25,21 @@ export enum ActorTypes {
   SOFTWARE = "SOFTWARE",
 }
 
+export enum BatchState {
+  Completed = "Completed",
+  Scheduled = "Scheduled",
+  Submitted = "Submitted",
+}
+
 export enum CodeSystemType {
   ACP1 = "ACP1",
   ACP2 = "ACP2",
   OPENTOKEN = "OPENTOKEN",
+}
+
+export enum QueryOrder {
+  ASC = "ASC",
+  DESC = "DESC",
 }
 
 export enum ThingIDTypes {
@@ -64,6 +75,11 @@ export interface CreateItemFleetInput {
   disableMinimumDayCodesGenerated?: boolean | null;
   fleetName?: string | null;
   assignDate: any;
+}
+
+export interface GetAllClientItemsInItemFleet {
+  itemFleetId: string;
+  clientId: string;
 }
 
 export interface ReassignItemsFromItemFleetInputDto {

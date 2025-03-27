@@ -2,7 +2,7 @@
 // ManufacturersTable.tsx
 import { useState, useEffect } from 'react'
 import Table from '@/components/table/table'
-import { FleetInterface, CustomerInterface } from '../types'
+import { FleetInterface, CustomerInterface } from '../../accounts/types'
 // import { getFleets, reassignFleetToAgent, assignFleetToAgent, getCustomers } from '../services/inventoryService'
 
 import Link from 'next/link';
@@ -20,10 +20,13 @@ import FeedbackModal from '@/components/feedback-modal';
 import { columns, dropdownOptions } from "./tableColumns";
 import { actions } from './tableActions';
 import { SearchableListModal } from '@/components/seachable-list-modal';
-import { useLazygetAllAssetAccountsForClientQuery } from './queries';
+import { useLazyGetAllClientItemsQuery } from './queries';
 import { useAuth } from '@/lib/auth-context';
 import { usePagination } from '@/components/utils/pagination';
-import { GetAllAssetAccountsForClient_getAllAssetAccountsForClient_page_edges } from './types/GetAllAssetAccountsForClient';
+import { QueryOrder } from '../types/globalTypes';
+// import { GetAllAssetAccountsForClient_getAllAssetAccountsForClient_page_edges } from './types/GetAllAssetAccountsForClient';
+
+import { GetAllClientItems_getAllClientItems_page_edges } from './types/GetAllClientItems';
 import  SearchForm  from '@/components/search-form';
 import PaginationClassic from '@/components/pagination-classic';
 export default function FleetTableWrapper() {
@@ -35,8 +38,8 @@ export default function FleetTableWrapper() {
 }
 
 function FleetTable() {
-  const [customers, setCustomers] = useState<GetAllAssetAccountsForClient_getAllAssetAccountsForClient_page_edges[]>(
-    [] as GetAllAssetAccountsForClient_getAllAssetAccountsForClient_page_edges[])
+  const [customers, setCustomers] = useState<GetAllClientItems_getAllClientItems_page_edges[]>(
+    [] as GetAllClientItems_getAllClientItems_page_edges[])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [agents, setAgents] = useState<AgentInterface[]>([])
@@ -62,11 +65,13 @@ function FleetTable() {
       currentPage, // Use this from hook instead of calculating
     } = usePagination();
 
-  const [getAllAssetAccounts, { loading: assetLoading, error: assetError, data }] = useLazygetAllAssetAccountsForClientQuery({
+  const [getAllAssetAccounts, { loading: assetLoading, error: assetError, data }] = useLazyGetAllClientItemsQuery({
     clientId: distributorId || "",
     first: itemsPerPage,
     after: currentCursor,
-    search: debouncedSearchTerm || null
+    search: debouncedSearchTerm || null,
+    assetaccount: false,
+    queryorder: QueryOrder.DESC
   });
   // const fetchCustomers = async () => {
   //   try {
@@ -112,7 +117,7 @@ function FleetTable() {
   }, [])
 
   useEffect(() => {
-    setCustomers(data?.getAllAssetAccountsForClient?.page?.edges || [])
+    setCustomers(data?.getAllClientItems?.page?.edges || [])
   },[data])
 
   const handleSelectionChange = (selectedIds: any[]) => {
@@ -163,12 +168,12 @@ function FleetTable() {
   }
   // 2. Add these pagination data extractors (add after your existing useEffect hooks):
 // Extract page info and count
-const pageInfo = data?.getAllAssetAccountsForClient?.page?.pageInfo || {
+const pageInfo = data?.getAllClientItems?.page?.pageInfo || {
   hasNextPage: false, 
   hasPreviousPage: false
 };
 
-const totalCount = data?.getAllAssetAccountsForClient?.pageData?.count || 0;
+const totalCount = data?.getAllClientItems?.pageData?.count || 0;
 
 // Handler for next page button
 const handleNextPage = () => {
@@ -215,18 +220,18 @@ console.log(columns, "Columns")
       <div className="sm:flex sm:justify-between sm:items-center mb-5">
         <div className="mb-4 sm:mb-0">
           <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-            Asset Accounts
+            Items
           </h1>
         </div>
 
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
         <SearchForm
-          placeholder="Search by Account Number…" 
+          placeholder="Search by Customer…" 
           searchTerm={searchTerm}
           setSearchTerm={handleSearch}
         />
           <Link
-            href="/accounts/asset-accounts/activate/new" // Replace with your desired path
+            href="/accounts/customers/add" // Replace with your desired path
             className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white flex items-center justify-center"
           >
             <svg

@@ -77,8 +77,6 @@ export interface GetAllClientCustomers_getAllClientCustomers_page {
 export interface GetAllClientCustomers_getAllClientCustomers_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllClientCustomers_getAllClientCustomers {

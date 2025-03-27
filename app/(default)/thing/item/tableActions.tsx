@@ -17,8 +17,7 @@ export const actions = ({ row, onDelete }: ActionProps) => {
     const [dangerModalOpen, setDangerModalOpen] = useState(false)
     const { alert } = useAlert()
     const handleEdit = () => {
-        const accountId = row.node?._id;
-        router.push(`/accounts/asset-accounts/activate/${accountId}`);
+        router.push(`/accounts/asset-accounts/edit/${row.id}`);
     };
 
     const handleDelete = () => {

@@ -49,8 +49,6 @@ export interface GetAllPayPlanTemplates_getAllPayPlanTemplates_page {
 export interface GetAllPayPlanTemplates_getAllPayPlanTemplates_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllPayPlanTemplates_getAllPayPlanTemplates {

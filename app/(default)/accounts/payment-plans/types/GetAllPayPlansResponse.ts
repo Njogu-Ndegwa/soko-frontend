@@ -49,8 +49,6 @@ export interface GetAllPayPlansResponse_page {
 export interface GetAllPayPlansResponse_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllPayPlansResponse {
