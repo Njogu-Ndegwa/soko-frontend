@@ -1,4 +1,8 @@
-import { gql, useLazyQuery, useQuery } from '@apollo/client';
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import {
+  GetAllMessageGroups,
+  GetAllMessageGroupsVariables,
+} from "./types/GetAllMessageGroups";
 // import clientSimulator from 'utils/clientSimulator';
 // import {
 //   GetAllMessageGroups,
@@ -20,13 +24,12 @@ persons: [Person!]!
 }
  */
 
-
 export const messageGroupFragment = gql`
   fragment MessageGroup on MessageGroup {
     name
     description
     persons {
-      pageData{
+      pageData {
         count
       }
     }
@@ -76,11 +79,8 @@ offset: Int!
 export const pageDataFragment = gql`
   fragment PageData on PageData {
     count
-    limit
-    offset
   }
 `;
-
 
 /**
  * type MessageGroupConnection {
@@ -148,3 +148,15 @@ export const getAllMessageGroupsQuery = gql`
     }
   }
 `;
+
+export const useGetAllMessageGroups = () => {
+  return useQuery<GetAllMessageGroups, GetAllMessageGroupsVariables>(
+    getAllMessageGroupsQuery
+  );
+};
+
+export const useLazyGetAllMessageGroups = () => {
+  return useLazyQuery<GetAllMessageGroups, GetAllMessageGroupsVariables>(
+    getAllMessageGroupsQuery
+  );
+};
