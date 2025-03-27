@@ -1,5 +1,4 @@
-import gql from 'graphql-tag';
-
+import gql from "graphql-tag";
 
 /**
  * Mutation.createPayPlan(
@@ -9,17 +8,17 @@ createPayPlanTemplateInput: CreatePayPlanInput!
 export const createPayPlanMutation = gql`
   mutation CreatePayPlan($createPayPlanTemplateInput: CreatePayPlanInput!) {
     createPayPlan(createPayPlanTemplateInput: $createPayPlanTemplateInput) {
-        _id
-        deleteStatus
-        deleteAt
-        createdAt
-        updatedAt
-        planName
-        planDescription
-        planDetails {
-            pName
-            pValue
-        }
+      _id
+      deleteStatus
+      deleteAt
+      createdAt
+      updatedAt
+      planName
+      planDescription
+      planDetails {
+        pName
+        pValue
+      }
     }
   }
 `;
@@ -30,21 +29,19 @@ updatePayPlanTemplateInput: UpdatePayPlanInput!
 ): PayPlanTemplate!
  */
 export const updatePayPlanMutation = gql`
-  mutation UpdatePayPlan(
-    $updatePayPlanTemplateInput: UpdatePayPlanInput!
-  ) {
+  mutation UpdatePayPlan($updatePayPlanTemplateInput: UpdatePayPlanInput!) {
     updatePayPlan(updatePayPlanTemplateInput: $updatePayPlanTemplateInput) {
-        _id
-        deleteStatus
-        deleteAt
-        createdAt
-        updatedAt
-        planName
-        planDescription
-        planDetails {
-            pName
-            pValue
-        }
+      _id
+      deleteStatus
+      deleteAt
+      createdAt
+      updatedAt
+      planName
+      planDescription
+      planDetails {
+        pName
+        pValue
+      }
     }
   }
 `;
@@ -56,6 +53,12 @@ payPlanTemplateId: String!
  */
 export const deletePayPlanMutation = gql`
   mutation DeletePayPlan($payPlanTemplateId: String!) {
-    deletePayPlan(payPlanTemplateId: $payPlanTemplateId) 
+    deletePayPlan(payPlanTemplateId: $payPlanTemplateId)
   }
 `;
+
+/**
+ * Mutation.createPayPlanDetail(
+createPayPlanDetailInput: CreatePayPlanDetailInput!
+): PayPlanDetail!
+ */

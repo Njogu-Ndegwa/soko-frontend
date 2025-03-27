@@ -1,6 +1,9 @@
-import { gql, useLazyQuery, useQuery } from '@apollo/client';
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
 // import clientAccount from 'apps/accounts/app/utils/clientAccount';
-// import { GetAllPayPlanTemplates, GetAllPayPlanTemplatesVariables } from './types/GetAllPayPlanTemplates';
+import {
+  GetAllPayPlanTemplates,
+  GetAllPayPlanTemplatesVariables,
+} from "./types/GetAllPayPlanTemplates";
 // import { GetSpecificPayPlanTemplate, GetSpecificPayPlanTemplateVariables } from './types/GetSpecificPayPlanTemplate';
 
 /**
@@ -17,18 +20,18 @@ planDetails: [PlanDetail!]
  */
 
 const paymentPlanTemplateFragment = gql`
-fragment PayPlanTemplate on PayPlanTemplate {
-  planName
-  planDescription
-  useUpfront
-  _id
-  createdAt
-  planDetails {
-    pName
-    pValue
+  fragment PayPlanTemplate on PayPlanTemplate {
+    planName
+    planDescription
+    useUpfront
+    _id
+    createdAt
+    planDetails {
+      pName
+      pValue
+    }
   }
-}
-`
+`;
 /**
  * type PayPlanTemplateEdge {
 cursor: String
@@ -54,7 +57,7 @@ hasNextPage: Boolean!
 }
  */
 const payPlanTemplatePageInfoFragment = gql`
-  fragment  PayPlanTemplatePageInfo  on  PayPlanTemplatePageInfo  {
+  fragment PayPlanTemplatePageInfo on PayPlanTemplatePageInfo {
     endCursor
     hasNextPage
     hasPreviousPage
@@ -89,8 +92,6 @@ offset: Int!
 const pageDataFragment = gql`
   fragment PageData on PageData {
     count
-    limit
-    offset
   }
 `;
 /**
@@ -119,7 +120,7 @@ first: Int
 last: Int
 ): GetAllPayPlansResponse!
  */
-const  getAllPayPlanTemplatesQuery = gql`
+const getAllPayPlanTemplatesQuery = gql`
   ${getAllPayPlansResponse}
   query GetAllPayPlanTemplates(
     $after: String
@@ -143,7 +144,7 @@ const  getAllPayPlanTemplatesQuery = gql`
 id: ID!
 ): PayPlanTemplate
  */
-const  getSpecificPayPlanTemplateQuery = gql`
+const getSpecificPayPlanTemplateQuery = gql`
   ${paymentPlanTemplateFragment}
   query GetSpecificPayPlanTemplate($id: ID!) {
     getSpecificPayPlanTemplate(id: $id) {
@@ -152,7 +153,20 @@ const  getSpecificPayPlanTemplateQuery = gql`
   }
 `;
 
+export const useGetAllPayPlanTemplates = () => {
+  return useQuery<GetAllPayPlanTemplates, GetAllPayPlanTemplatesVariables>(
+    getAllPayPlanTemplatesQuery
+  );
+};
 
+export const useLazyGetAllPayPlanTemplatesQuery = () => {
+  return useLazyQuery<GetAllPayPlanTemplates, GetAllPayPlanTemplatesVariables>(
+    getAllPayPlanTemplatesQuery
+  );
+};
 
-
-
+export const useGetSpecificPayPlanTemplate = () => {
+  return useLazyQuery<GetAllPayPlanTemplates, GetAllPayPlanTemplatesVariables>(
+    getSpecificPayPlanTemplateQuery
+  );
+};

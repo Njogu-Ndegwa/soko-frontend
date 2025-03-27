@@ -1,9 +1,9 @@
-import { useMutation } from '@apollo/client';
-import { clientRegisterCustomerMutation } from '../mutations';
+import { useMutation } from "@apollo/client";
+import { createPayPlanMutation } from "../mutations";
 import {
   ClientRegisterCustomer,
   ClientRegisterCustomerVariables,
-} from '../types/ClientRegisterCustomer';
+} from "../types/ClientRegisterCustomer";
 
 const useClientRegisterCustomer = (onCompleted: (data: any) => void) => {
   const [registerCustomer, options] = useMutation<
