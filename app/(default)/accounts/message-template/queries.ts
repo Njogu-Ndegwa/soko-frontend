@@ -1,18 +1,21 @@
-import { gql, useLazyQuery, useQuery } from '@apollo/client';
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import {
+  GetAllMessageTemplates,
+  GetAllMessageTemplatesVariables,
+} from "./types/GetAllMessageTemplates";
 // import clientSimulator from 'utils/clientSimulator';
 // // import {
 // //   GetAllMessageGroups,
 // //   GetAllMessageGroupsVariables
 // // } from './types/GetAllMessageGroups';
-// import { 
-//   GetAllMessageTemplates, 
-//   GetAllMessageTemplatesVariables 
+// import {
+//   GetAllMessageTemplates,
+//   GetAllMessageTemplatesVariables
 // } from './types/GetAllMessageTemplates';
-// import { 
+// import {
 //   GetSpecificMessageTemplate,
 //   GetSpecificMessageTemplateVariables
 //  } from './types/GetSpecificMessageTemplate';
-
 
 /**
  * type MessageTemplate {
@@ -28,7 +31,6 @@ intent: IntentsEnum!
 distributor: Distributor
 }
  */
-
 
 export const messageTemplateFragment = gql`
   fragment MessageTemplate on MessageTemplate {
@@ -87,11 +89,8 @@ offset: Int!
 export const pageDataFragment = gql`
   fragment PageData on PageData {
     count
-    limit
-    offset
   }
 `;
-
 
 /**
  * type MessageGroupConnection {
@@ -170,7 +169,24 @@ export const getSpecificMessageTemplateQuery = gql`
   query GetSpecificMessageTemplate($id: ID!) {
     getSpecificMessageTemplate(id: $id) {
       ...MessageTemplate
-        }
+    }
   }
 `;
 
+export const useGetAllMessageTemplates = () => {
+  return useQuery<GetAllMessageTemplates, GetAllMessageTemplatesVariables>(
+    getAllMessageTemplateQuery
+  );
+};
+
+export const useLazyGetAllPayPlanTemplatesQuery = () => {
+  return useLazyQuery<GetAllMessageTemplates, GetAllMessageTemplatesVariables>(
+    getAllMessageTemplateQuery
+  );
+};
+
+export const useGetSpecificMessageTemplate = () => {
+  return useLazyQuery<GetAllMessageTemplates, GetAllMessageTemplatesVariables>(
+    getSpecificMessageTemplateQuery
+  );
+};
