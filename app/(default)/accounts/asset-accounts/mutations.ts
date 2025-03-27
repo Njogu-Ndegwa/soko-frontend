@@ -116,3 +116,102 @@ export const closeAssetAccountMutation = gql`
     }
   }
 `;
+
+/**
+ * type CodeResponse {
+codeType: CodeTypes!
+codeHex: String!
+codeDec: String!
+}
+ */
+const codeResponseFragment = gql`
+  fragment CodeResponse on CodeResponse {
+    codeType
+    codeHex
+    codeDec
+  }
+`;
+/**
+ * Mutation.generateDaysCode(
+generateDaysCodeInput: GenerateDaysCodeInput!
+): CodeResponse!
+ */
+export const generateDaysCodeMutation = gql`
+  ${codeResponseFragment}
+  mutation GenerateDaysCode($generateDaysCodeInput: GenerateDaysCodeInput!) {
+    generateDaysCode(generateDaysCodeInput: $generateDaysCodeInput) {
+      ...CodeResponse
+    }
+  }
+`;
+
+/**
+Mutation.generateResetCode(
+generateResetCodeInput: GenerateCodeInput!
+): CodeResponse!
+ */
+export const generateResetCodeMutation = gql`
+  ${codeResponseFragment}
+  mutation GenerateResetCode($generateResetCodeInput: GenerateCodeInput!) {
+    generateResetCode(generateResetCodeInput: $generateResetCodeInput) {
+      ...CodeResponse
+    }
+  }
+`;
+
+/**
+ * Mutation.generateFreeCode(
+generateFreeCodeInput: GenerateCodeInput!
+): CodeResponse!
+ */
+export const generateFreeCodeMutation = gql`
+  ${codeResponseFragment}
+  mutation GenerateFreeCode($generateFreeCodeInput: GenerateCodeInput!) {
+    generateFreeCode(generateFreeCodeInput: $generateFreeCodeInput) {
+      ...CodeResponse
+    }
+  }
+`;
+
+/**
+ * 
+distributorIncreaseFreeCodeCountForItem
+Mutation.distributorIncreaseFreeCodeCountForItem(
+itemId: ID!
+freeCodeCount: Int!
+): CodeGenerator!
+ */
+export const distributorIncreaseFreeCodeCountForItemMutation = gql`
+  mutation DistributorIncreaseFreeCodeCountForItem(
+    $itemId: ID!
+    $freeCodeCount: Int!
+  ) {
+    distributorIncreaseFreeCodeCountForItem(
+      itemId: $itemId
+      freeCodeCount: $freeCodeCount
+    ) {
+      _id
+    }
+  }
+`;
+
+/**
+ * distributorIncreaseResetCodeCountForItem(
+itemId: ID!
+resetCodeCount: Int!
+): CodeGenerator!
+ */
+export const distributorIncreaseResetCodeCountForItemMutation = gql`
+  mutation DistributorIncreaseResetCodeCountForItem(
+    $itemId: ID!
+    $resetCodeCount: Int!
+  ) {
+    distributorIncreaseResetCodeCountForItem(
+      itemId: $itemId
+      resetCodeCount: $resetCodeCount
+    ) {
+      _id
+    }
+  }
+`;
+

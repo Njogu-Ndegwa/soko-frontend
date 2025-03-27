@@ -628,6 +628,17 @@ export interface DetailDto {
   value: string;
 }
 
+export interface GenerateCodeInput {
+  itemId: string;
+  description?: string | null;
+}
+
+export interface GenerateDaysCodeInput {
+  itemId: string;
+  codeDays: number;
+  description?: string | null;
+}
+
 export interface PairAssetAccountInput {
   clientId: string;
   userId: string;

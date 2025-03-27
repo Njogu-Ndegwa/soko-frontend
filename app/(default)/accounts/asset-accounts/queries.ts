@@ -1,13 +1,17 @@
 import { gql, useLazyQuery } from "@apollo/client";
-import { 
-  GetAllAssetAccountsForClientVariables, 
-  GetAllAssetAccountsForClient } from "./types/GetAllAssetAccountsForClient";
+import {
+  GetAllAssetAccountsForClientVariables,
+  GetAllAssetAccountsForClient
+} from "./types/GetAllAssetAccountsForClient";
 
-import { 
-  GetSpecificAssetAccount, 
-  GetSpecificAssetAccountVariables } from "./types/GetSpecificAssetAccount";
+import {
+  GetSpecificAssetAccount,
+  GetSpecificAssetAccountVariables
+} from "./types/GetSpecificAssetAccount";
 import { GetSpecificDistributorVariables, GetSpecificDistributor } from "./types/GetSpecificDistributor";
-  
+import { GetAllCodeEvents, GetAllCodeEventsVariables } from "./types/GetAllCodeEvents";
+import { GetAllCodeEventsForSpecificItemByDistributor, GetAllCodeEventsForSpecificItemByDistributorVariables } from "./types/GetAllCodeEventsForSpecificItemByDistributor";
+import { GetCodeEventsByCodeGeneratorIds } from "../payments/types/GetCodeEventsByCodeGeneratorIds";
 /***
  * type Activity {
 action: String!
@@ -525,7 +529,7 @@ totalCodeCountLimit: Int
 codeGenInterval: Int
 }
  */
-const distributorSettingFragment = gql ` 
+const distributorSettingFragment = gql` 
 fragment DistributorSetting on DistributorSetting {
   _id
   deleteStatus
@@ -550,7 +554,7 @@ distributorId: String!
 ): DistributorSetting!
  */
 
-const getSpecificDistributorSettingQuery = gql `
+const getSpecificDistributorSettingQuery = gql`
   ${distributorSettingFragment}
 query GetSpecificDistributorSetting($id: String!) {
   getSpecificDistributorSetting(distributorId: $id) {
@@ -559,36 +563,241 @@ query GetSpecificDistributorSetting($id: String!) {
 }
 `
 
+/**
+ * type CodeEvent {
+_id: ID!
+deleteStatus: Boolean
+deleteAt: DateTime
+createdAt: DateTime
+updatedAt: DateTime
+type: ActorTypes!
+actionScope: ActionScope!
+actorName: String!
+profile: String
+codeType: CodeTypes!
+codeDays: Int!
+codeGenerator: CodeGenerator!
+codeHexString: String!
+codeDecString: String!
+description: String
+}
+ */
+export const codeEventFragment = gql`
+  fragment CodeEvent on CodeEvent {
+    _id
+    deleteStatus
+    deleteAt
+    createdAt
+    updatedAt
+    triggers
+    type
+    actionScope
+    actorName
+    profile
+    codeType
+    codeDays
+    codeNumber
+    codeGenerator {
+      _id
+      hashIndex
+      hashTop
+      codeCount
+    }
+    codeHexString
+    codeDecString
+    description
+    hashIndex
+    hashTop
+    hashRoot
+    codeCount
+    userWhoCausedTheChange
+    typeOfChangeChange
+    descriptionOfChangeChange
+  }
+`;
+/**
+ * type CodeEventEdge {
+cursor: String
+node: CodeEvent
+}
+ */
+const codeEventEdgeFragment = gql`
+  ${codeEventFragment}
+  fragment CodeEventEdge on CodeEventEdge {
+    cursor
+    node {
+      ...CodeEvent
+    }
+  }
+`;
+
+/**type CodeEventPageInfo {
+startCursor: String
+endCursor: String
+hasPreviousPage: Boolean!
+hasNextPage: Boolean!
+} */
+const codeEventPageInfoFragment = gql`
+  fragment CodeEventPageInfo on CodeEventPageInfo {
+    startCursor
+    endCursor
+    hasPreviousPage
+    hasNextPage
+  }
+`;
+/**
+ * type CodeEventConnection {
+edges: [CodeEventEdge!]
+pageInfo: CodeEventPageInfo
+}
+ */
+const codeEventConnectionFragment = gql`
+  ${codeEventEdgeFragment}
+  ${codeEventPageInfoFragment}
+  fragment CodeEventConnection on CodeEventConnection {
+    edges {
+      ...CodeEventEdge
+    }
+    pageInfo {
+      ...CodeEventPageInfo
+    }
+  }
+`;
+/**
+ * type GetAllCodeEventsResponse {
+page: CodeEventConnection!
+pageData: PageData
+}
+ */
+const getAllCodeEventsResponseFragment = gql`
+  ${codeEventConnectionFragment}
+  ${pageDataFragment}
+  fragment GetAllCodeEventsResponse on GetAllCodeEventsResponse {
+    page {
+      ...CodeEventConnection
+    }
+    pageData {
+      ...PageData
+    }
+  }
+`;
+/*
+getAllCodeEvents(
+before: String
+after: String
+first: Int
+last: Int
+): GetAllCodeEventsResponse! */
+
+const getAllCodeEventsQuery = gql`
+  ${getAllCodeEventsResponseFragment}
+  query GetAllCodeEvents(
+    $before: String
+    $after: String
+    $first: Int
+    $last: Int
+  ) {
+    getAllCodeEvents(
+      before: $before
+      after: $after
+      first: $first
+      last: $last
+    ) {
+      ...GetAllCodeEventsResponse
+    }
+  }
+`;
+
+/**
+ * 
+ *getAllCodeEventsForSpecificItemByDistributor(
+before: String
+after: String
+first: Int
+last: Int
+itemId: ID!
+distributorId: ID!
+): GetAllCodeEventsResponse!
+ */
+export const getAllCodeEventsForSpecificItemByDistributorQuery = gql`
+  ${codeEventEdgeFragment}
+  query GetAllCodeEventsForSpecificItemByDistributor(
+    $before: String
+    $after: String
+    $first: Int
+    $last: Int
+    $itemId: ID!
+    $distributorId: ID
+  ) {
+    getAllCodeEventsForSpecificItemByDistributor(
+      before: $before
+      after: $after
+      first: $first
+      last: $last
+      itemId: $itemId
+      distributorId: $distributorId
+    ) {
+      page {
+        edges {
+          ...CodeEventEdge
+        }
+        pageInfo {
+          startCursor
+          endCursor
+          hasPreviousPage
+          hasNextPage
+        }
+      }
+      pageData {
+        count
+        limit
+        offset
+      }
+    }
+  }
+`;
+
 
 export const useLazygetAllAssetAccountsForClientQuery = (
   variables: GetAllAssetAccountsForClientVariables
-) =>
-  { 
+) => {
   return useLazyQuery<
     GetAllAssetAccountsForClient,
     GetAllAssetAccountsForClientVariables
   >(getAllAssetAccountsForClientQuery, {
     variables
-  })}
+  })
+}
 
-  export const useLazygetSpecificAssetAccountsForClientQuery = (
-    variables: GetSpecificAssetAccountVariables
-  ) =>
-    { 
-    return useLazyQuery<
-      GetSpecificAssetAccount,
-      GetSpecificAssetAccountVariables
-    >(getSpecificAssetAccountQuery, {
-      variables
-    })}
+export const useLazygetSpecificAssetAccountsForClientQuery = (
+  variables: GetSpecificAssetAccountVariables
+) => {
+  return useLazyQuery<
+    GetSpecificAssetAccount,
+    GetSpecificAssetAccountVariables
+  >(getSpecificAssetAccountQuery, {
+    variables
+  })
+}
 
 
 export const useLazyGetSpecificDistributorQuery = (
-      variables: GetSpecificDistributorVariables
-    ) =>
-      useLazyQuery<GetSpecificDistributor, GetSpecificDistributorVariables>(
-        getSpecificDistributorQuery,
-        {
-          variables,
-        }
-      );
+  variables: GetSpecificDistributorVariables
+) =>
+  useLazyQuery<GetSpecificDistributor, GetSpecificDistributorVariables>(
+    getSpecificDistributorQuery,
+    {
+      variables,
+    }
+  );
+
+
+export const useLazyGetAllCodeEventForSpecificItemByDistributor = (
+  variables: GetAllCodeEventsForSpecificItemByDistributorVariables
+) =>
+  useLazyQuery<GetAllCodeEventsForSpecificItemByDistributor, GetAllCodeEventsForSpecificItemByDistributorVariables>(
+    getAllCodeEventsForSpecificItemByDistributorQuery,
+    {
+      variables,
+    }
+  );
