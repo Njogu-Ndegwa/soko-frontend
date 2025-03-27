@@ -50,8 +50,6 @@ export interface GetAllMessageTemplateResponse_page {
 export interface GetAllMessageTemplateResponse_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllMessageTemplateResponse {

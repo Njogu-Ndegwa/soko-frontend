@@ -42,13 +42,13 @@ export default function SettingsSidebar({ id }: { id: any }) {
                     </li>
                     <li className="mr-0.5 md:mr-0 md:mb-0.5">
                         <Link
-                            href={`/inventory/items/link-payplan/${id}`}
-                            className={`flex items-center px-2.5 py-2 rounded-lg whitespace-nowrap ${pathname.includes('/inventory/items/link-payplan') &&
+                            href={`/accounts/asset-accounts/link-payplan/${id}`}
+                            className={`flex items-center px-2.5 py-2 rounded-lg whitespace-nowrap ${pathname.includes('/accounts/asset-accounts/link-payplan') &&
                                 'bg-[linear-gradient(135deg,var(--tw-gradient-stops))] from-violet-500/[0.12] dark:from-violet-500/[0.24] to-violet-500/[0.04]'
                                 }`}
                         >
                             <svg
-                                className={`shrink-0 fill-current mr-2 ${pathname.includes('/inventory/items/link-payplan')
+                                className={`shrink-0 fill-current mr-2 ${pathname.includes('/accounts/asset-accounts/link-payplan')
                                         ? 'text-violet-500 dark:text-violet-400'
                                         : 'text-gray-400 dark:text-gray-500'
                                     }`}
@@ -59,7 +59,7 @@ export default function SettingsSidebar({ id }: { id: any }) {
                                 <path d="M8 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm-5.143 7.91a1 1 0 1 1-1.714-1.033A7.996 7.996 0 0 1 8 10a7.996 7.996 0 0 1 6.857 3.877 1 1 0 1 1-1.714 1.032A5.996 5.996 0 0 0 8 12a5.996 5.996 0 0 0-5.143 2.91Z" />
                             </svg>
                             <span
-                                className={`text-sm font-medium ${pathname.includes('/inventory/items/link-payplan')
+                                className={`text-sm font-medium ${pathname.includes('/accounts/asset-accounts/link-payplan')
                                         ? 'text-violet-500 dark:text-violet-400'
                                         : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
                                     }`}
@@ -70,13 +70,13 @@ export default function SettingsSidebar({ id }: { id: any }) {
                     </li>
                     <li className="mr-0.5 md:mr-0 md:mb-0.5">
                         <Link
-                            href={`/inventory/items/code-generation/${id}`}
-                            className={`flex items-center px-2.5 py-2 rounded-lg whitespace-nowrap ${pathname.includes('/inventory/items/code-generation') &&
+                            href={`/accounts/asset-accounts/code-generation/${id}`}
+                            className={`flex items-center px-2.5 py-2 rounded-lg whitespace-nowrap ${pathname.includes('/accounts/asset-accounts/code-generation') &&
                                 'bg-[linear-gradient(135deg,var(--tw-gradient-stops))] from-violet-500/[0.12] dark:from-violet-500/[0.24] to-violet-500/[0.04]'
                                 }`}
                         >
                             <svg
-                                className={`shrink-0 fill-current mr-2 ${pathname.includes('/inventory/items/code-generation')
+                                className={`shrink-0 fill-current mr-2 ${pathname.includes('/accounts/asset-accounts/code-generation')
                                         ? 'text-violet-500 dark:text-violet-400'
                                         : 'text-gray-400 dark:text-gray-500'
                                     }`}
@@ -87,7 +87,7 @@ export default function SettingsSidebar({ id }: { id: any }) {
                                 <path d="M8 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm-5.143 7.91a1 1 0 1 1-1.714-1.033A7.996 7.996 0 0 1 8 10a7.996 7.996 0 0 1 6.857 3.877 1 1 0 1 1-1.714 1.032A5.996 5.996 0 0 0 8 12a5.996 5.996 0 0 0-5.143 2.91Z" />
                             </svg>
                             <span
-                                className={`text-sm font-medium ${pathname.includes('/inventory/items/code-generation')
+                                className={`text-sm font-medium ${pathname.includes('/accounts/asset-accounts/code-generation')
                                         ? 'text-violet-500 dark:text-violet-400'
                                         : 'text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200'
                                     }`}
@@ -98,8 +98,8 @@ export default function SettingsSidebar({ id }: { id: any }) {
                     </li>
                     <li className="mr-0.5 md:mr-0 md:mb-0.5">
                         <Link
-                            href={`/inventory/items/code-history/${id}`}
-                            className={`flex items-center px-2.5 py-2 rounded-lg whitespace-nowrap ${pathname.includes('/inventory/items/code-history') &&
+                            href={`/accounts/asset-accounts/code-history/${id}`}
+                            className={`flex items-center px-2.5 py-2 rounded-lg whitespace-nowrap ${pathname.includes('/accounts/asset-accounts/code-history') &&
                                 'bg-[linear-gradient(135deg,var(--tw-gradient-stops))] from-violet-500/[0.12] dark:from-violet-500/[0.24] to-violet-500/[0.04]'
                                 }`}
                         >

@@ -50,8 +50,6 @@ export interface GetAllMessageTemplates_getAllMessageTemplates_page {
 export interface GetAllMessageTemplates_getAllMessageTemplates_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllMessageTemplates_getAllMessageTemplates {

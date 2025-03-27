@@ -4,10 +4,13 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: PageData
+// GraphQL fragment: DistributorPageInfo
 // ====================================================
 
-export interface PageData {
-  __typename: "PageData";
-  count: number;
+export interface DistributorPageInfo {
+  __typename: "DistributorPageInfo";
+  endCursor: string | null;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor: string | null;
 }

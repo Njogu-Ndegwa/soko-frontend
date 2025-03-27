@@ -6,6 +6,8 @@ import {
 import { 
   GetSpecificAssetAccount, 
   GetSpecificAssetAccountVariables } from "./types/GetSpecificAssetAccount";
+import { GetSpecificDistributorVariables, GetSpecificDistributor } from "./types/GetSpecificDistributor";
+  
 /***
  * type Activity {
 action: String!
@@ -210,6 +212,8 @@ export const assetAccountFullFragment = gql`
     }
   }
 `;
+
+
 /**
  * type AssetAccountEdge {
 cursor: String
@@ -340,6 +344,221 @@ const getSpecificAssetAccountQuery = gql`
   }
 `;
 
+/**
+ * type Distributor {
+_id: ID!
+activeSubRolePermission: PermissionInput
+authenticationInstance: AuthenticationInstance!
+authenticationSubInstance: AuthenticationSubInstance!
+createdAt: DateTime
+deleteAt: DateTime
+deleteStatus: Boolean
+description: String
+itemFleet: [ItemFleet!]!
+itemSKU: [ItemSKU!]
+name: String!
+orgAddress: Address!
+orgContactPerson: Person
+role: Roles!
+subRolePermissions: SubRolePermissions!
+type: OrgTypes!
+updatedAt: DateTime
+}
+ */
+const distributorFragment = gql`
+  fragment Distributor on Distributor {
+    _id
+    activeSubRolePermission
+    createdAt
+    deleteAt
+    deleteStatus
+    description
+    type
+    updatedAt
+    orgContactPerson {
+      _id
+      name
+      address {
+        city
+        country
+        postcode
+        srpc
+        street
+        unit
+        addressLocation {
+          addressLatitude
+          addressLongitude
+        }
+      }
+      contact {
+        email
+        phone
+        social
+      }
+    }
+  }
+`;
+/**
+ * type DistributorEdge {
+cursor: String
+node: Distributor
+}
+ */
+const distributorEdgeFragment = gql`
+  ${distributorFragment}
+  fragment DistributorEdge on DistributorEdge {
+    cursor
+    node {
+      ...Distributor
+    }
+  }
+`;
+/**
+ * type DistributorPageInfo {
+endCursor: String
+hasNextPage: Boolean!
+hasPreviousPage: Boolean!
+startCursor: String
+}
+ */
+const distributorPageInfoFragment = gql`
+  fragment DistributorPageInfo on DistributorPageInfo {
+    endCursor
+    hasNextPage
+    hasPreviousPage
+    startCursor
+  }
+`;
+/**
+ * type DistributorConnection {
+edges: [DistributorEdge!]
+pageInfo: DistributorPageInfo
+}
+ */
+const distributorConnectionFragment = gql`
+  ${distributorEdgeFragment}
+  ${distributorPageInfoFragment}
+  fragment DistributorConnection on DistributorConnection {
+    edges {
+      ...DistributorEdge
+    }
+    pageInfo {
+      ...DistributorPageInfo
+    }
+  }
+`;
+/**
+ * type GetAllDistributorsResponse {
+page: DistributorConnection!
+pageData: PageData
+}
+ */
+const getAllDistributorsResponseFragment = gql`
+  ${distributorConnectionFragment}
+  ${pageDataFragment}
+  fragment GetAllDistributorsResponse on GetAllDistributorsResponse {
+    page {
+      ...DistributorConnection
+    }
+
+    pageData {
+      ...PageData
+    }
+  }
+`;
+/**
+ * getAllDistributors(
+after: String
+before: String
+first: Int
+last: Int
+): GetAllDistributorsResponse!
+ */
+const getAllDistributorsQuery = gql`
+  ${getAllDistributorsResponseFragment}
+  query GetAllDistributors(
+    $after: String
+    $before: String
+    $first: Int
+    $last: Int
+    $search: String
+  ) {
+    getAllDistributors(
+      after: $after
+      before: $before
+      first: $first
+      last: $last
+      search: $search
+    ) {
+      ...GetAllDistributorsResponse
+    }
+  }
+`;
+
+/**
+ * 
+Query.getSpecificDistributor(
+id: ID!
+): Distributor
+ */
+const getSpecificDistributorQuery = gql`
+  ${distributorFragment}
+  query GetSpecificDistributor($id: ID!) {
+    getSpecificDistributor(id: $id) {
+      ...Distributor
+    }
+  }
+`;
+
+/**
+ * 
+type DistributorSetting {
+_id: ID!
+deleteStatus: Boolean
+deleteAt: DateTime
+createdAt: DateTime
+updatedAt: DateTime
+freeCodeCount: Int
+resetCodeCount: Int
+dayCodeCountLimit: Int
+totalCodeCountLimit: Int
+codeGenInterval: Int
+}
+ */
+const distributorSettingFragment = gql ` 
+fragment DistributorSetting on DistributorSetting {
+  _id
+  deleteStatus
+  deleteAt
+  createdAt
+  updatedAt
+  freeCodeCount
+  resetCodeCount
+  dayCodeCountLimit
+  totalCodeCountLimit
+  codeGenInterval
+  maxCreditStackDays
+  maxCreditStackCodeEvents
+
+}
+`
+
+/**
+ * 
+getSpecificDistributorSetting(
+distributorId: String!
+): DistributorSetting!
+ */
+
+const getSpecificDistributorSettingQuery = gql `
+  ${distributorSettingFragment}
+query GetSpecificDistributorSetting($id: String!) {
+  getSpecificDistributorSetting(distributorId: $id) {
+    ...DistributorSetting
+  }
+}
+`
+
 
 export const useLazygetAllAssetAccountsForClientQuery = (
   variables: GetAllAssetAccountsForClientVariables
@@ -362,3 +581,14 @@ export const useLazygetAllAssetAccountsForClientQuery = (
     >(getSpecificAssetAccountQuery, {
       variables
     })}
+
+
+export const useLazyGetSpecificDistributorQuery = (
+      variables: GetSpecificDistributorVariables
+    ) =>
+      useLazyQuery<GetSpecificDistributor, GetSpecificDistributorVariables>(
+        getSpecificDistributorQuery,
+        {
+          variables,
+        }
+      );

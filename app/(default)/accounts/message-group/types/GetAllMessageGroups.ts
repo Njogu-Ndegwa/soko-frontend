@@ -49,8 +49,6 @@ export interface GetAllMessageGroups_getAllMessageGroups_page {
 export interface GetAllMessageGroups_getAllMessageGroups_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllMessageGroups_getAllMessageGroups {

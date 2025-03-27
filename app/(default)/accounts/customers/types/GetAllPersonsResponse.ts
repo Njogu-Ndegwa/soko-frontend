@@ -77,8 +77,6 @@ export interface GetAllPersonsResponse_page {
 export interface GetAllPersonsResponse_pageData {
   __typename: "PageData";
   count: number;
-  limit: number;
-  offset: number;
 }
 
 export interface GetAllPersonsResponse {

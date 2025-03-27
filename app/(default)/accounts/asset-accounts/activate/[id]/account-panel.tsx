@@ -7,7 +7,7 @@ import { useAlert } from '@/app/contexts/alertContext'
 import { Package, User, DollarSign, CreditCard, CheckCircle, Edit } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import usePairAssetAccount from '../../hook/usePairAssetAccount'
-import { useLazygetSpecificAssetAccountsForClientQuery } from '../../queries'
+import { useLazygetSpecificAssetAccountsForClientQuery, useLazyGetSpecificDistributorQuery } from '../../queries'
 import { useLazyGetAllClientCustomersQuery } from '../../../customers/queries'
 import { useLazyGetAllClientItemsQuery } from '@/app/(default)/thing/item/queries'
 import { QueryOrder } from '@/app/(default)/thing/types/globalTypes'
@@ -37,6 +37,7 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
     const [assetAccountId, setAssetAccountId] = useState('')
     const [userId, setUserId] = useState('')
     const [clientId, setClientId] = useState('')
+    const [personId, setPersonId] = useState('')
 
     // Get queries
     const [getAllItems, { data: itemsData }] = useLazyGetAllClientItemsQuery({
@@ -46,17 +47,22 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
     })
     
     const [getAllCustomers, { data: customersData }] = useLazyGetAllClientCustomersQuery({
-        clientId: distributorId || ""
+        clientId: distributorId || "",
+        first: 10
     })
     
     const [getAssetAccount, { data: assetAccountData }] = useLazygetSpecificAssetAccountsForClientQuery({
         id: itemId
     })
 
+    const [getDistributor, {data: distributorData}] = useLazyGetSpecificDistributorQuery({
+        id: distributorId || ""
+    })
+
     // Mutation for pairing asset account
     const { pairAssetAccount } = usePairAssetAccount((data) => {
         alert({ text: 'Asset account paired successfully', type: 'success' })
-        router.push('/inventory/items')
+        router.back()
     })
 
     useEffect(() => {
@@ -73,6 +79,7 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                 // Fetch items and customers
                 await getAllItems()
                 await getAllCustomers()
+                await getDistributor()
             } catch (error) {
                 console.error('Error fetching data:', error)
                 alert({ text: 'Failed to load data', type: 'error' })
@@ -82,12 +89,16 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
         }
 
         fetchData()
-    }, [itemId, getAssetAccount, getAllItems, getAllCustomers, alert])
+    }, [itemId, getAssetAccount, getAllItems, getAllCustomers, getDistributor, alert])
 
     // Set form values when editing
     useEffect(() => {
         if (assetAccountData && assetAccountData.getSpecificAssetAccount) {
             const account = assetAccountData.getSpecificAssetAccount
+            
+            // Debug log
+            console.log('Asset Account Data received:', account)
+            
             setSelectedItem(account.asset?._id || '')
             setSelectedCustomer(account.credit?.owner?._id || '')
             setBalance(account.credit?.balance?.toString() || '')
@@ -108,6 +119,12 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
         }
     }, [itemsData])
 
+    useEffect(() => {
+        if (distributorData?.getSpecificDistributor?.orgContactPerson?._id) {
+            setPersonId(distributorData.getSpecificDistributor.orgContactPerson._id);
+        }
+    }, [distributorData]);
+
     // Process customers data when it changes
     useEffect(() => {
         if (customersData && customersData.getAllClientCustomers?.page?.edges) {
@@ -125,7 +142,6 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                 }))
             setCustomers(customersArray)
         }
-        console.log(customersData, "Customer Data")
     }, [customersData])
 
     const handleAssetAccountSubmit = async (e:any) => {
@@ -137,7 +153,7 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
             await pairAssetAccount({
                 variables: {
                     pairAssetAccountInput: {
-                        clientId: clientId || '', // Default client ID if not set
+                        clientId: distributorId || "", // Default client ID if not set
                         credit: {
                             balance: parseFloat(balance),
                             currency: selectedCurrency,
@@ -149,7 +165,7 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                             datetime: currentDate,
                             instruction: ""
                         },
-                        userId: userId || '' // Default user ID if not set
+                        userId: personId || '' // Default user ID if not set
                     }
                 }
             })
@@ -159,14 +175,72 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
         }
     }
 
-    if (loading) return (
-        <div className="flex items-center justify-center min-h-[400px]">
-            <div className="animate-pulse flex flex-col items-center">
-                <div className="h-12 w-12 rounded-full bg-blue-200 mb-3"></div>
-                <div className="text-gray-500">Loading asset account data...</div>
+    if (loading) {
+        return (
+            <div className="grow bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6">
+                {/* Skeleton Header */}
+                <div className="border-b border-gray-200 dark:border-gray-700 pb-4 mb-6">
+                    <div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                    <div className="h-4 w-48 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+                </div>
+                
+                {/* Skeleton Form Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-6">
+                        <div>
+                            <div className="h-4 w-24 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-2"></div>
+                            <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        </div>
+                        <div>
+                            <div className="h-4 w-32 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-2"></div>
+                            <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        </div>
+                    </div>
+                    <div className="space-y-6">
+                        <div>
+                            <div className="h-4 w-20 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-2"></div>
+                            <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        </div>
+                        <div>
+                            <div className="h-4 w-28 bg-gray-100 dark:bg-gray-800 rounded animate-pulse mb-2"></div>
+                            <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Skeleton Summary Card */}
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mt-6 border border-gray-200 dark:border-gray-700">
+                    <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-4"></div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+                        <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+                        <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+                    </div>
+                </div>
+                
+                {/* Skeleton Button */}
+                <div className="flex justify-end pt-4 mt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div className="h-10 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
+
+    // For debugging purposes - remove in production
+    const getFormDebugInfo = () => {
+        return {
+            selectedItem,
+            selectedCustomer,
+            balance,
+            selectedCurrency,
+            assetAccountId,
+            userId,
+            clientId,
+            personId
+        }
+    }
+    
+    console.log('Form state:', getFormDebugInfo())
 
     return (
         <div className="grow bg-white dark:bg-gray-900 rounded-lg shadow-lg">
@@ -180,16 +254,6 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                             {isEditing ? 'View details of the asset account' : 'Enter the details to create a new Asset Account'}
                         </p>
                     </div>
-                    {isEditing && (
-                        <button
-                            type="button"
-                            className="px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg text-sm flex items-center"
-                            onClick={() => setIsEditing(false)}
-                        >
-                            <Edit className="h-4 w-4 mr-1" />
-                            Edit
-                        </button>
-                    )}
                 </div>
                 
                 <form onSubmit={handleAssetAccountSubmit} className="space-y-6">
@@ -203,20 +267,28 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <Package className="h-5 w-5 text-gray-400" />
                                     </div>
-                                    <select
-                                        className="form-select pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
-                                        value={selectedItem}
-                                        onChange={(e) => setSelectedItem(e.target.value)}
-                                        required
-                                        disabled={isEditing}
-                                    >
-                                        <option value="">Choose an item</option>
-                                        {items.map((item:any) => (
-                                            <option key={item._id} value={item._id}>
-                                                {item.sellerItemID || `Item #${item._id}`}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            className="form-input pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                            value={items.find((i:any) => i._id === selectedItem)?.sellerItemID || `${selectedItem}`}
+                                            disabled={true}
+                                        />
+                                    ) : (
+                                        <select
+                                            className="form-select pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                            value={selectedItem}
+                                            onChange={(e) => setSelectedItem(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Choose an item</option>
+                                            {items.map((item:any) => (
+                                                <option key={item._id} value={item._id}>
+                                                    {item.sellerItemID || `Item #${item._id}`}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
                                 </div>
                             </div>
                             
@@ -227,20 +299,28 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <User className="h-5 w-5 text-gray-400" />
                                     </div>
-                                    <select
-                                        className="form-select pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
-                                        value={selectedCustomer}
-                                        onChange={(e) => setSelectedCustomer(e.target.value)}
-                                        required
-                                        disabled={isEditing}
-                                    >
-                                        <option value="">Choose a customer</option>
-                                        {customers.map((customer:any) => (
-                                            <option key={customer.id} value={customer.id}>
-                                                {customer.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            className="form-input pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                            value={customers.find((c:any) => c.id === selectedCustomer)?.name || `${selectedCustomer}`}
+                                            disabled={true}
+                                        />
+                                    ) : (
+                                        <select
+                                            className="form-select pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                            value={selectedCustomer}
+                                            onChange={(e) => setSelectedCustomer(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Choose a customer</option>
+                                            {customers.map((customer:any) => (
+                                                <option key={customer.id} value={customer.id}>
+                                                    {customer.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -274,19 +354,27 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <CreditCard className="h-5 w-5 text-gray-400" />
                                     </div>
-                                    <select
-                                        className="form-select pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
-                                        value={selectedCurrency}
-                                        onChange={(e) => setSelectedCurrency(e.target.value)}
-                                        required
-                                        disabled={isEditing}
-                                    >
-                                        {currencies.map(currency => (
-                                            <option key={currency.code} value={currency.code}>
-                                                {currency.code} - {currency.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            className="form-input pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                            value={`${selectedCurrency} - ${currencies.find(c => c.code === selectedCurrency)?.name || ''}`}
+                                            disabled={true}
+                                        />
+                                    ) : (
+                                        <select
+                                            className="form-select pl-10 w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                                            value={selectedCurrency}
+                                            onChange={(e) => setSelectedCurrency(e.target.value)}
+                                            required
+                                        >
+                                            {currencies.map(currency => (
+                                                <option key={currency.code} value={currency.code}>
+                                                    {currency.code} - {currency.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -300,7 +388,7 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                                 <p className="text-gray-500 dark:text-gray-400">Item:</p>
                                 <p className="font-medium text-gray-900 dark:text-gray-100">
                                     {selectedItem 
-                                        ? items.find((i:any) => i._id === selectedItem)?.sellerItemID || `Item #${selectedItem}`
+                                        ? items.find((i:any) => i._id === selectedItem)?.sellerItemID || `${selectedItem}`
                                         : 'Not selected'}
                                 </p>
                             </div>
@@ -308,7 +396,7 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                                 <p className="text-gray-500 dark:text-gray-400">Customer:</p>
                                 <p className="font-medium text-gray-900 dark:text-gray-100">
                                     {selectedCustomer 
-                                        ? customers.find((c:any) => c.id === selectedCustomer)?.name 
+                                        ? customers.find((c:any) => c.id === selectedCustomer)?.name || `${selectedCustomer}`
                                         : 'Not selected'}
                                 </p>
                             </div>
