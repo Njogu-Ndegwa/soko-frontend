@@ -94,6 +94,78 @@ function Design2TableRow<T extends { id: any }>({
   )
 }
 
+// // Design2Table.tsx
+// export default function Design2Table<T extends { id: any }>({
+//   data,
+//   columns,
+//   selectable = false,
+//   onSelectionChange,
+// }: Design2TableProps<T>) {
+//   const {
+//     selectedItems,
+//     isAllSelected,
+//     handleCheckboxChange,
+//     handleSelectAllChange,
+//   } = useTableSelection(data)
+
+//   useEffect(() => {
+//     onSelectionChange?.(selectedItems)
+//   }, [selectedItems, onSelectionChange])
+
+//   return (
+//     <div className="bg-white dark:bg-gray-900">
+//       <div className="overflow-x-auto">
+//         <table className="table-auto w-full dark:text-gray-300">
+//           <thead className="text-xs font-semibold uppercase text-gray-500 border-t border-b border-gray-200 dark:border-gray-700/60">
+//             <tr>
+//               {selectable && (
+//                 <th className="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap w-px">
+//                   <div className="flex items-center">
+//                     <label className="inline-flex">
+//                       <span className="sr-only">Select all</span>
+//                       <input
+//                         type="checkbox"
+//                         className="form-checkbox"
+//                         checked={isAllSelected}
+//                         onChange={handleSelectAllChange}
+//                       />
+//                     </label>
+//                   </div>
+//                 </th>
+//               )}
+              
+//               {columns.map((column, index) => (
+//                 <th
+//                   key={index}
+//                   className={`px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap ${
+//                     column.align === 'right' ? 'text-right' :
+//                     column.align === 'center' ? 'text-center' : 'text-left'
+//                   }`}
+//                 >
+//                   <div className="font-semibold">{column.header}</div>
+//                 </th>
+//               ))}
+//             </tr>
+//           </thead>
+
+//           <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60 border-b border-gray-200 dark:border-gray-700/60">
+//             {data.map((item) => (
+//               <Design2TableRow
+//                 key={item.id}
+//                 item={item}
+//                 columns={columns}
+//                 selectable={selectable}
+//                 isSelected={selectedItems.includes(item.id)}
+//                 onCheckboxChange={handleCheckboxChange}
+//               />
+//             ))}
+//           </tbody>
+//         </table>
+//       </div>
+//     </div>
+//   )
+// }
+
 // Design2Table.tsx
 export default function Design2Table<T extends { id: any }>({
   data,
@@ -107,15 +179,15 @@ export default function Design2Table<T extends { id: any }>({
     handleCheckboxChange,
     handleSelectAllChange,
   } = useTableSelection(data)
-
+ 
   useEffect(() => {
     onSelectionChange?.(selectedItems)
   }, [selectedItems, onSelectionChange])
-
+ 
   return (
-    <div className="bg-white dark:bg-gray-900">
+    <div className="bg-white dark:bg-gray-900 w-full">
       <div className="overflow-x-auto">
-        <table className="table-auto w-full dark:text-gray-300">
+        <table className="table-auto w-full table-layout-fixed dark:text-gray-300">
           <thead className="text-xs font-semibold uppercase text-gray-500 border-t border-b border-gray-200 dark:border-gray-700/60">
             <tr>
               {selectable && (
@@ -133,7 +205,7 @@ export default function Design2Table<T extends { id: any }>({
                   </div>
                 </th>
               )}
-              
+                          
               {columns.map((column, index) => (
                 <th
                   key={index}
@@ -147,7 +219,7 @@ export default function Design2Table<T extends { id: any }>({
               ))}
             </tr>
           </thead>
-
+         
           <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700/60 border-b border-gray-200 dark:border-gray-700/60">
             {data.map((item) => (
               <Design2TableRow
