@@ -67,7 +67,7 @@ function FleetTable() {
   const [
     getDistributorItems,
     { data, error: assetError, loading: assetLoading },
-  ] = useLazyGetItemFleetsForClientQuery({ clientId: distributorId });
+  ] = useLazyGetItemFleetsForClientQuery({ clientId: distributorId || "" });
   // const fetchCustomers = async () => {
   //   try {
   //     const data = await getCustomers()
@@ -212,18 +212,18 @@ function FleetTable() {
       <div className="sm:flex sm:justify-between sm:items-center mb-5">
         <div className="mb-4 sm:mb-0">
           <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-            Customers
+            Fleet
           </h1>
         </div>
 
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
           <SearchForm
-            placeholder="Search by Customer…"
+            placeholder="Search"
             searchTerm={searchTerm}
             setSearchTerm={handleSearch}
           />
           <Link
-            href="/accounts/customers/add" // Replace with your desired path
+            href="" // Replace with your desired path
             className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white flex items-center justify-center"
           >
             <svg

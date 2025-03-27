@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [signInUser] = useMutation(SIGN_IN_USER, {
     onCompleted: (data) => {
       const { accessToken, _id } = data.signInUser;
-      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("access_token", accessToken);
       localStorage.setItem("distributorId", _id);
       //61811cc2bf5a3f81fbeb5d41
       console.log("Access Token:", accessToken);
@@ -66,7 +66,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const signOut = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("access_token");
     localStorage.removeItem("distributorId");
     setUser(null);
     setDistributorId(null);

@@ -11,7 +11,7 @@ import {
 import { GetSpecificDistributorVariables, GetSpecificDistributor } from "./types/GetSpecificDistributor";
 import { GetAllCodeEvents, GetAllCodeEventsVariables } from "./types/GetAllCodeEvents";
 import { GetAllCodeEventsForSpecificItemByDistributor, GetAllCodeEventsForSpecificItemByDistributorVariables } from "./types/GetAllCodeEventsForSpecificItemByDistributor";
-import { GetCodeEventsByCodeGeneratorIds } from "../payments/types/GetCodeEventsByCodeGeneratorIds";
+
 /***
  * type Activity {
 action: String!

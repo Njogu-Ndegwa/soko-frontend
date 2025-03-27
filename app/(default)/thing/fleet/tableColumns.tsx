@@ -82,7 +82,6 @@
 
 import { TableColumn } from "@/components/table/table";
 import { format } from "date-fns";
-import { CustomerInterface } from "../types";
 import { Pencil, Trash2, Plus, MoreHorizontal } from "lucide-react";
 
 export const columns: TableColumn<any>[] = [
@@ -104,35 +103,12 @@ export const columns: TableColumn<any>[] = [
       </div>
     ),
   },
-  {
-    header: "Account Stage",
-    accessor: "node.accountStage" as keyof any,
-    cellRenderer: (value: unknown, item: any) => {
-      const stage = item.node.distributor.orgContactPerson.name;
-      let stageColor = "bg-gray-100 text-gray-800";
 
-      if (stage === "ACCOUNT_ACTIVATED")
-        stageColor = "bg-green-100 text-green-800";
-      if (stage === "PAYPLAN_COMPLETED")
-        stageColor = "bg-blue-100 text-blue-800";
-      if (stage === "ASSET_USER_PAIRED")
-        stageColor = "bg-purple-100 text-purple-800";
-      if (stage === "ACCOUNT_CLOSED") stageColor = "bg-red-100 text-red-800";
-
-      return (
-        <div
-          className={`px-2 py-1 rounded-full text-xs font-medium inline-block ${stageColor}`}
-        >
-          {stage.replace(/_/g, " ")}
-        </div>
-      );
-    },
-  },
   {
     header: "Description",
     accessor: "node.credit.owner.name" as keyof any,
     cellRenderer: (value: unknown, item: any) => (
-      <div className="font-medium text-gray-800 dark:text-gray-100">
+      <div className="max-w-md truncate">
         {item.node.description || "-"}
       </div>
     ),
@@ -165,6 +141,7 @@ export const columns: TableColumn<any>[] = [
       );
     },
   },
+  
   {
     header: "Profile",
     accessor: "node.credit.accountStatus" as keyof any,

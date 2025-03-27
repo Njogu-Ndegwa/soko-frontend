@@ -221,7 +221,7 @@ console.log(columns, "Columns")
 
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
         <SearchForm
-          placeholder="Search by Account Number…" 
+          placeholder="Search" 
           searchTerm={searchTerm}
           setSearchTerm={handleSearch}
         />

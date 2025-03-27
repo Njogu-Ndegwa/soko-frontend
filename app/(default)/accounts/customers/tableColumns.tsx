@@ -21,16 +21,17 @@ export const columns: TableColumn<any>[] = [
         header: 'Name',
         accessor: 'node.name' as keyof any,
         cellRenderer: (value: unknown, item: any) => {
-            // Handle null node case
             if (!item.node) return <div>-</div>;
-            
+            const name = item.node.name || '-';
+            const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
             return (
                 <div className="font-medium text-gray-800 dark:text-gray-100">
-                    {item.node.name || '-'}
+                    {capitalizedName}
                 </div>
             );
         }
     },
+    
     {
         header: 'Type',
         accessor: 'node.type' as keyof any,

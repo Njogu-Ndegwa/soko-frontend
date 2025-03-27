@@ -10,13 +10,13 @@ interface DecodedToken {
   exp: number;
 }
 
-export const getDecodedToken = (): DecodedToken | null => {
+export const getDecodedToken = (): any | null => {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('access_token');
     console.log(token, "Token---17----")
     if (token) {
       try {
-        const decoded = jwtDecode<DecodedToken>(token);
+        const decoded = jwtDecode<any>(token);
         if (decoded.exp * 1000 > Date.now()) {
           return decoded;
         }
@@ -82,11 +82,12 @@ export function isAuth(Component: any) {
 // Custom hook for menu visibility
 export const useMenuVisibility = () => {
   const decoded = getDecodedToken();
-  const userType = decoded?.user_type || '';
-
+  console.log(decoded, "Decode TOken----85----")
+  const userType = decoded?.roleName || '';
+    console.log(userType, "User Type")
   const menuPermissions = {
     SUPER_ADMIN: ['dashboard', 'ecommerce', 'community', 'finance', 'job', 'tasks', 'settings'],
-    DISTRIBUTOR: ['dashboard', 'ecommerce', 'tasks', 'inventory'],
+    DISTRIBUTOR: ['dashboard', 'ecommerce', 'tasks', 'inventory', 'accounts', 'thing'],
     CUSTOMER: ['dashboard', 'ecommerce'],
   };
   type UserType = keyof typeof menuPermissions;

@@ -53,7 +53,7 @@ export async function authenticatedFetch<T>(
     if (response.status === 401) {
       // Handle token expiration
       // You might want to redirect to login or refresh token here
-      localStorage.removeItem('accessToken')
+      localStorage.removeItem('access_token')
       throw new Error('Authentication token expired')
     }
     throw new Error(`API call failed: ${response.statusText}`)

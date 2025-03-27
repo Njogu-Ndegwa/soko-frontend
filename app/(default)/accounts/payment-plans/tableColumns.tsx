@@ -38,18 +38,8 @@ export const columns: TableColumn<any>[] = [
       // Handle null node case
       if (!item.node) return <div>-</div>;
 
-      const type = item.node.type;
-      let typeColor = "bg-gray-100 text-gray-800";
-
-      // Adjust colors based on your actual type values
-      if (type === "CUSTOMER") typeColor = "bg-green-100 text-green-800";
-      if (type === "AGENT") typeColor = "bg-blue-100 text-blue-800";
-      if (type === "ADMIN") typeColor = "bg-purple-100 text-purple-800";
-
       return (
-        <div
-          className={`px-2 py-1 rounded-full text-xs font-medium inline-block ${typeColor}`}
-        >
+        <div className="max-w-md truncate">
           {item?.node?.planDescription || "-"}
         </div>
       );
