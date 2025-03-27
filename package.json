@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build-types-account": "apollo client:codegen --target=typescript types --globalTypesFile=app/(default)/accounts/types/globalTypes.ts --config=apollo.config.account.js"
+    "build-types-account": "apollo client:codegen --target=typescript types --globalTypesFile=app/(default)/accounts/types/globalTypes.ts --config=apollo.config.account.js",
+    "build-types-thing": "apollo client:codegen --target=typescript types --globalTypesFile=app/(default)/thing/types/globalTypes.ts --config=apollo.config.thing.js",
+    "build-types-staff": "apollo client:codegen --target=typescript types --globalTypesFile=app/(default)/staff/types/globalTypes.ts --config=apollo.config.staff.js"
   },
   "dependencies": {
     "@apollo/client": "^3.13.1",

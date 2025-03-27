@@ -1,5 +1,11 @@
 import { gql, useLazyQuery } from "@apollo/client";
-import { GetAllAssetAccountsForClientVariables, GetAllAssetAccountsForClient } from "./types/GetAllAssetAccountsForClient";
+import { 
+  GetAllAssetAccountsForClientVariables, 
+  GetAllAssetAccountsForClient } from "./types/GetAllAssetAccountsForClient";
+
+import { 
+  GetSpecificAssetAccount, 
+  GetSpecificAssetAccountVariables } from "./types/GetSpecificAssetAccount";
 /***
  * type Activity {
 action: String!
@@ -318,6 +324,22 @@ const getAllAssetAccountsForClientQuery = gql`
   }
 `;
 
+/**
+ * 
+ * @param variables getSpecificAssetAccount(
+id: ID!
+): AssetAccount!
+ * @returns 
+ */
+const getSpecificAssetAccountQuery = gql`
+  ${assetAccountFragment}
+  query GetSpecificAssetAccount($id: ID!) {
+    getSpecificAssetAccount(id: $id) {
+      ...AssetAccount
+    }
+  }
+`;
+
 
 export const useLazygetAllAssetAccountsForClientQuery = (
   variables: GetAllAssetAccountsForClientVariables
@@ -329,3 +351,14 @@ export const useLazygetAllAssetAccountsForClientQuery = (
   >(getAllAssetAccountsForClientQuery, {
     variables
   })}
+
+  export const useLazygetSpecificAssetAccountsForClientQuery = (
+    variables: GetSpecificAssetAccountVariables
+  ) =>
+    { 
+    return useLazyQuery<
+      GetSpecificAssetAccount,
+      GetSpecificAssetAccountVariables
+    >(getSpecificAssetAccountQuery, {
+      variables
+    })}

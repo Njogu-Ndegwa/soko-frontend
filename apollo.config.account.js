@@ -4,7 +4,7 @@ module.exports = {
     includes: ['app/(default)/accounts/**/*.ts*'],
     service: {
       url: 'https://dev-federated-graphql-api.omnivoltaic.com/graphql',
-      name: 'thing-service',
+      name: 'account-service',
     },
   },
 };

@@ -61,6 +61,22 @@ export enum CodeTypes {
   SYNCCODE = "SYNCCODE",
 }
 
+export enum IntentsEnum {
+  KEYCODE = "KEYCODE",
+  PAYMENT = "PAYMENT",
+  REFUND = "REFUND",
+  RESET = "RESET",
+  TENPLUSDAYS = "TENPLUSDAYS",
+  THREEXDAYS = "THREEXDAYS",
+  TWOXDAYS = "TWOXDAYS",
+  UNLOCK = "UNLOCK",
+}
+
+export enum MessageCourierEnum {
+  LIPAY = "LIPAY",
+  TELERIVET = "TELERIVET",
+}
+
 export enum PersonTypes {
   AGENT = "AGENT",
   CONTACT = "CONTACT",
@@ -68,6 +84,13 @@ export enum PersonTypes {
   DEVELOPER = "DEVELOPER",
   EMPLOYEE = "EMPLOYEE",
   LOGIN = "LOGIN",
+}
+
+export interface ActivityDto {
+  action: string;
+  datetime: any;
+  amount: number;
+  notes: string;
 }
 
 export interface AddressDto {
@@ -85,6 +108,11 @@ export interface AddressLocationDto {
   inputAddressLongitude: number;
 }
 
+export interface AssetAccountMetaDto {
+  name: string;
+  value: string;
+}
+
 export interface ClientRegisterPersonInput {
   clientPersonType?: PersonTypes | null;
   clientPersonName: string;
@@ -96,15 +124,82 @@ export interface ClientRegisterPersonInput {
   details?: DetailDto[] | null;
 }
 
+export interface CreateMessageFromTemplateInput {
+  messageGroupId: string;
+  messageTemplateId: string;
+}
+
+export interface CreatePayPlanInput {
+  planName?: string | null;
+  planDescription: string;
+  useUpfront?: boolean | null;
+  planDetails?: PlanDetailDto[] | null;
+}
+
+export interface CreditAccountDTO {
+  customerId: string;
+  currency: string;
+  balance: number;
+  activities?: ActivityDto[] | null;
+  totalAmountPaid?: number | null;
+}
+
 export interface DetailDto {
   name: string;
   value: string;
+}
+
+export interface PairAssetAccountInput {
+  clientId: string;
+  userId: string;
+  credit: CreditAccountDTO;
+  itemId: string;
+  paySchedule?: PaymentDTO | null;
+  paymentPlan?: PayPlanBaseEntityDto | null;
+  meta?: AssetAccountMetaDto[] | null;
+}
+
+export interface PayPlanBaseEntityDto {
+  planName?: string | null;
+  planDescription?: string | null;
+  useUpfront?: boolean | null;
+  planDetails?: PlanDetailDto[] | null;
+}
+
+export interface PaymentDTO {
+  amount: number;
+  datetime: any;
+  instruction: string;
+}
+
+export interface PaymentInput {
+  action: AccountActions;
+  datetime: any;
+  amount: number;
+  notes: string;
 }
 
 export interface PersonContactDto {
   phone: string;
   email: string;
   social: string;
+}
+
+export interface PersonDto {
+  personId: string;
+}
+
+export interface PlanDetailDto {
+  pName: string;
+  pValue: string;
+}
+
+export interface UpdateAssetAccountInput {
+  assetAccountId: string;
+  credit?: CreditAccountDTO | null;
+  paySchedule?: PaymentDTO | null;
+  paymentPlan?: PayPlanBaseEntityDto | null;
+  meta?: AssetAccountMetaDto[] | null;
 }
 
 export interface UpdateClientPersonInput {
@@ -117,6 +212,30 @@ export interface UpdateClientPersonInput {
   clientId?: string | null;
   details?: DetailDto[] | null;
   gender?: string | null;
+}
+
+export interface UpdateMessageGroupInput {
+  name: string;
+  description: string;
+  persons?: PersonDto[] | null;
+  distributor?: string | null;
+}
+
+export interface UpdateMessageTemplateInput {
+  name: string;
+  description: string;
+  messageBody: string;
+  distributor: string;
+  intent: IntentsEnum;
+  messageCourier?: MessageCourierEnum | null;
+}
+
+export interface UpdatePayPlanInput {
+  payPlanId: string;
+  planName?: string | null;
+  planDescription: string;
+  useUpfront?: boolean | null;
+  planDetails?: PlanDetailDto[] | null;
 }
 
 //==============================================================
