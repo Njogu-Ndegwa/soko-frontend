@@ -16,7 +16,7 @@ export default function Logo() {
         <Image 
         src={LogoImage} // This works with Next.js Image component without .src
         alt="Logo" 
-        width={180} // Set appropriate dimensions
+        width={150} // Set appropriate dimensions
         height={32}
         priority // Loads the logo early
       />
