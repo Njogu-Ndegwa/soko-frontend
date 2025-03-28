@@ -8,22 +8,24 @@ import { getCssVariable } from '@/components/utils/utils'
 export default function DashboardCard06() {
 
   const chartData = {
-    labels: ['United States', 'Italy', 'Other'],
+    labels: ['Oves Distributor Fleet', 'Open Token Simulator', 'M400Test fleet', 'Other'],
     datasets: [
       {
-        label: 'Top Countries',
+        label: 'Top Fleets',
         data: [
-          35, 30, 35,
+          35, 30, 10, 25,
         ],
         backgroundColor: [
           getCssVariable('--color-violet-500'),
           getCssVariable('--color-sky-500'),
           getCssVariable('--color-violet-800'),
+          getCssVariable('--color-purple-800'),
         ],
         hoverBackgroundColor: [
           getCssVariable('--color-violet-600'),
           getCssVariable('--color-sky-600'),
           getCssVariable('--color-violet-900'),
+          getCssVariable('--color-purple-800'),
         ],
         borderWidth: 0,
       },
@@ -33,7 +35,7 @@ export default function DashboardCard06() {
   return(
     <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
       <header className="px-5 py-4 border-b border-gray-100 dark:border-gray-700/60">
-        <h2 className="font-semibold text-gray-800 dark:text-gray-100">Top Countries</h2>
+        <h2 className="font-semibold text-gray-800 dark:text-gray-100">Top Fleets</h2>
       </header>
       {/* Chart built with Chart.js 3 */}
       {/* Change the height attribute to adjust the chart height */}
