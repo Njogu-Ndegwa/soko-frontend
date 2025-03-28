@@ -7,6 +7,7 @@ import { useWindowWidth } from "@/components/utils/use-window-width";
 import SidebarLinkGroup from "./sidebar-link-group";
 import SidebarLink from "./sidebar-link";
 import Logo from "./logo";
+// import Logo from "./favicon-Photoroom.png"
 import { useMenuVisibility } from '../../lib/auth'
 
 export default function Sidebar({
