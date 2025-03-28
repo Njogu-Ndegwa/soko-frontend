@@ -7,6 +7,7 @@ import { useWindowWidth } from "@/components/utils/use-window-width";
 import SidebarLinkGroup from "./sidebar-link-group";
 import SidebarLink from "./sidebar-link";
 import Logo from "./logo";
+import SmallLogo from "./smallLogo";
 // import Logo from "./favicon-Photoroom.png"
 import { useMenuVisibility } from '../../lib/auth'
 
@@ -82,7 +83,14 @@ export default function Sidebar({
             </svg>
           </button>
           {/* Logo */}
-          <Logo />
+          <div className={`${!sidebarExpanded ? 'hidden' : 'block'}`}>
+            <Logo />
+          </div>
+
+          {/* Logo for collapsed sidebar */}
+          <div className={`${sidebarExpanded ? 'hidden' : 'block'}`}>
+            <SmallLogo />
+          </div>
         </div>
 
         {/* Links */}
@@ -201,8 +209,8 @@ export default function Sidebar({
                             <div className="flex items-center">
                               <svg
                                 className={`shrink-0 fill-current ${segments.includes("staff")
-                                    ? "text-violet-500"
-                                    : "text-gray-400 dark:text-gray-500"
+                                  ? "text-violet-500"
+                                  : "text-gray-400 dark:text-gray-500"
                                   }`}
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
