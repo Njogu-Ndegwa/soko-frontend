@@ -212,7 +212,7 @@ export default function Sidebar({
                                 <path d="M11.92 6.851c.044-.027.09-.05.137-.07.481-.275.758-.68.908-1.256.126-.55.169-.81.357-2.058.075-.498.144-.91.217-1.264-4.122.75-7.087 2.984-9.12 6.284a18.087 18.087 0 0 0-1.985 4.585 17.07 17.07 0 0 0-.354 1.506c-.05.265-.076.448-.086.535a1 1 0 0 1-1.988-.226c.056-.49.209-1.312.502-2.357a20.063 20.063 0 0 1 2.208-5.09C5.31 3.226 9.306.494 14.913.004a1 1 0 0 1 .954 1.494c-.237.414-.375.993-.567 2.267-.197 1.306-.244 1.586-.392 2.235-.285 1.094-.789 1.853-1.552 2.363-.748 3.816-3.976 5.06-8.515 4.326a1 1 0 0 1 .318-1.974c2.954.477 4.918.025 5.808-1.556-.628.085-1.335.121-2.127.121a1 1 0 1 1 0-2c1.458 0 2.434-.116 3.08-.429Z" />
                               </svg>
                               <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Staff
+                                Personel
                               </span>
                             </div>
                             {/* Icon */}
@@ -309,28 +309,28 @@ export default function Sidebar({
                             <li className="mb-1 last:mb-0">
                               <SidebarLink href="/accounts/asset-accounts">
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                  Assets Accounts
+                                  PayGo
                                 </span>
                               </SidebarLink>
                             </li>
                             <li className="mb-1 last:mb-0">
                               <SidebarLink href="/accounts/payment-plans">
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                  payment-plans
+                                  Payment Plans
                                 </span>
                               </SidebarLink>
                             </li>
                             <li className="mb-1 last:mb-0">
                               <SidebarLink href="/accounts/message-template">
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                  message template
+                                  Message Templates
                                 </span>
                               </SidebarLink>
                             </li>
                             <li className="mb-1 last:mb-0">
                               <SidebarLink href="/accounts/message-group">
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                  message group
+                                  Message Groups
                                 </span>
                               </SidebarLink>
                             </li>
@@ -372,7 +372,7 @@ export default function Sidebar({
                                 <path d="M9 6.855A3.502 3.502 0 0 0 8 0a3.5 3.5 0 0 0-1 6.855v1.656L5.534 9.65a3.5 3.5 0 1 0 1.229 1.578L8 10.267l1.238.962a3.5 3.5 0 1 0 1.229-1.578L9 8.511V6.855ZM6.5 3.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm4.803 8.095c.005-.005.01-.01.013-.016l.012-.016a1.5 1.5 0 1 1-.025.032ZM3.5 11c.474 0 .897.22 1.171.563l.013.016.013.017A1.5 1.5 0 1 1 3.5 11Z" />
                               </svg>
                               <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                Thing
+                                Assets
                               </span>
                             </div>
                             {/* Icon */}
@@ -392,14 +392,14 @@ export default function Sidebar({
                             <li className="mb-1 last:mb-0">
                               <SidebarLink href="/thing/fleet">
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                  Fleet
+                                  Fleets
                                 </span>
                               </SidebarLink>
                             </li>
                             <li className="mb-1 last:mb-0">
                               <SidebarLink href="/thing/item">
                                 <span className="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                                  Item
+                                  Items
                                 </span>
                               </SidebarLink>
                             </li>

@@ -248,10 +248,10 @@ export default function AccountPanel({ itemId, itemData }: {itemId:any, itemData
                 <div className="border-b border-gray-200 dark:border-gray-700 pb-4 mb-6 flex justify-between items-center">
                     <div>
                         <h2 className="text-2xl text-gray-800 dark:text-gray-100 font-bold">
-                            {isEditing ? 'Asset Account Details' : 'Create Asset Account'}
+                            {isEditing ? 'PayGo Details' : 'Create PayGo Account'}
                         </h2>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            {isEditing ? 'View details of the asset account' : 'Enter the details to create a new Asset Account'}
+                            {isEditing ? 'View details of the PayGo Account' : 'Enter the details to create a new PayGo Account'}
                         </p>
                     </div>
                 </div>

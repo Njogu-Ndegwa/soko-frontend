@@ -81,7 +81,7 @@ export default function AccountSettings({ params }: { params: { id: string } }) 
                           <span>Back</span>
                         </button>
                 <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-                    {params.id === 'new' ? 'Create Asset Account' : 'Asset Account Details'}
+                    {params.id === 'new' ? 'Create PayGo Account' : 'PayGo Account Details'}
                 </h1>
             </div>
 
