@@ -7,10 +7,10 @@ import { useState } from 'react';
 import { useCustomerForm } from './useCustomerForm';
 import { useAlert } from '@/app/contexts/alertContext';
 // import { PersonInterface } from '../../types';
-import { Person } from '../types/Person';
+// import { Person } from '../types/Person';
 
 interface FormCustomerProps {
-  editData?: Person | null; // Add prop for edit data
+  editData?: any | null; // Add prop for edit data
 }
 
  export default function FormCustomer({ editData }: FormCustomerProps) {

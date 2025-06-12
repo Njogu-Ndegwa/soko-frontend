@@ -2,8 +2,6 @@
 // ManufacturersTable.tsx
 import { useState, useEffect } from 'react'
 import Table from '@/components/table/table'
-import { FleetInterface, CustomerInterface } from '../../accounts/types'
-// import { getFleets, reassignFleetToAgent, assignFleetToAgent, getCustomers } from '../services/inventoryService'
 
 import Link from 'next/link';
 import DynamicDropdown from '@/components/dropdown-dynamic';

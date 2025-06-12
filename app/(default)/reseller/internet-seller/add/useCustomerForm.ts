@@ -60,15 +60,15 @@
 // hooks/useCustomerForm.ts
 import { useState } from 'react';
 import { CustomerFormData } from '../constants';
-import { Person } from '../types/Person';
-import useClientRegisterCustomer from '../hooks/useClientRegisterCustomer';
-import useUpdatePerson from '../hooks/useUpdatePerson';
-import { PersonTypes } from '../../types/globalTypes';
+// import { Person } from '../types/Person';
+// import useClientRegisterCustomer from '../hooks/useClientRegisterCustomer';
+// import useUpdatePerson from '../hooks/useUpdatePerson';
+// import { PersonTypes } from '../../types/globalTypes';
 
 interface UseCustomerFormProps {
   isEdit?: boolean;
   personId?: string | null;
-  onSuccess?: (person: Person) => void;
+  onSuccess?: (person: any) => void;
   onError?: (error: string) => void;
 }
 
@@ -81,90 +81,90 @@ export const useCustomerForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { registerCustomer } = useClientRegisterCustomer((data) => {
-    if (onSuccess) {
-      onSuccess(data.clientRegisterCustomer);
-    }
-  });
+  // const { registerCustomer } = useClientRegisterCustomer((data) => {
+  //   if (onSuccess) {
+  //     onSuccess(data.clientRegisterCustomer);
+  //   }
+  // });
 
-  const { updatePerson } = useUpdatePerson((data) => {
-    if (onSuccess) {
-      onSuccess(data.updatePerson);
-    }
-  });
+  // const { updatePerson } = useUpdatePerson((data) => {
+  //   if (onSuccess) {
+  //     onSuccess(data.updatePerson);
+  //   }
+  // });
 
   const handleSubmit = async (formData: CustomerFormData) => {
     setIsLoading(true);
     setError(null);
 
-    try {
-      let person: Person;
+    // try {
+    //   let person: any;
       
-      if (isEdit && personId) {
-        await updatePerson({
-          variables: {
-            updateClientPersonInput: {
-              personId: personId,
-              clientContactPerson: {
-                email: formData.email,
-                phone: formData.phone,
-                social: formData.social
-              },
-              clientPersonAddress: {
-                city: formData.city,
-                country: formData.country,
-                postcode: formData.postCode,
-                srpc: formData.srpc,
-                street: formData.street,
-                unit: formData.unit,
-                locationAddressDto: {
-                  inputAddressLatitude: parseFloat(formData.latitude) || 0,
-                  inputAddressLongitude: parseFloat(formData.longitude) || 0
-                }
-              },
-              clientPersonName: formData.name,
-              clientPersonDescription: formData.description
-            }
-          }
-        });
-      } else {
-        await registerCustomer({
-          variables: {
-            clientCustomerInput: {
-              clientContactPerson: {
-                email: formData.email,
-                phone: formData.phone,
-                social: formData.social
-              },
-              clientPersonAddress: {
-                city: formData.city,
-                country: formData.country,
-                postcode: formData.postCode,
-                srpc: formData.srpc,
-                street: formData.street,
-                unit: formData.unit,
-                locationAddressDto: {
-                  inputAddressLatitude: parseFloat(formData.latitude) || 0,
-                  inputAddressLongitude: parseFloat(formData.longitude) || 0
-                }
-              },
-              clientPersonName: formData.name,
-              clientPersonDescription: formData.description,
-              clientPersonType: PersonTypes.CUSTOMER
-            }
-          }
-        });
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
-      setError(errorMessage);
-      if (onError) {
-        onError(errorMessage);
-      }
-      throw err; // Re-throw error for component-level handling
-    } finally {
-      setIsLoading(false);
-    }
+    //   if (isEdit && personId) {
+    //     await updatePerson({
+    //       variables: {
+    //         updateClientPersonInput: {
+    //           personId: personId,
+    //           clientContactPerson: {
+    //             email: formData.email,
+    //             phone: formData.phone,
+    //             social: formData.social
+    //           },
+    //           clientPersonAddress: {
+    //             city: formData.city,
+    //             country: formData.country,
+    //             postcode: formData.postCode,
+    //             srpc: formData.srpc,
+    //             street: formData.street,
+    //             unit: formData.unit,
+    //             locationAddressDto: {
+    //               inputAddressLatitude: parseFloat(formData.latitude) || 0,
+    //               inputAddressLongitude: parseFloat(formData.longitude) || 0
+    //             }
+    //           },
+    //           clientPersonName: formData.name,
+    //           clientPersonDescription: formData.description
+    //         }
+    //       }
+    //     });
+    //   } else {
+    //     await registerCustomer({
+    //       variables: {
+    //         clientCustomerInput: {
+    //           clientContactPerson: {
+    //             email: formData.email,
+    //             phone: formData.phone,
+    //             social: formData.social
+    //           },
+    //           clientPersonAddress: {
+    //             city: formData.city,
+    //             country: formData.country,
+    //             postcode: formData.postCode,
+    //             srpc: formData.srpc,
+    //             street: formData.street,
+    //             unit: formData.unit,
+    //             locationAddressDto: {
+    //               inputAddressLatitude: parseFloat(formData.latitude) || 0,
+    //               inputAddressLongitude: parseFloat(formData.longitude) || 0
+    //             }
+    //           },
+    //           clientPersonName: formData.name,
+    //           clientPersonDescription: formData.description,
+    //           clientPersonType: PersonTypes.CUSTOMER
+    //         }
+    //       }
+    //     });
+    //   }
+    // } catch (err) {
+    //   const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
+    //   setError(errorMessage);
+    //   if (onError) {
+    //     onError(errorMessage);
+    //   }
+    //   throw err; // Re-throw error for component-level handling
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   return {
