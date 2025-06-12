@@ -26,35 +26,125 @@ import  SearchForm  from '@/components/search-form';
 
 const dummyPaymentPlans = [
   {
-    id: 'PP-001',
-    time_frame: '6 months',
-    plan_type: 'Premium',
-    amount: 15000,
+    id: 'PLAN-HOME-001',
+    plan_name: 'Home Starter',
+    description: 'Perfect for basic home internet needs',
+    service_type: 'PPPOE',
+    download_speed: '10 Mbps',
+    upload_speed: '2 Mbps',
+    data_limit: 100,
+    contract_period: '1 Month',
+    monthly_cost: 2500,
+    setup_fee: 3000,
+    status: 'ACTIVE',
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-06-01T14:30:00Z'
   },
   {
-    id: 'PP-002',
-    time_frame: '12 months',
-    plan_type: 'Standard',
-    amount: 25000,
+    id: 'PLAN-HOME-002',
+    plan_name: 'Home Premium',
+    description: 'High-speed unlimited for families',
+    service_type: 'PPPOE',
+    download_speed: '25 Mbps',
+    upload_speed: '5 Mbps',
+    data_limit: null, // Unlimited
+    contract_period: '6 Months',
+    monthly_cost: 4500,
+    setup_fee: 0,
+    status: 'ACTIVE',
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-06-01T14:30:00Z'
   },
   {
-    id: 'PP-003',
-    time_frame: '3 months',
-    plan_type: 'Basic',
-    amount: 8000,
+    id: 'PLAN-BIZ-001',
+    plan_name: 'Business Static IP',
+    description: 'Dedicated static IP for business operations',
+    service_type: 'STATIC',
+    download_speed: '50 Mbps',
+    upload_speed: '50 Mbps',
+    data_limit: null, // Unlimited
+    contract_period: '12 Months',
+    monthly_cost: 12000,
+    setup_fee: 8000,
+    status: 'ACTIVE',
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-06-01T14:30:00Z'
   },
   {
-    id: 'PP-004',
-    time_frame: '24 months',
-    plan_type: 'Enterprise',
-    amount: 50000,
+    id: 'PLAN-HOTSPOT-001',
+    plan_name: 'Café WiFi Package',
+    description: 'Managed hotspot solution for businesses',
+    service_type: 'HOTSPOT',
+    download_speed: '100 Mbps',
+    upload_speed: '20 Mbps',
+    data_limit: 500,
+    contract_period: '3 Months',
+    monthly_cost: 8500,
+    setup_fee: 15000,
+    status: 'ACTIVE',
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-06-01T14:30:00Z'
   },
   {
-    id: 'PP-005',
-    time_frame: '9 months',
-    plan_type: 'Premium',
-    amount: 18500,
+    id: 'PLAN-CORP-001',
+    plan_name: 'Corporate Enterprise',
+    description: 'High-capacity connection for large organizations',
+    service_type: 'HYBRID',
+    download_speed: '200 Mbps',
+    upload_speed: '100 Mbps',
+    data_limit: null, // Unlimited
+    contract_period: '24 Months',
+    monthly_cost: 25000,
+    setup_fee: 20000,
+    status: 'ACTIVE',
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-06-01T14:30:00Z'
   },
+  {
+    id: 'PLAN-HOME-003',
+    plan_name: 'Student Package',
+    description: 'Affordable internet for students',
+    service_type: 'PPPOE',
+    download_speed: '5 Mbps',
+    upload_speed: '1 Mbps',
+    data_limit: 50,
+    contract_period: '1 Month',
+    monthly_cost: 1500,
+    setup_fee: 2000,
+    status: 'ACTIVE',
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-06-01T14:30:00Z'
+  },
+  {
+    id: 'PLAN-BIZ-002',
+    plan_name: 'SME Dedicated',
+    description: 'Small business dedicated line',
+    service_type: 'STATIC',
+    download_speed: '30 Mbps',
+    upload_speed: '15 Mbps',
+    data_limit: 300,
+    contract_period: '6 Months',
+    monthly_cost: 7500,
+    setup_fee: 5000,
+    status: 'ACTIVE',
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-06-01T14:30:00Z'
+  },
+  {
+    id: 'PLAN-LEGACY-001',
+    plan_name: 'Legacy Basic',
+    description: 'Old package being phased out',
+    service_type: 'PPPOE',
+    download_speed: '2 Mbps',
+    upload_speed: '512 Kbps',
+    data_limit: 25,
+    contract_period: '1 Month',
+    monthly_cost: 1000,
+    setup_fee: 1500,
+    status: 'DISCONTINUED',
+    created_at: '2023-01-15T10:00:00Z',
+    updated_at: '2024-03-01T14:30:00Z'
+  }
 ]
 
 export default function FleetTableWrapper() {
@@ -210,8 +300,8 @@ function FleetTable() {
           searchTerm={searchTerm}
           setSearchTerm={handleSearch}
         />
-          {/* <Link
-            href="/accounts/customers/add" // Replace with your desired path
+          <Link
+            href="/payments/payment-plans/add" // Replace with your desired path
             className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white flex items-center justify-center"
           >
             <svg
@@ -226,7 +316,7 @@ function FleetTable() {
               <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
             </svg>
             <span className="max-xs:sr-only">Add</span>
-          </Link> */}
+          </Link>
         </div>
       </div>
       <div className="sm:flex sm:justify-between sm:items-center mb-5">

@@ -159,39 +159,139 @@ import { format } from 'date-fns'
 
 export const columns: TableColumn<any>[] = [
   {
-    header: 'ID',
+    header: 'Plan ID',
     accessor: 'id' as keyof any,
     cellRenderer: (_value, item: any) => (
-      <div className="font-medium text-gray-800 dark:text-gray-100">
+      <div className="font-medium text-sky-600 cursor-pointer hover:text-sky-800">
         {item?.id ?? '-'}
       </div>
     ),
   },
   {
-    header: 'Time Frame',
-    accessor: 'time_frame' as keyof any,
+    header: 'Plan Details',
+    accessor: 'plan_name' as keyof any,
     cellRenderer: (_value, item: any) => (
-      <div className="font-medium text-gray-800 dark:text-gray-100">
-        {item?.time_frame ?? '-'}
+      <div className="max-w-xs">
+        <div className="font-medium text-gray-900 dark:text-gray-100">{item?.plan_name ?? '-'}</div>
+        <div className="text-xs text-gray-500 dark:text-gray-400">{item?.description ?? '-'}</div>
       </div>
     ),
   },
   {
-    header: 'Plan Type',
-    accessor: 'plan_type' as keyof any,
+    header: 'Service Type',
+    accessor: 'service_type' as keyof any,
+    cellRenderer: (_value, item: any) => {
+      const serviceType = item?.service_type;
+      let serviceColor = "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
+      
+      if (serviceType === "PPPOE") serviceColor = "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+      if (serviceType === "STATIC") serviceColor = "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      if (serviceType === "HOTSPOT") serviceColor = "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
+      if (serviceType === "HYBRID") serviceColor = "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200";
+      
+      return (
+        <div className={`px-2 py-1 rounded text-xs font-medium inline-block ${serviceColor}`}>
+          {serviceType ?? '-'}
+        </div>
+      );
+    },
+  },
+  {
+    header: 'Bandwidth',
+    accessor: 'bandwidth' as keyof any,
     cellRenderer: (_value, item: any) => (
-      <div className="max-w-md truncate">
-        {item?.plan_type ?? '-'}
+      <div className="text-sm">
+        <div className="font-medium text-gray-900 dark:text-gray-100">
+          {item?.download_speed ?? '-'} / {item?.upload_speed ?? '-'}
+        </div>
+        <div className="text-xs text-gray-500 dark:text-gray-400">Down / Up</div>
       </div>
     ),
   },
   {
-    header: 'Amount',
-    accessor: 'amount' as keyof any,
+    header: 'Data Allowance',
+    accessor: 'data_limit' as keyof any,
+    cellRenderer: (_value, item: any) => {
+      const isUnlimited = item?.data_limit === null || item?.data_limit === 0;
+      return (
+        <div className="text-sm">
+          <div className="font-medium text-gray-900 dark:text-gray-100">
+            {isUnlimited ? 'Unlimited' : `${item?.data_limit} GB`}
+          </div>
+          {!isUnlimited && (
+            <div className="text-xs text-gray-500 dark:text-gray-400">Monthly</div>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    header: 'Contract Period',
+    accessor: 'contract_period' as keyof any,
+    cellRenderer: (_value, item: any) => {
+      const period = item?.contract_period;
+      let periodColor = "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
+      
+      if (period === "1 Month") periodColor = "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      if (period === "3 Months") periodColor = "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+      if (period === "6 Months") periodColor = "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      if (period === "12 Months") periodColor = "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
+      if (period === "24 Months") periodColor = "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200";
+      
+      return (
+        <div className={`px-2 py-1 rounded text-xs font-medium inline-block ${periodColor}`}>
+          {period ?? '-'}
+        </div>
+      );
+    },
+  },
+  {
+    header: 'Monthly Cost',
+    accessor: 'monthly_cost' as keyof any,
     cellRenderer: (_value, item: any) => (
-      <div className="font-medium">
-        {item?.amount != null ? Number(item.amount).toLocaleString() : '-'}
+      <div className="text-sm">
+        <div className="font-medium text-gray-900 dark:text-gray-100">
+          KES {item?.monthly_cost != null ? Number(item.monthly_cost).toLocaleString() : '-'}
+        </div>
+        <div className="text-xs text-gray-500 dark:text-gray-400">per month</div>
       </div>
     ),
   },
+  {
+    header: 'Setup Fee',
+    accessor: 'setup_fee' as keyof any,
+    cellRenderer: (_value, item: any) => {
+      const setupFee = item?.setup_fee;
+      return (
+        <div className="text-sm">
+          <div className="font-medium text-gray-900 dark:text-gray-100">
+            {setupFee === 0 ? (
+              <span className="text-green-600 dark:text-green-400">FREE</span>
+            ) : (
+              `KES ${setupFee != null ? Number(setupFee).toLocaleString() : '-'}`
+            )}
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    header: 'Status',
+    accessor: 'status' as keyof any,
+    cellRenderer: (_value, item: any) => {
+      const status = item?.status;
+      let statusColor = "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
+      
+      if (status === "ACTIVE") statusColor = "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      if (status === "INACTIVE") statusColor = "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      if (status === "PENDING") statusColor = "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      if (status === "DISCONTINUED") statusColor = "bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-gray-300";
+      
+      return (
+        <div className={`px-2 py-1 rounded-full text-xs font-medium inline-block ${statusColor}`}>
+          {status ?? '-'}
+        </div>
+      );
+    },
+  }
 ]

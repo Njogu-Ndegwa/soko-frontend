@@ -24,36 +24,120 @@ import { useAuth } from '@/lib/auth-context';
 import PaginationClassic from '@/components/pagination-classic';
 import  SearchForm  from '@/components/search-form';
 
-const dummyCustomers = [
+const dummyResellers = [
   {
-    id: 'INT-001',
+    id: 'RSL-001',
+    business_name: 'TechConnect Solutions',
+    contact_person: 'John Kamau',
     phone_number: '+254712345678',
-    email: 'john.doe@example.com',
+    email: 'john@techconnect.co.ke',
+    location: 'Nakuru',
+    coverage_area: 'Nakuru Town, Naivasha',
+    total_clients: 245,
+    active_clients: 198,
+    allocated_bandwidth: 500,
+    bandwidth_used: 387,
+    account_balance: 85000,
+    commission_rate: 15,
+    monthly_commission: 42500,
     status: 'ACTIVE',
+    joined_date: '2023-03-15T10:00:00Z',
+    last_payment: '2024-06-01T14:30:00Z'
   },
   {
-    id: 'INT-001',
-    phone_number: '+254787654321',
-    email: 'jane.smith@example.com',
-    status: 'PENDING',
-  },
-  {
-    id: 'INT-001',
+    id: 'RSL-002',
+    business_name: 'Coastal Net Services',
+    contact_person: 'Grace Wanjiku',
     phone_number: '+254798765432',
-    email: 'mike.johnson@example.com',
+    email: 'grace@coastalnet.co.ke',
+    location: 'Mombasa',
+    coverage_area: 'Mombasa Island, Nyali, Bamburi',
+    total_clients: 156,
+    active_clients: 134,
+    allocated_bandwidth: 300,
+    bandwidth_used: 245,
+    account_balance: -25000,
+    commission_rate: 12,
+    monthly_commission: 18600,
     status: 'ACTIVE',
+    joined_date: '2023-07-22T11:15:00Z',
+    last_payment: '2024-05-15T09:45:00Z'
   },
   {
-    id: 'INT-001',
+    id: 'RSL-003',
+    business_name: 'Mountain View ISP',
+    contact_person: 'David Mwangi',
     phone_number: '+254723456789',
-    email: 'sarah.wilson@example.com',
-    status: 'INACTIVE',
+    email: 'david@mountainview.co.ke',
+    location: 'Nyeri',
+    coverage_area: 'Nyeri Town, Karatina, Othaya',
+    total_clients: 89,
+    active_clients: 67,
+    allocated_bandwidth: 200,
+    bandwidth_used: 123,
+    account_balance: 15000,
+    commission_rate: 10,
+    monthly_commission: 8900,
+    status: 'PENDING',
+    joined_date: '2024-05-10T08:30:00Z',
+    last_payment: null
   },
   {
-    id: 'INT-001',
+    id: 'RSL-004',
+    business_name: 'Lake Region Networks',
+    contact_person: 'Lisa Achieng',
     phone_number: '+254756789012',
-    email: 'david.brown@example.com',
+    email: 'lisa@lakeregion.co.ke',
+    location: 'Kisumu',
+    coverage_area: 'Kisumu City, Ahero, Maseno',
+    total_clients: 312,
+    active_clients: 289,
+    allocated_bandwidth: 750,
+    bandwidth_used: 634,
+    account_balance: 120000,
+    commission_rate: 18,
+    monthly_commission: 67500,
+    status: 'ACTIVE',
+    joined_date: '2022-11-08T13:20:00Z',
+    last_payment: '2024-06-05T16:10:00Z'
+  },
+  {
+    id: 'RSL-005',
+    business_name: 'Border Connect Ltd',
+    contact_person: 'Tom Ochieng',
+    phone_number: '+254787654321',
+    email: 'tom@borderconnect.co.ke',
+    location: 'Busia',
+    coverage_area: 'Busia Town, Malaba',
+    total_clients: 67,
+    active_clients: 0,
+    allocated_bandwidth: 150,
+    bandwidth_used: 0,
+    account_balance: -45000,
+    commission_rate: 8,
+    monthly_commission: 0,
     status: 'SUSPENDED',
+    joined_date: '2023-09-12T15:45:00Z',
+    last_payment: '2024-03-20T11:30:00Z'
+  },
+  {
+    id: 'RSL-006',
+    business_name: 'Central Kenya Networks',
+    contact_person: 'Emily Njeri',
+    phone_number: '+254734567890',
+    email: 'emily@centralkenya.co.ke',
+    location: 'Thika',
+    coverage_area: 'Thika Town, Ruiru, Juja',
+    total_clients: 178,
+    active_clients: 156,
+    allocated_bandwidth: 400,
+    bandwidth_used: 298,
+    account_balance: 67000,
+    commission_rate: 14,
+    monthly_commission: 28400,
+    status: 'ACTIVE',
+    joined_date: '2023-01-18T09:00:00Z',
+    last_payment: '2024-06-08T12:45:00Z'
   },
 ]
 
@@ -66,7 +150,7 @@ export default function FleetTableWrapper() {
 }
 
 function FleetTable() {
-   const [customers, setCustomers] = useState<any>(dummyCustomers)
+   const [customers, setCustomers] = useState<any>(dummyResellers)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [agents, setAgents] = useState<AgentInterface[]>([])
