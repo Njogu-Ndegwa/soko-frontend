@@ -1,6 +1,7 @@
-import FormCustomer from "./customerForm";
+// AddResellerPage.tsx
+import FormReseller from "./resellerForm";
 
-export default function AddCustomerPage() {
-  // No props passed directly to FormCustomer from the page
-  return <FormCustomer />;
+export default function AddResellerPage() {
+  // No props passed directly to FormReseller from the page
+  return <FormReseller />;
 }
