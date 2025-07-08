@@ -1,48 +1,38 @@
 'use client'
-// components/FormCustomer.tsx
+// components/FormPlan.tsx
 import { useEffect } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useCustomerForm } from './useCustomerForm';
+import { usePlanForm } from './usePlanForm';
 import { useAlert } from '@/app/contexts/alertContext';
-// import { PersonInterface } from '../../types';
-// import { Person } from '../types/Person';
 
-interface FormCustomerProps {
+interface FormPlanProps {
   editData?: any; // Add prop for edit data
 }
 
- export default function FormCustomer({ editData }: FormCustomerProps) {
+export default function FormPlan({ editData }: FormPlanProps) {
   const router = useRouter();
   const [isEditing] = useState(!!editData); // Determine if in edit mode
   const { alert } = useAlert();
 
   const [formData, setFormData] = useState({
     name: editData?.name || '',
-    email: editData?.contact?.email || '',
-    phone: editData?.contact?.phone || '',
-    social: editData?.contact?.social || '',
-    city: editData?.address?.city || '',
-    country: editData?.address?.country || '',
-    postCode: editData?.address?.postcode || '',
-    srpc: editData?.address?.srpc || '',
-    street: editData?.address?.street || '',
-    unit: editData?.address?.unit || '',
-    longitude: editData?.address?.addressLocation?.addressLongitude?.toString() || '0',
-    latitude: editData?.address?.addressLocation?.addressLongitude?.toString() || '0',
-    description: editData?.description || '',
+    connectionType: editData?.connectionType || '',
+    price: editData?.price?.toString() || '',
+    speed: editData?.speed || '',
+    durationDays: editData?.durationDays?.toString() || '',
   });
 
-  const { handleSubmit, isLoading, error } = useCustomerForm({
+  const { handleSubmit, isLoading, error } = usePlanForm({
     isEdit: isEditing,
-    personId: editData?._id,
+    planId: editData?.id,
     onSuccess: () => {
       router.back();
-      alert({ text: `Customer ${isEditing ? 'Updated' : 'Created'} Successfully`, type: "success" });
+      alert({ text: `Plan ${isEditing ? 'Updated' : 'Created'} Successfully`, type: "success" });
     },
     onError: () => {
-      alert({ text: `There was a problem ${isEditing ? 'Updating' : 'Creating'} the Customer`, type: "error" });
+      alert({ text: `There was a problem ${isEditing ? 'Updating' : 'Creating'} the Plan`, type: "error" });
     }
   });
 
@@ -72,7 +62,7 @@ interface FormCustomerProps {
           <span>Back</span>
         </button>
         <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-          {isEditing ? 'Edit Customer' : 'Create a Customer'}
+          {isEditing ? 'Edit Plan' : 'Create a Plan'}
         </h1>
       </div>
 
@@ -86,7 +76,7 @@ interface FormCustomerProps {
             <div>
               <div>
                 <label className="block text-sm font-medium mb-1" htmlFor="name">
-                  Plan Type
+                  Plan Name
                 </label>
                 <input
                   id="name"
@@ -102,15 +92,15 @@ interface FormCustomerProps {
 
             <div>
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="email">
-                  Time Frame
+                <label className="block text-sm font-medium mb-1" htmlFor="connectionType">
+                  Connection Type
                 </label>
                 <input
-                  id="email"
-                  name="email"
+                  id="connectionType"
+                  name="connectionType"
                   className="form-input w-full"
-                  type="email"
-                  value={formData.email}
+                  type="text"
+                  value={formData.connectionType}
                   onChange={handleInputChange}
                   required
                 />
@@ -119,20 +109,56 @@ interface FormCustomerProps {
 
             <div>
               <div>
-                <label className="block text-sm font-medium mb-1" htmlFor="phone">
-                  Amount
+                <label className="block text-sm font-medium mb-1" htmlFor="price">
+                  Price
                 </label>
                 <input
-                  id="phone"
-                  name="phone"
+                  id="price"
+                  name="price"
                   className="form-input w-full"
-                  type="text"
-                  value={formData.phone}
+                  type="number"
+                  step="0.01"
+                  value={formData.price}
                   onChange={handleInputChange}
                   required
                 />
               </div>
             </div>
+
+            <div>
+              <div>
+                <label className="block text-sm font-medium mb-1" htmlFor="speed">
+                  Speed
+                </label>
+                <input
+                  id="speed"
+                  name="speed"
+                  className="form-input w-full"
+                  type="text"
+                  value={formData.speed}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <div>
+                <label className="block text-sm font-medium mb-1" htmlFor="durationDays">
+                  Duration (Days)
+                </label>
+                <input
+                  id="durationDays"
+                  name="durationDays"
+                  className="form-input w-full"
+                  type="number"
+                  value={formData.durationDays}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            </div>
+
             <div>
               <div className="mt-[25px]">
                 <button
@@ -143,7 +169,7 @@ interface FormCustomerProps {
                 >
                   {isLoading
                     ? `${isEditing ? 'Updating...' : 'Creating...'}`
-                    : `${isEditing ? 'Update' : 'Create'} Customer`}
+                    : `${isEditing ? 'Update' : 'Create'} Plan`}
                 </button>
               </div>
             </div>

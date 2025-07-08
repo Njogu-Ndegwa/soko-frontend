@@ -1,6 +1,8 @@
-import FormCustomer from "./customerForm";
 
-export default function AddCustomerPage() {
-  // No props passed directly to FormCustomer from the page
-  return <FormCustomer />;
+// AddPlanPage.tsx
+import FormPlan from "./planForm";
+
+export default function AddPlanPage() {
+  // No props passed directly to FormPlan from the page
+  return <FormPlan />;
 }

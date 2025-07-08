@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import FormPlan from '../../add/planForm';
+import FormPlan from '../../add/customerForm';
 import { useAlert } from '@/app/contexts/alertContext';
 import { useRouter } from 'next/navigation';
 import { AnyARecord } from 'dns';

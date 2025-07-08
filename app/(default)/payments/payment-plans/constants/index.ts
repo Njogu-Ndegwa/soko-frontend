@@ -1,15 +1,17 @@
-export interface CustomerFormData {
-    name: string;
-    email: string;
-    phone: string;
-    social: string;
-    city: string;
-    country: string;
-    postCode: string;
-    srpc: string;
-    street: string;
-    unit: string;
-    longitude: string;
-    latitude: string;
-    description: string;
-  }
+// constants/planConstants.ts
+export interface PlanFormData {
+  name: string;
+  connectionType: string;
+  price: string;
+  speed: string;
+  durationDays: string;
+}
+
+export interface PlanInterface {
+  id: string;
+  name: string;
+  connectionType: string;
+  price: number;
+  speed: string;
+  durationDays: number;
+}

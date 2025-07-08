@@ -1,12 +1,12 @@
+
 // 'use client'
-// // ManufacturersTable.tsx
+// // CustomersTable.tsx
 // import { useState, useEffect } from 'react'
 // import Table from '@/components/table/table'
-
 // import Link from 'next/link';
 // import DynamicDropdown from '@/components/dropdown-dynamic';
 // import { getDistributorAgents, } from '@/app/(auth)/services/authService';
-
+// import { useQuery, gql } from '@apollo/client';
 // import { AgentInterface } from '@/app/(auth)/services/authService'
 // import { useSelectedItems } from '@/app/selected-items-context';
 // import DateSelect from '@/components/date-select';
@@ -22,131 +22,60 @@
 // import PaginationClassic from '@/components/pagination-classic';
 // import  SearchForm  from '@/components/search-form';
 
-// const dummyPayments = [
-//   {
-//     id: 'TXN-2024-001234',
-//     customer_name: 'John Kamau',
-//     customer_phone: '+254712345678',
-//     amount: 4500,
-//     payment_method: 'M-PESA',
-//     mpesa_code: 'QGH7K9M2NP',
-//     reference_no: null,
-//     plan_name: 'Home Premium',
-//     billing_period: 'June 2024',
-//     status: 'COMPLETED',
-//     created_at: '2024-06-10T09:15:00Z',
-//     processed_at: '2024-06-10T09:16:23Z'
-//   },
-//   {
-//     id: 'TXN-2024-001235',
-//     customer_name: 'Grace Wanjiku',
-//     customer_phone: '+254798765432',
-//     amount: 12000,
-//     payment_method: 'BANK_TRANSFER',
-//     mpesa_code: null,
-//     reference_no: 'BT240610001',
-//     plan_name: 'Business Static IP',
-//     billing_period: 'June 2024',
-//     status: 'COMPLETED',
-//     created_at: '2024-06-11T14:27:00Z',
-//     processed_at: '2024-06-11T16:45:12Z'
-//   },
-//   {
-//     id: 'TXN-2024-001236',
-//     customer_name: 'David Mwangi',
-//     customer_phone: '+254723456789',
-//     amount: 2500,
-//     payment_method: 'M-PESA',
-//     mpesa_code: 'QHJ8L3K5RT',
-//     reference_no: null,
-//     plan_name: 'Home Starter',
-//     billing_period: 'June 2024',
-//     status: 'PENDING',
-//     created_at: '2024-06-12T08:03:00Z',
-//     processed_at: null
-//   },
-//   {
-//     id: 'TXN-2024-001237',
-//     customer_name: 'Lisa Achieng',
-//     customer_phone: '+254756789012',
-//     amount: 7500,
-//     payment_method: 'CARD',
-//     mpesa_code: null,
-//     reference_no: 'CARD240612001',
-//     plan_name: 'SME Dedicated',
-//     billing_period: 'June 2024',
-//     status: 'FAILED',
-//     created_at: '2024-06-12T11:30:00Z',
-//     processed_at: '2024-06-12T11:31:45Z'
-//   },
-//   {
-//     id: 'TXN-2024-001238',
-//     customer_name: 'Tom Ochieng',
-//     customer_phone: '+254787654321',
-//     amount: 25000,
-//     payment_method: 'BANK_TRANSFER',
-//     mpesa_code: null,
-//     reference_no: 'BT240612002',
-//     plan_name: 'Corporate Enterprise',
-//     billing_period: 'June 2024',
-//     status: 'PROCESSING',
-//     created_at: '2024-06-12T13:45:00Z',
-//     processed_at: null
-//   },
-//   {
-//     id: 'TXN-2024-001239',
-//     customer_name: 'Emily Njeri',
-//     customer_phone: '+254734567890',
-//     amount: 6500,
-//     payment_method: 'M-PESA',
-//     mpesa_code: 'QKL9M6N8PQ',
-//     reference_no: null,
-//     plan_name: 'Home Ultra',
-//     billing_period: 'June 2024',
-//     status: 'COMPLETED',
-//     created_at: '2024-06-12T15:20:00Z',
-//     processed_at: '2024-06-12T15:21:15Z'
-//   },
-//   {
-//     id: 'TXN-2024-001240',
-//     customer_name: 'Peter Kariuki',
-//     customer_phone: '+254745678901',
-//     amount: 1500,
-//     payment_method: 'M-PESA',
-//     mpesa_code: 'QMN7P4R9ST',
-//     reference_no: null,
-//     plan_name: 'Student Package',
-//     billing_period: 'June 2024',
-//     status: 'COMPLETED',
-//     created_at: '2024-06-12T16:10:00Z',
-//     processed_at: '2024-06-12T16:11:08Z'
-//   },
-//   {
-//     id: 'TXN-2024-001241',
-//     customer_name: 'Ann Mutua',
-//     customer_phone: '+254712348765',
-//     amount: 4500,
-//     payment_method: 'M-PESA',
-//     mpesa_code: 'QPR8S5T2UV',
-//     reference_no: null,
-//     plan_name: 'Home Premium',
-//     billing_period: 'May 2024 (Late Payment)',
-//     status: 'REFUNDED',
-//     created_at: '2024-06-11T10:05:00Z',
-//     processed_at: '2024-06-11T10:06:30Z'
+// // GraphQL Query
+// const GET_MY_CUSTOMERS = gql`
+//   query MyQuery {
+//     myCustomers {
+//       expiry
+//       macAddress
+//       id
+//       name
+//       phone
+//       plan {
+//         connectionType
+//         durationDays
+//         id
+//         name
+//         price
+//         speed
+//       }
+//       pppoeUsername
+//       staticIp
+//       status
+//     }
 //   }
-// ]
+// `;
 
-// export default function FleetTableWrapper() {
+// interface Customer {
+//   expiry: string | null;
+//   macAddress: string | null;
+//   id: number;
+//   name: string;
+//   phone: string;
+//   plan: {
+//     connectionType: string;
+//     durationDays: number;
+//     id: number;
+//     name: string;
+//     price: number;
+//     speed: string;
+//   };
+//   pppoeUsername: string | null;
+//   staticIp: string | null;
+//   status: string;
+// }
+
+// export default function CustomersTableWrapper() {
 //   return (
 //     <SelectedItemsProvider>
-//       <FleetTable />
+//       <CustomersTable />
 //     </SelectedItemsProvider>
 //   )
 // }
 
-// function FleetTable() {
-//    const [customers, setCustomers] = useState<any>(dummyPayments)
+// function CustomersTable() {
+//   const { data, loading: queryLoading, error: queryError, refetch } = useQuery(GET_MY_CUSTOMERS);
+//   const [customers, setCustomers] = useState<Customer[]>([])
 //   const [loading, setLoading] = useState(true)
 //   const [error, setError] = useState<string | null>(null)
 //   const [agents, setAgents] = useState<AgentInterface[]>([])
@@ -162,10 +91,26 @@
 //   const [searchTerm, setSearchTerm] = useState('');
 //   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
-//     const getAllAssetAccounts = () => {
-
+//   // Handle GraphQL data
+//   useEffect(() => {
+//     if (data?.myCustomers) {
+//       setCustomers(data.myCustomers);
+//       setLoading(false);
 //     }
+//   }, [data]);
 
+//   // Handle GraphQL error
+//   useEffect(() => {
+//     if (queryError) {
+//       setError(queryError.message);
+//       setLoading(false);
+//     }
+//   }, [queryError]);
+
+//   // Handle GraphQL loading
+//   useEffect(() => {
+//     setLoading(queryLoading);
+//   }, [queryLoading]);
 
 //   useEffect(() => {
 //     const timer = setTimeout(() => {
@@ -175,9 +120,13 @@
 //     return () => clearTimeout(timer);
 //   }, [searchTerm]);
 
-//   useEffect(() => {
-//     getAllAssetAccounts();
-//   }, [debouncedSearchTerm]);
+//   // Filter customers based on search term
+//   const filteredCustomers = customers.filter(customer =>
+//     customer.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+//     customer.phone.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+//     customer.plan?.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+//     customer.status.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+//   );
 
 //   const fetchAgents = async () => {
 //     try {
@@ -185,63 +134,57 @@
 //       setAgents(data)
 //     }
 //     catch (err) {
-
+//       console.error('Error fetching agents:', err);
 //     }
-//     finally {
-
-//     }
-
 //   }
 
 //   useEffect(() => {
-//     // fetchAgents()
-//     // fetchCustomers()
-//     getAllAssetAccounts()
+//     fetchAgents()
 //   }, [])
-
-//   useEffect(() => {
-//     setTimeout(() => {
-//       setLoading(false)
-//     }, 2000); // Simulate loading delay
-//   },[])
 
 //   const handleSelectionChange = (selectedIds: any[]) => {
 //     setSelectedItems(selectedIds)
 //   }
 
 //   const handleAgentSelect = (agent: any) => {
-//     setSelectedAgentId(agent.id); // Just set the ID, no actor here
+//     setSelectedAgentId(agent.id);
 //   };
 
 //   const handleDropdownItemSelect = (option: any) => {
 //     setSelectedOption(option.id)
 //     if (option.id === 0) {
 //       setDangerModalOpen(true);
-//     } else if (option.id === 1 || option.id === 2) {
+//     } else if (option.id === 1) {
+//       // Edit - you might want to handle this differently
 //       setIsOpen(true)
+//     } else if (option.id === 2 || option.id === 3) {
+//       // Suspend/Activate
+//       handleStatusChange(option.id === 2 ? 'suspend' : 'activate');
 //     }
+//   }
+
+//   const handleStatusChange = (action: 'suspend' | 'activate') => {
+//     if (selectedItems.length === 0) {
+//       alert({ text: "Please select customers first", type: "error" })
+//       return;
+//     }
+    
+//     const actionText = action === 'suspend' ? 'suspended' : 'activated';
+//     alert({ text: `${selectedItems.length} customer(s) ${actionText} successfully`, type: "success" })
+//     loadData()
 //   }
   
 //   const loadData = async () => {
-//     await new Promise(resolve => setTimeout(resolve, 2000));
-//     // fetchCustomers();
+//     await new Promise(resolve => setTimeout(resolve, 1000));
+//     refetch(); // Refetch GraphQL data
 //     setSelectedItems([]);
 //   };
 
 //   const handleActionClick = async (actor: string) => {
-//     // if (selectedAgentId) {
-//     //   if (actor === "assign") {
-//     //     assignFleetToAgent({ agent_id: selectedAgentId, fleet_ids: selectedItems })
-//     //     alert({ text: "Fleet Assignment started Successfully", type: "success" })
-//     //     loadData()
-//     //   } else if (actor === "reAssign") {
-//     //     await reassignFleetToAgent({ new_agent_id: selectedAgentId, fleet_ids: selectedItems })
-//     //     alert({ text: "Fleet ReAssignment started Successfully", type: "success" })
-//     //     loadData()
-//     //   }
-//     // } else {
-//     //   alert({ text: "Select an Agent First", type: "error" })
-//     // }
+//     // Handle actions based on your requirements
+//     console.log('Action clicked:', actor, 'Selected items:', selectedItems);
+//     alert({ text: "Action completed successfully", type: "success" })
+//     loadData()
 //   };
 
 //   const filteredAgents = agents.filter(agent =>
@@ -252,15 +195,41 @@
 //     setSearchTerm(term);
 //   }
 
+//   // Get status counts
+//   const statusCounts = {
+//     all: filteredCustomers.length,
+//     active: filteredCustomers.filter(c => c.status === 'active').length,
+//     inactive: filteredCustomers.filter(c => c.status === 'inactive').length,
+//     suspended: filteredCustomers.filter(c => c.status === 'suspended').length,
+//     expired: filteredCustomers.filter(c => c.status === 'expired').length,
+//   };
+
+//   // Handle error state
+//   if (error) {
+//     return (
+//       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto">
+//         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+//           <p>Error loading customers: {error}</p>
+//           <button 
+//             onClick={() => refetch()} 
+//             className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+//           >
+//             Retry
+//           </button>
+//         </div>
+//       </div>
+//     );
+//   }
+
 //   return (
 //     <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto">
 //       <FeedbackModal
 //         isOpen={dangerModalOpen}
 //         setIsOpen={setDangerModalOpen}
 //         variant="danger"
-//         title={`Delete ${1} customer?`}
-//         content="Semper eget duis at tellus at urna condimentum mattis pellentesque lacus suspendisse faucibus interdum."
-//         confirmButtonLabel="Yes, Delete it"
+//         title={`Delete ${selectedItems.length} customer${selectedItems.length !== 1 ? 's' : ''}?`}
+//         content="Are you sure you want to delete the selected customer(s)? This action cannot be undone and will remove all their data including connection details."
+//         confirmButtonLabel="Yes, Delete"
 //       />
 //       <SearchableListModal
 //         isOpen={isOpen}
@@ -273,25 +242,26 @@
 //         renderItem={(agent) => agent.email}
 //         onSelect={handleAgentSelect}
 //         selectedItemId={selectedAgentId}
-//         actionLabel={selectedOption === 1 ? 'Assign Item' : 'Re-assign Item'}
-//         onAction={() => handleActionClick(selectedOption === 1 ? 'assign' : 'reAssign')}
+//         actionLabel="Assign Customers"
+//         onAction={() => handleActionClick('assign')}
 //       />
+
 //       {/* Header section */}
 //       <div className="sm:flex sm:justify-between sm:items-center mb-5">
 //         <div className="mb-4 sm:mb-0">
 //           <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-//             M-Pesa Transactions
+//             Customers
 //           </h1>
 //         </div>
 
 //         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-//         <SearchForm
-//           placeholder="Search" 
-//           searchTerm={searchTerm}
-//           setSearchTerm={handleSearch}
-//         />
-//           {/* <Link
-//             href="/accounts/customers/add" // Replace with your desired path
+//           <SearchForm
+//             placeholder="Search customers..." 
+//             searchTerm={searchTerm}
+//             setSearchTerm={handleSearch}
+//           />
+//           <Link
+//             href="/clients/customers/add"
 //             className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white flex items-center justify-center"
 //           >
 //             <svg
@@ -305,53 +275,53 @@
 //             >
 //               <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
 //             </svg>
-//             <span className="max-xs:sr-only">Add</span>
-//           </Link> */}
+//             <span className="max-xs:sr-only">Add Customer</span>
+//           </Link>
 //         </div>
 //       </div>
-//       <div className="sm:flex sm:justify-between sm:items-center mb-5">
 
+//       <div className="sm:flex sm:justify-between sm:items-center mb-5">
 //         {/* Left side */}
 //         <div className="mb-4 sm:mb-0">
 //           <ul className="flex flex-wrap -m-1">
 //             <li className="m-1">
-//               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">All <span className="ml-1 text-gray-400 dark:text-gray-500">{20}</span></button>
+//               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
+//                 All <span className="ml-1 text-gray-400 dark:text-gray-500">{filteredCustomers.length}</span>
+//               </button>
 //             </li>
 //           </ul>
 //         </div>
 
 //         {/* Right side */}
 //         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-//           {/* Delete button */}
 //           <DynamicDropdown options={dropdownOptions} onDropdownItemSelect={handleDropdownItemSelect} />
-//           {/* Dropdown */}
 //           <DateSelect />
-//           {/* Filter button */}
 //           <FilterButton align="right" />
 //         </div>
-
 //       </div>
+
 //       {/* Table section */}
 //       <div className="bg-white dark:bg-gray-800 shadow-lg rounded-xl">
 //         <Table
-//           data={customers}
+//           data={filteredCustomers}
 //           columns={columns}
-//           totalCount={customers.length}
+//           totalCount={filteredCustomers.length}
 //           selectable
 //           actions={(row) => actions({ row, onDelete: loadData })}
 //           onSelectionChange={handleSelectionChange}
 //           isLoading={loading}
 //         />
 //       </div>
+
 //       <div className="mt-8">
-        
+//         <PaginationClassic />
 //       </div> 
 //     </div>
 //   )
 // }
 
 'use client'
-// PaymentsTable.tsx
+// RoutersTable.tsx
 import { useState, useEffect } from 'react'
 import Table from '@/components/table/table'
 import Link from 'next/link';
@@ -374,62 +344,35 @@ import PaginationClassic from '@/components/pagination-classic';
 import  SearchForm  from '@/components/search-form';
 
 // GraphQL Query
-const GET_MY_PAYMENTS = gql`
-  query MyQuery(
-    $customerId: Int
-    $limit: Int
-    $endDate: String
-    $offset: Int
-    $paymentMethod: String
-    $startDate: String
-  ) {
-    myPayments(
-      customerId: $customerId
-      limit: $limit
-      endDate: $endDate
-      offset: $offset
-      paymentMethod: $paymentMethod
-      startDate: $startDate
-    ) {
-      amount
-      customerId
-      customerName
-      daysPaidFor
-      notes
+const GET_MY_ROUTERS = gql`
+  query MyQuery {
+    myRouters {
       id
+      name
+      ipAddress
+      port
     }
   }
 `;
 
-interface Payment {
-  amount: number;
-  customerId: number;
-  customerName: string;
-  daysPaidFor: number;
-  notes: string | null;
+interface Router {
   id: number;
+  name: string;
+  ipAddress: string;
+  port: number;
 }
 
-export default function PaymentsTableWrapper() {
+export default function RoutersTableWrapper() {
   return (
     <SelectedItemsProvider>
-      <PaymentsTable />
+      <RoutersTable />
     </SelectedItemsProvider>
   )
 }
 
-function PaymentsTable() {
-  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(GET_MY_PAYMENTS, {
-    variables: {
-      customerId: null,
-      limit: 50,
-      endDate: "",
-      offset: 0,
-      paymentMethod: "",
-      startDate: ""
-    }
-  });
-  const [payments, setPayments] = useState<Payment[]>([])
+function RoutersTable() {
+  const { data, loading: queryLoading, error: queryError, refetch } = useQuery(GET_MY_ROUTERS);
+  const [routers, setRouters] = useState<Router[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [agents, setAgents] = useState<AgentInterface[]>([])
@@ -447,8 +390,8 @@ function PaymentsTable() {
 
   // Handle GraphQL data
   useEffect(() => {
-    if (data?.myPayments) {
-      setPayments(data.myPayments);
+    if (data?.myRouters) {
+      setRouters(data.myRouters);
       setLoading(false);
     }
   }, [data]);
@@ -474,13 +417,11 @@ function PaymentsTable() {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Filter payments based on search term
-  const filteredPayments = payments.filter(payment =>
-    payment.customerName.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-    payment.id.toString().includes(debouncedSearchTerm.toLowerCase()) ||
-    payment.customerId.toString().includes(debouncedSearchTerm.toLowerCase()) ||
-    payment.amount.toString().includes(debouncedSearchTerm.toLowerCase()) ||
-    (payment.notes && payment.notes.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
+  // Filter routers based on search term
+  const filteredRouters = routers.filter(router =>
+    router.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+    router.ipAddress.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+    router.port.toString().includes(debouncedSearchTerm.toLowerCase())
   );
 
   const fetchAgents = async () => {
@@ -512,30 +453,32 @@ function PaymentsTable() {
     } else if (option.id === 1) {
       setIsOpen(true)
     } else if (option.id === 2) {
-      // View Details
-      handleViewDetails();
+      // Test Connection
+      handleTestConnection();
     } else if (option.id === 3) {
-      // Export
-      handleExport();
+      // Restart
+      handleRestart();
     }
   }
 
-  const handleViewDetails = () => {
+  const handleTestConnection = () => {
     if (selectedItems.length === 0) {
-      alert({ text: "Please select payments first", type: "error" })
+      alert({ text: "Please select routers first", type: "error" })
       return;
     }
     
-    alert({ text: `Viewing details for ${selectedItems.length} payment(s)`, type: "success" })
+    alert({ text: `Testing connection for ${selectedItems.length} router(s)...`, type: "success" })
+    loadData()
   }
 
-  const handleExport = () => {
+  const handleRestart = () => {
     if (selectedItems.length === 0) {
-      alert({ text: "Please select payments first", type: "error" })
+      alert({ text: "Please select routers first", type: "error" })
       return;
     }
     
-    alert({ text: `Exporting ${selectedItems.length} payment(s)...`, type: "success" })
+    alert({ text: `Restarting ${selectedItems.length} router(s)...`, type: "success" })
+    loadData()
   }
   
   const loadData = async () => {
@@ -559,15 +502,12 @@ function PaymentsTable() {
     setSearchTerm(term);
   }
 
-  // Calculate total amount for summary
-  const totalAmount = filteredPayments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
-
   // Handle error state
   if (error) {
     return (
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-[96rem] mx-auto">
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          <p>Error loading payments: {error}</p>
+          <p>Error loading routers: {error}</p>
           <button 
             onClick={() => refetch()} 
             className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
@@ -585,8 +525,8 @@ function PaymentsTable() {
         isOpen={dangerModalOpen}
         setIsOpen={setDangerModalOpen}
         variant="danger"
-        title={`Delete ${selectedItems.length} payment${selectedItems.length !== 1 ? 's' : ''}?`}
-        content="Are you sure you want to delete the selected payment(s)? This action cannot be undone and will permanently remove all payment records."
+        title={`Delete ${selectedItems.length} router${selectedItems.length !== 1 ? 's' : ''}?`}
+        content="Are you sure you want to delete the selected router(s)? This action cannot be undone and will remove all router configurations and connection data."
         confirmButtonLabel="Yes, Delete"
       />
       <SearchableListModal
@@ -600,7 +540,7 @@ function PaymentsTable() {
         renderItem={(agent) => agent.email}
         onSelect={handleAgentSelect}
         selectedItemId={selectedAgentId}
-        actionLabel="Assign Payments"
+        actionLabel="Assign Routers"
         onAction={() => handleActionClick('assign')}
       />
 
@@ -608,21 +548,18 @@ function PaymentsTable() {
       <div className="sm:flex sm:justify-between sm:items-center mb-5">
         <div className="mb-4 sm:mb-0">
           <h1 className="text-2xl md:text-3xl text-gray-800 dark:text-gray-100 font-bold">
-            Payments
+            Routers
           </h1>
-          <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Total: KES {totalAmount.toLocaleString()} from {filteredPayments.length} payment{filteredPayments.length !== 1 ? 's' : ''}
-          </div>
         </div>
 
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
           <SearchForm
-            placeholder="Search payments..." 
+            placeholder="Search routers..." 
             searchTerm={searchTerm}
             setSearchTerm={handleSearch}
           />
-          {/* <Link
-            href="/payments/add"
+          <Link
+            href="/assets/routers/add"
             className="btn bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white flex items-center justify-center"
           >
             <svg
@@ -636,8 +573,8 @@ function PaymentsTable() {
             >
               <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
             </svg>
-            <span className="max-xs:sr-only">Add Payment</span>
-          </Link> */}
+            <span className="max-xs:sr-only">Add Router</span>
+          </Link>
         </div>
       </div>
 
@@ -647,7 +584,7 @@ function PaymentsTable() {
           <ul className="flex flex-wrap -m-1">
             <li className="m-1">
               <button className="inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-800 transition">
-                All <span className="ml-1 text-gray-400 dark:text-gray-500">{filteredPayments.length}</span>
+                All <span className="ml-1 text-gray-400 dark:text-gray-500">{filteredRouters.length}</span>
               </button>
             </li>
           </ul>
@@ -664,9 +601,9 @@ function PaymentsTable() {
       {/* Table section */}
       <div className="bg-white dark:bg-gray-800 shadow-lg rounded-xl">
         <Table
-          data={filteredPayments}
+          data={filteredRouters}
           columns={columns}
-          totalCount={filteredPayments.length}
+          totalCount={filteredRouters.length}
           selectable
           actions={(row) => actions({ row, onDelete: loadData })}
           onSelectionChange={handleSelectionChange}
